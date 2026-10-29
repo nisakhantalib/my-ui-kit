@@ -1,0 +1,58 @@
+{
+  "$description": "Civic: calm public-service brand (ClinicBook SG). The library default.",
+  "font": { "$type": "fontFamily", "$value": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"] },
+  "radius": { "$type": "dimension", "$value": "10px" },
+  "color": {
+    "$type": "color",
+    "bg": {
+      "$value": "{palette.white}",
+      "$extensions": { "mode": { "dark": "{palette.ink.950}" } },
+      "$description": "Page background"
+    },
+    "surface": {
+      "$value": "{palette.ink.50}",
+      "$extensions": { "mode": { "dark": "{palette.ink.800}" } },
+      "$description": "Cards and raised areas"
+    },
+    "text": { "$value": "{palette.ink.900}", "$extensions": { "mode": { "dark": "{palette.ink.25}" } } },
+    "text-muted": { "$value": "{palette.ink.700}", "$extensions": { "mode": { "dark": "{palette.ink.300}" } } },
+    "border": {
+      "$value": "{palette.ink.400}",
+      "$extensions": { "mode": { "dark": "{palette.ink.500}" } },
+      "$description": "Input borders"
+    },
+    "primary": { "$value": "{palette.blue.700}", "$extensions": { "mode": { "dark": "{palette.blue.400}" } } },
+    "primary-hover": { "$value": "{palette.blue.800}", "$extensions": { "mode": { "dark": "{palette.blue.300}" } } },
+    "on-primary": {
+      "$value": "{palette.white}",
+      "$extensions": { "mode": { "dark": "{palette.ink.990}" } },
+      "$description": "Text on primary"
+    },
+    "accent": {
+      "$value": "{palette.teal.700}",
+      "$extensions": { "mode": { "dark": "{palette.teal.300}" } },
+      "$description": "Highlights and charts"
+    },
+    "danger": { "$value": "{palette.red.700}", "$extensions": { "mode": { "dark": "{palette.red.300}" } } },
+    "on-danger": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.red.990}" } } },
+    "success": { "$value": "{palette.green.700}", "$extensions": { "mode": { "dark": "{palette.green.300}" } } },
+    "warning": { "$value": "{palette.amber.700}", "$extensions": { "mode": { "dark": "{palette.amber.300}" } } },
+    "focus": {
+      "$value": "{palette.orange.700}",
+      "$extensions": { "mode": { "dark": "{palette.amber.400}" } },
+      "$description": "Focus ring"
+    },
+    "backdrop": { "$value": "{palette.backdrop}", "$description": "Behind modal dialogs" }
+  },
+  "component": {
+    "button": { "radius": { "$type": "dimension", "$value": "{radius}" } },
+    "control": {
+      "height": {
+        "$type": "dimension",
+        "$value": "44px",
+        "$description": "Buttons and inputs. WCAG 2.5.8 asks for 24px."
+      }
+    },
+    "card": { "radius": { "$type": "dimension", "$value": "16px" } }
+  }
+}

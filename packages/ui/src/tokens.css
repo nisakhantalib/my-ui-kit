@@ -1,14 +1,20 @@
-/* Generated from tokens/tokens.json by scripts/build-tokens.mjs. Do not edit. */
+/* Generated from tokens/*.json by scripts/build-tokens.mjs. Do not edit. */
 
 @layer kit.tokens {
   :root {
-    --kit-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --kit-radius: 10px;
     --kit-space-1: 4px;
     --kit-space-2: 8px;
     --kit-space-3: 12px;
     --kit-space-4: 16px;
     --kit-space-6: 24px;
+    --kit-space-8: 32px;
+  }
+
+  /* ---- civic (default) ---- */
+  :root,
+  [data-brand='civic'] {
+    --kit-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-radius: 10px;
     --kit-bg: #ffffff;
     --kit-surface: #f6f7f9;
     --kit-text: #14171f;
@@ -17,17 +23,22 @@
     --kit-primary: #0b5cad;
     --kit-primary-hover: #084a8c;
     --kit-on-primary: #ffffff;
+    --kit-accent: #0f766e;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
     --kit-warning: #9a6700;
     --kit-focus: #b45309;
     --kit-backdrop: rgb(10 14 22 / 0.55);
-    color-scheme: light; /* native controls (date picker, scrollbars) follow the theme */
+    --kit-button-radius: var(--kit-radius);
+    --kit-control-height: 44px;
+    --kit-card-radius: 16px;
+    color-scheme: light;
   }
-
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) {
+    :root:not([data-theme='light']),
+    :root:not([data-theme='light']) [data-brand='civic'],
+    :root:not([data-theme='light'])[data-brand='civic'] {
       --kit-bg: #12151c;
       --kit-surface: #1b1f29;
       --kit-text: #eef0f4;
@@ -36,6 +47,7 @@
       --kit-primary: #7ab8f5;
       --kit-primary-hover: #a3cdf8;
       --kit-on-primary: #0a1626;
+      --kit-accent: #5eead4;
       --kit-danger: #ff8a7a;
       --kit-on-danger: #2a0905;
       --kit-success: #6fdd8b;
@@ -44,9 +56,9 @@
       color-scheme: dark;
     }
   }
-
-  /* An explicit choice from a theme toggle wins over the system setting. */
-  :root[data-theme='dark'] {
+  :root[data-theme='dark'],
+  :root[data-theme='dark'] [data-brand='civic'],
+  :root[data-theme='dark'][data-brand='civic'] {
     --kit-bg: #12151c;
     --kit-surface: #1b1f29;
     --kit-text: #eef0f4;
@@ -55,11 +67,75 @@
     --kit-primary: #7ab8f5;
     --kit-primary-hover: #a3cdf8;
     --kit-on-primary: #0a1626;
+    --kit-accent: #5eead4;
     --kit-danger: #ff8a7a;
     --kit-on-danger: #2a0905;
     --kit-success: #6fdd8b;
     --kit-warning: #f0b72f;
     --kit-focus: #f5a524;
+    color-scheme: dark;
+  }
+
+  /* ---- orchid ---- */
+  [data-brand='orchid'] {
+    --kit-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-radius: 14px;
+    --kit-bg: #ffffff;
+    --kit-surface: #f8f6fb;
+    --kit-text: #1a1523;
+    --kit-text-muted: #585067;
+    --kit-border: #8c849b;
+    --kit-primary: #6a1fb0;
+    --kit-primary-hover: #551a8f;
+    --kit-on-primary: #ffffff;
+    --kit-accent: #c0267a;
+    --kit-danger: #b42318;
+    --kit-on-danger: #ffffff;
+    --kit-success: #1a7f37;
+    --kit-warning: #9a6700;
+    --kit-focus: #0f766e;
+    --kit-backdrop: rgb(10 14 22 / 0.55);
+    --kit-button-radius: 999px;
+    --kit-control-height: 48px;
+    --kit-card-radius: 20px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) [data-brand='orchid'],
+    :root:not([data-theme='light'])[data-brand='orchid'] {
+      --kit-bg: #110e17;
+      --kit-surface: #1c1724;
+      --kit-text: #f2eef8;
+      --kit-text-muted: #bdb4cc;
+      --kit-border: #6f6782;
+      --kit-primary: #c9a7f5;
+      --kit-primary-hover: #dcc5fa;
+      --kit-on-primary: #1d0b33;
+      --kit-accent: #f472b6;
+      --kit-danger: #ff8a7a;
+      --kit-on-danger: #2a0905;
+      --kit-success: #6fdd8b;
+      --kit-warning: #f0b72f;
+      --kit-focus: #5eead4;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme='dark'] [data-brand='orchid'],
+  :root[data-theme='dark'][data-brand='orchid'] {
+    --kit-bg: #110e17;
+    --kit-surface: #1c1724;
+    --kit-text: #f2eef8;
+    --kit-text-muted: #bdb4cc;
+    --kit-border: #6f6782;
+    --kit-primary: #c9a7f5;
+    --kit-primary-hover: #dcc5fa;
+    --kit-on-primary: #1d0b33;
+    --kit-accent: #f472b6;
+    --kit-danger: #ff8a7a;
+    --kit-on-danger: #2a0905;
+    --kit-success: #6fdd8b;
+    --kit-warning: #f0b72f;
+    --kit-focus: #5eead4;
     color-scheme: dark;
   }
 }

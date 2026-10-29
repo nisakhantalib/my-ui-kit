@@ -23,7 +23,8 @@ export default tseslint.config(
       '@typescript-eslint/consistent-type-imports': ['error', { fixStyle: 'inline-type-imports' }],
       // Our components forward their own ARIA props, so these can't be judged statically.
       'jsx-a11y/no-noninteractive-element-interactions': 'off',
-      'jsx-a11y/no-noninteractive-tabindex': ['error', { roles: ['tabpanel'], tags: [] }],
+      // tabpanel (APG) and region: scrollable areas must be focusable to scroll by keyboard (axe scrollable-region-focusable).
+      'jsx-a11y/no-noninteractive-tabindex': ['error', { roles: ['tabpanel', 'region'], tags: [] }],
     },
   },
   {

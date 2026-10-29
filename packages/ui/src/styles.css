@@ -48,11 +48,11 @@
     align-items: center;
     justify-content: center;
     gap: var(--kit-space-2);
-    min-height: 44px; /* WCAG 2.5.8 target size (minimum is 24px) */
+    min-height: var(--kit-control-height); /* ≥ 24px for WCAG 2.5.8; brands use 44–48px */
     padding: 0 var(--kit-space-4);
     font: 600 1rem/1 var(--kit-font);
     border: 2px solid transparent;
-    border-radius: var(--kit-radius);
+    border-radius: var(--kit-button-radius);
     cursor: pointer;
     transition: background-color 0.15s ease;
   }
@@ -126,7 +126,7 @@
     color: var(--kit-text-muted);
   }
   .kit-field__input {
-    min-height: 44px;
+    min-height: var(--kit-control-height);
     width: 100%;
     box-sizing: border-box;
     padding: 0 var(--kit-space-3);
@@ -602,6 +602,394 @@
     }
   }
 
+  /* ---------- AmountInput ---------- */
+  .kit-amount {
+    display: flex;
+    align-items: stretch;
+  }
+  .kit-amount__currency {
+    display: grid;
+    place-items: center;
+    padding: 0 var(--kit-space-3);
+    font: 600 0.9375rem var(--kit-font);
+    color: var(--kit-text-muted);
+    background: var(--kit-surface);
+    border: 2px solid var(--kit-border);
+    border-right: 0;
+    border-radius: var(--kit-radius) 0 0 var(--kit-radius);
+  }
+  .kit-amount__input {
+    border-radius: 0 var(--kit-radius) var(--kit-radius) 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+  .kit-field--error .kit-amount__currency {
+    border-color: var(--kit-danger);
+  }
+
+  /* ---------- OTPInput ---------- */
+  .kit-otp__boxes {
+    position: relative;
+    display: flex;
+    gap: var(--kit-space-2);
+    max-width: 22rem;
+  }
+  /* The real input covers the boxes: taps, paste and autofill go to it; its own text is invisible. */
+  .kit-otp__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: transparent;
+    caret-color: transparent;
+    font-size: 16px; /* stops iOS zooming on focus */
+    letter-spacing: 2em;
+    outline: none;
+    opacity: 0.01;
+    z-index: 1;
+  }
+  .kit-otp__box {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 0.85;
+    max-width: 3.25rem;
+    font: 700 1.5rem var(--kit-font);
+    font-variant-numeric: tabular-nums;
+    color: var(--kit-text);
+    background: var(--kit-bg);
+    border: 2px solid var(--kit-border);
+    border-radius: var(--kit-radius);
+    transition: border-color 0.15s ease;
+  }
+  .kit-otp__box--filled {
+    border-color: var(--kit-text-muted);
+  }
+  /* The focus ring moves to the box where the next digit goes. */
+  .kit-otp__box--active {
+    border-color: var(--kit-primary);
+    outline: 3px solid var(--kit-focus);
+    outline-offset: 2px;
+  }
+  .kit-otp__box--active:empty::after {
+    content: '';
+    width: 2px;
+    height: 1.4em;
+    background: var(--kit-primary);
+    animation: kit-caret 1s steps(1) infinite;
+  }
+  @keyframes kit-caret {
+    50% {
+      opacity: 0;
+    }
+  }
+  .kit-field--error .kit-otp__box {
+    border-color: var(--kit-danger);
+  }
+  .kit-otp__resend {
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .kit-link-button {
+    padding: var(--kit-space-1) 0;
+    font: 600 0.9375rem var(--kit-font);
+    color: var(--kit-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+
+  /* ---------- Combobox ---------- */
+  .kit-combobox__control {
+    position: relative;
+  }
+  .kit-combobox__input {
+    padding-right: 2.75rem;
+  }
+  .kit-combobox__toggle {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    width: 2.5rem;
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: var(--kit-radius);
+    cursor: pointer;
+    color: var(--kit-text);
+  }
+  .kit-combobox__chevron {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: translateY(-25%) rotate(45deg);
+    transition: transform 0.15s ease;
+  }
+  .kit-combobox__toggle[aria-expanded='true'] .kit-combobox__chevron {
+    transform: translateY(25%) rotate(225deg);
+  }
+  .kit-combobox__listbox {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    max-height: 18rem;
+    overflow-y: auto;
+    margin: 0;
+    padding: var(--kit-space-1);
+    background: var(--kit-bg);
+    border: 1px solid var(--kit-border);
+    border-radius: var(--kit-radius);
+    box-shadow: 0 16px 40px rgb(0 0 0 / 0.18);
+  }
+  .kit-combobox__option {
+    display: flex;
+    align-items: center;
+    gap: var(--kit-space-3);
+    min-height: 44px;
+    padding: var(--kit-space-2) var(--kit-space-3);
+    border-radius: calc(var(--kit-radius) * 0.7);
+    color: var(--kit-text);
+    cursor: pointer;
+  }
+  .kit-combobox__option--active {
+    background: var(--kit-surface);
+    outline: 2px solid var(--kit-primary);
+    outline-offset: -2px;
+  }
+  .kit-combobox__option[aria-selected='true'] {
+    font-weight: 700;
+  }
+  .kit-combobox__option[aria-selected='true']::after {
+    content: '✓';
+    margin-left: auto;
+    color: var(--kit-primary);
+  }
+  .kit-combobox__empty {
+    padding: var(--kit-space-3);
+    color: var(--kit-text-muted);
+  }
+
+  /* ---------- DataTable ---------- */
+  .kit-table-wrap {
+    overflow-x: auto;
+    border-radius: var(--kit-radius);
+  }
+  .kit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font: 0.9375rem/1.4 var(--kit-font);
+    color: var(--kit-text);
+  }
+  .kit-table__caption {
+    padding-bottom: var(--kit-space-3);
+    font-weight: 700;
+    font-size: 1.0625rem;
+    text-align: left;
+  }
+  .kit-table__th {
+    padding: var(--kit-space-2) var(--kit-space-3);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    color: var(--kit-text-muted);
+    border-bottom: 2px solid var(--kit-border);
+    white-space: nowrap;
+  }
+  .kit-table__cell {
+    padding: var(--kit-space-3);
+    text-align: left;
+    font-weight: 400;
+    border-bottom: 1px solid color-mix(in srgb, var(--kit-border) 45%, transparent);
+    vertical-align: middle;
+  }
+  th.kit-table__cell {
+    font-weight: 600;
+  }
+  .kit-table__cell--end {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .kit-table tbody tr:hover {
+    background: color-mix(in srgb, var(--kit-surface) 70%, transparent);
+  }
+  .kit-table__sort {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kit-space-1);
+    min-height: 32px;
+    padding: 0;
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .kit-table__cell--end .kit-table__sort {
+    flex-direction: row-reverse;
+  }
+  .kit-table__sort-icon {
+    width: 0.6em;
+    height: 0.6em;
+    opacity: 0.35;
+    border: solid currentColor;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  .kit-table__sort-icon--ascending {
+    opacity: 1;
+    transform: translateY(25%) rotate(225deg);
+  }
+  .kit-table__sort-icon--descending {
+    opacity: 1;
+  }
+  .kit-table__empty {
+    padding: var(--kit-space-6);
+    text-align: center;
+    color: var(--kit-text-muted);
+  }
+
+  /* ---------- MaskedValue ---------- */
+  .kit-masked {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kit-space-1);
+    font-variant-numeric: tabular-nums;
+  }
+  .kit-masked__value {
+    letter-spacing: 0.04em;
+  }
+  .kit-masked__toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  .kit-masked__toggle:hover {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+  /* An eye drawn in CSS: almond outline + pupil; a slash when the value is shown. */
+  .kit-masked__eye {
+    position: relative;
+    width: 18px;
+    height: 12px;
+    border: 2px solid currentColor;
+    border-radius: 75% 15%;
+    transform: rotate(45deg);
+  }
+  .kit-masked__eye::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .kit-masked__eye--off::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -6px;
+    bottom: -6px;
+    width: 2px;
+    background: currentColor;
+    transform: translateX(-50%) rotate(-90deg);
+  }
+
+  /* ---------- Badge ---------- */
+  .kit-badge {
+    --kit-tone: var(--kit-text-muted);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 10px;
+    font: 600 0.8125rem/1.6 var(--kit-font);
+    color: var(--kit-text);
+    background: color-mix(in srgb, var(--kit-tone) 12%, var(--kit-bg));
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .kit-badge--info {
+    --kit-tone: var(--kit-primary);
+  }
+  .kit-badge--success {
+    --kit-tone: var(--kit-success);
+  }
+  .kit-badge--warning {
+    --kit-tone: var(--kit-warning);
+  }
+  .kit-badge--danger {
+    --kit-tone: var(--kit-danger);
+  }
+  .kit-badge__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--kit-tone);
+  }
+
+  /* ---------- Skeleton ---------- */
+  .kit-skeleton-group {
+    display: grid;
+    gap: var(--kit-space-2);
+  }
+  .kit-skeleton {
+    display: block;
+    height: 0.9em;
+    border-radius: 6px;
+    background:
+      linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--kit-bg) 60%, transparent) 50%, transparent 100%) 0
+        0 / 200% 100% no-repeat,
+      color-mix(in srgb, var(--kit-text) 10%, var(--kit-bg));
+    animation: kit-shimmer 1.4s ease-in-out infinite;
+  }
+  .kit-skeleton--text:last-child:not(:first-child) {
+    width: 60%;
+  }
+  .kit-skeleton--block {
+    height: 6rem;
+    border-radius: var(--kit-card-radius);
+  }
+  .kit-skeleton--circle {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+  }
+  @keyframes kit-shimmer {
+    from {
+      background-position:
+        150% 0,
+        0 0;
+    }
+    to {
+      background-position:
+        -50% 0,
+        0 0;
+    }
+  }
+
   /* WCAG 2.3.3: no movement for people who ask for less. */
   @media (prefers-reduced-motion: reduce) {
     [class^='kit-'],
@@ -627,6 +1015,14 @@
     }
     .kit-switch__control[aria-checked='true'] .kit-switch__thumb {
       background: HighlightText;
+    }
+    .kit-otp__box--active,
+    .kit-combobox__option--active {
+      outline-color: Highlight;
+    }
+    .kit-badge__dot,
+    .kit-skeleton {
+      forced-color-adjust: none;
     }
     .kit-alert,
     .kit-toast {

@@ -1,15 +1,16 @@
 import { forwardRef, useEffect, useRef, type HTMLAttributes, type MouseEvent, type ReactNode } from 'react';
-import { cx, useMergedRef } from '../utils.js';
+import { cx, useMergedRef, warnDeprecated } from '../utils.js';
+import { useKit, type MessageKey } from '../i18n.js';
 import { VisuallyHidden } from './VisuallyHidden.js';
 
 type Tone = 'info' | 'success' | 'warning' | 'danger';
 
 /** Spoken before the message, so the tone is not conveyed by colour and icon alone (WCAG 1.4.1). */
-const TONE_LABEL: Record<Tone, string> = {
-  info: 'Information',
-  success: 'Success',
-  warning: 'Warning',
-  danger: 'Error',
+const TONE_LABEL: Record<Tone, MessageKey> = {
+  info: 'alert.info',
+  success: 'alert.success',
+  warning: 'alert.warning',
+  danger: 'alert.danger',
 };
 
 const TONE_ICON: Record<Tone, string> = { info: 'i', success: '✓', warning: '!', danger: '!' };
@@ -31,6 +32,8 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
   { tone = 'info', title, role, className, children, ...rest },
   ref,
 ) {
+  const { t } = useKit();
+  const spoken = <VisuallyHidden>{t(TONE_LABEL[tone])}: </VisuallyHidden>;
   return (
     <div ref={ref} role={role} className={cx('kit-alert', `kit-alert--${tone}`, className)} {...rest}>
       <span className="kit-alert__icon" aria-hidden="true">
@@ -39,11 +42,11 @@ export const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
       <div className="kit-alert__body">
         {title ? (
           <p className="kit-alert__title">
-            <VisuallyHidden>{TONE_LABEL[tone]}: </VisuallyHidden>
+            {spoken}
             {title}
           </p>
         ) : (
-          <VisuallyHidden>{TONE_LABEL[tone]}: </VisuallyHidden>
+          spoken
         )}
         {children && <div className="kit-alert__content">{children}</div>}
       </div>
@@ -57,6 +60,8 @@ export interface ErrorSummaryProps {
   errors: { id: string; message: string }[];
   /** Move focus to the summary when errors appear (the GOV.UK / SGDS pattern). Default true. */
   focusOnShow?: boolean;
+  /** @deprecated since 0.2.0, removed in 1.0.0. Use `focusOnShow`; run the `error-summary-focus-on-show` codemod. */
+  autoFocus?: boolean;
   className?: string;
 }
 
@@ -65,9 +70,13 @@ export interface ErrorSummaryProps {
  * summary, so screen-reader users hear the title and count straight away (WCAG 3.3.1, 2.4.3).
  */
 export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(function ErrorSummary(
-  { title = 'There is a problem', errors, focusOnShow = true, className },
+  { title, errors, focusOnShow: focusOnShowProp, autoFocus, className },
   ref,
 ) {
+  const { t } = useKit();
+  if (autoFocus !== undefined)
+    warnDeprecated('ErrorSummary', 'autoFocus', 'focusOnShow', 'error-summary-focus-on-show');
+  const focusOnShow = focusOnShowProp ?? autoFocus ?? true;
   const [mergedRef, local] = useMergedRef(ref);
   const count = errors.length;
   const signature = errors.map((e) => e.id).join('|');
@@ -96,8 +105,8 @@ export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(functi
     // Focusing the container makes screen readers read the heading and the list together.
     <div ref={mergedRef} tabIndex={-1} className={cx('kit-error-summary', className)}>
       <h2 className="kit-error-summary__title">
-        {title}
-        <VisuallyHidden>{`, ${count} ${count === 1 ? 'error' : 'errors'}`}</VisuallyHidden>
+        {title ?? t('errorSummary.title')}
+        <VisuallyHidden>{`, ${t('errorSummary.count', { count })}`}</VisuallyHidden>
       </h2>
       <ul className="kit-error-summary__list">
         {errors.map((err) => (

@@ -1,0 +1,77 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { Alert, Button, Badge, TextField, Switch } from '../src/index';
+import { contrastReport } from '../src/tokens';
+
+<Meta title="Foundations/Brands" />
+
+# One library, many brands
+
+The same components, re-skinned only by tokens. `data-brand` works on any element, so a page can host two brands at once — the panels below are siblings on one page. Nothing in the components knows which brand it's in.
+
+<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+  {['civic', 'orchid'].map((brand) => (
+    <div
+      key={brand}
+      data-brand={brand}
+      style={{
+        background: 'var(--kit-bg)',
+        color: 'var(--kit-text)',
+        fontFamily: 'var(--kit-font)',
+        padding: 24,
+        borderRadius: 'var(--kit-card-radius)',
+        border: '1px solid var(--kit-border)',
+        display: 'grid',
+        gap: 16,
+      }}
+    >
+      <strong style={{ fontSize: 18 }}>{brand === 'civic' ? 'Civic — ClinicBook SG' : 'Orchid — Orchid Bank'}</strong>
+      <TextField label="Email" hint="We send the receipt here" />
+      <Switch label="Notifications" defaultChecked />
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <Button>Continue</Button>
+        <Button variant="secondary">Back</Button>
+      </div>
+      <Alert tone="success" title="Saved" />
+      <div>
+        <Badge tone="warning">Pending</Badge>
+      </div>
+    </div>
+  ))}
+</div>
+
+## What a brand can change
+
+| Tier            | Example                | Civic          | Orchid       |
+| --------------- | ---------------------- | -------------- | ------------ |
+| Semantic colour | `--kit-primary`        | blue           | violet       |
+| Shape           | `--kit-radius`         | 10px           | 14px         |
+| Component       | `--kit-button-radius`  | follows radius | 999px (pill) |
+| Component       | `--kit-control-height` | 44px           | 48px         |
+| Type            | `--kit-font`           | system UI      | Inter        |
+
+## Enforced, not hoped for
+
+Every brand must define exactly the same tokens, and every colour pair below is checked against WCAG when tokens are built. A brand that fails cannot be published.
+
+<table>
+  <thead>
+    <tr>
+      <th>Brand</th>
+      <th>Mode</th>
+      <th>Pair</th>
+      <th>Ratio</th>
+      <th>Needs</th>
+    </tr>
+  </thead>
+  <tbody>
+    {contrastReport.map((r) => (
+      <tr key={`${r.brand}${r.mode}${r.pair}`}>
+        <td>{r.brand}</td>
+        <td>{r.mode}</td>
+        <td>{r.pair}</td>
+        <td>{r.ratio}:1</td>
+        <td>{r.min}:1 ✓</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
