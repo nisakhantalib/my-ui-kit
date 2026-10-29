@@ -10,7 +10,7 @@ import globals from 'globals';
 
 export default tseslint.config(
   {
-    ignores: ['**/dist/**', '**/coverage/**', '**/storybook-static/**', '**/android/**', '**/ios/**', '**/dev-dist/**'],
+    ignores: ['.claude/**', '**/dist/**', '**/coverage/**', '**/storybook-static/**', '**/android/**', '**/ios/**', '**/dev-dist/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
