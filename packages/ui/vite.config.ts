@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 
-// Library mode: ESM-only bundle (Node 20.19+ and every modern bundler load ESM, even from require()).
+// Library mode: ESM only (Node 20.19+ and every modern bundler load ESM, even from require()).
 // React stays external so consumers bring their own copy.
 // Vite 8 bundles with Rolldown, so options live under `rolldownOptions` (rollupOptions is deprecated).
 export default defineConfig({
@@ -11,13 +11,20 @@ export default defineConfig({
   build: {
     lib: {
       entry: 'src/index.ts',
-      name: 'MyUIKit',
-      fileName: 'my-ui-kit',
       formats: ['es'],
       cssFileName: 'my-ui-kit',
     },
     rolldownOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime'],
+      output: {
+        // One file per source module, so an app that imports only Button ships only Button.
+        preserveModules: true,
+        preserveModulesRoot: 'src',
+        entryFileNames: '[name].js',
+        // React Server Components (Next.js App Router): hooks-based modules must be client modules.
+        // tokens.js and utils.js stay server-safe.
+        banner: (chunk) => (/^(components|analytics)\//.test(chunk.fileName) ? "'use client';" : ''),
+      },
     },
     sourcemap: true,
   },

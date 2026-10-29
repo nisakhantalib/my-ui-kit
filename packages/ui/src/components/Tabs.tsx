@@ -3,11 +3,10 @@ import {
   useContext,
   useId,
   useRef,
-  useState,
   type KeyboardEvent,
   type ReactNode,
 } from 'react';
-import { cx } from '../utils.js';
+import { cx, useControllableState } from '../utils.js';
 import { useTrack } from '../analytics/analytics.js';
 
 /**
@@ -52,15 +51,13 @@ export interface TabsProps {
 }
 
 export function Tabs({ defaultValue = '', value, onValueChange, activation = 'automatic', children, className }: TabsProps) {
-  const [internal, setInternal] = useState(defaultValue);
+  const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange);
   const baseId = useId();
   const track = useTrack();
-  const selected = value ?? internal;
 
   function select(next: string) {
     if (next === selected) return;
-    if (value === undefined) setInternal(next);
-    onValueChange?.(next);
+    setSelected(next);
     track('tab_change', { component: 'Tabs', tab: next });
   }
 

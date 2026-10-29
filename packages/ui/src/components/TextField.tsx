@@ -1,5 +1,6 @@
-import { forwardRef, useId, type InputHTMLAttributes } from 'react';
-import { cx } from '../utils.js';
+import { forwardRef, type InputHTMLAttributes } from 'react';
+import { cx, useFieldIds } from '../utils.js';
+import { FieldError, FieldHint, RequiredMark } from './Field.js';
 
 export interface TextFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'id'> {
   label: string;
@@ -14,27 +15,15 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   { label, hint, error, required, id, className, ...rest },
   ref,
 ) {
-  const autoId = useId();
-  const inputId = id ?? `kit-field-${autoId}`;
-  const hintId = hint ? `${inputId}-hint` : undefined;
-  const errorId = error ? `${inputId}-error` : undefined;
-  const describedBy = [hintId, errorId].filter(Boolean).join(' ') || undefined;
+  const { inputId, hintId, errorId, describedBy } = useFieldIds(id, !!hint, !!error);
 
   return (
     <div className={cx('kit-field', error && 'kit-field--error', className)}>
       <label className="kit-field__label" htmlFor={inputId}>
         {label}
-        {required && (
-          <span className="kit-field__required" aria-hidden="true">
-            {' '}*
-          </span>
-        )}
+        <RequiredMark show={required} />
       </label>
-      {hint && (
-        <p id={hintId} className="kit-field__hint">
-          {hint}
-        </p>
-      )}
+      <FieldHint id={hintId}>{hint}</FieldHint>
       <input
         ref={ref}
         id={inputId}
@@ -45,15 +34,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
         aria-describedby={describedBy}
         {...rest}
       />
-      {/* Live region: the message is read out when it appears, not only on focus. */}
-      <p id={errorId} className="kit-field__error" aria-live="polite">
-        {error && (
-          <>
-            <span aria-hidden="true">⚠ </span>
-            {error}
-          </>
-        )}
-      </p>
+      <FieldError id={errorId}>{error}</FieldError>
     </div>
   );
 });
