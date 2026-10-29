@@ -106,7 +106,8 @@ export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(functi
     <div ref={mergedRef} tabIndex={-1} className={cx('kit-error-summary', className)}>
       <h2 className="kit-error-summary__title">
         {title ?? t('errorSummary.title')}
-        <VisuallyHidden>{`, ${t('errorSummary.count', { count })}`}</VisuallyHidden>
+        {/* Parentheses, not a comma: browsers may add a space before hidden text ("problem , 2 errors"). */}
+        <VisuallyHidden>{` (${t('errorSummary.count', { count })})`}</VisuallyHidden>
       </h2>
       <ul className="kit-error-summary__list">
         {errors.map((err) => (

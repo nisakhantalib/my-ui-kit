@@ -468,6 +468,7 @@
   .kit-error-summary__title {
     margin: 0 0 var(--kit-space-2);
     font-size: 1.125rem;
+    font-weight: 700;
   }
   .kit-error-summary__list {
     margin: 0;
@@ -590,6 +591,8 @@
   .kit-dialog__title {
     margin: 0 0 var(--kit-space-2);
     font-size: 1.25rem;
+    font-weight: 700; /* set explicitly: CSS resets such as Tailwind preflight make headings inherit */
+    line-height: 1.3;
   }
   .kit-dialog__desc {
     margin: 0 0 var(--kit-space-4);
