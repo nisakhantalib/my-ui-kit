@@ -1,17 +1,23 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T15:11:19.195Z",
+  "generatedAt": "2026-10-29T16:16:30.278Z",
   "kitPackage": "@nisakhantalib/my-ui-kit",
   "roots": ["apps"],
   "summary": {
-    "filesScanned": 8,
-    "filesImportingKit": 2,
-    "componentsUsed": 20,
-    "jsxUsages": 93,
+    "filesScanned": 19,
+    "filesImportingKit": 6,
+    "componentsUsed": 28,
+    "jsxUsages": 127,
     "deprecatedUsages": 0,
     "rawElementsInKitFiles": 0
   },
   "packages": [
+    {
+      "path": "apps/bank/package.json",
+      "name": "bank",
+      "kitVersion": "^0.1.0",
+      "dependencyType": "dependencies"
+    },
     {
       "path": "apps/demo/package.json",
       "name": "demo",
@@ -21,42 +27,48 @@
   ],
   "components": {
     "Button": {
-      "files": 2,
-      "usages": 27,
+      "files": 5,
+      "usages": 38,
       "props": {
-        "onClick": 17,
-        "variant": 15,
-        "loading": 3,
-        "size": 3,
-        "trackId": 3,
-        "disabled": 2,
-        "aria-pressed": 1,
-        "ref": 1,
-        "type": 1
+        "onClick": 26,
+        "variant": 21,
+        "size": 7,
+        "trackId": 6,
+        "loading": 4,
+        "aria-pressed": 3,
+        "disabled": 3,
+        "type": 3,
+        "className": 1,
+        "ref": 1
       },
       "byFile": {
+        "apps/bank/src/App.tsx": 1,
+        "apps/bank/src/Overview.tsx": 2,
+        "apps/bank/src/Pay.tsx": 8,
         "apps/demo/src/App.tsx": 10,
         "apps/demo/src/Showcase.tsx": 17
       }
     },
     "TextField": {
-      "files": 2,
-      "usages": 10,
+      "files": 3,
+      "usages": 11,
       "props": {
-        "label": 10,
+        "label": 11,
         "error": 7,
+        "value": 7,
+        "onChange": 6,
         "required": 6,
-        "value": 6,
-        "onChange": 5,
+        "hint": 4,
         "name": 4,
         "autoComplete": 3,
-        "hint": 3,
         "type": 3,
         "id": 2,
         "inputMode": 1,
+        "maxLength": 1,
         "readOnly": 1
       },
       "byFile": {
+        "apps/bank/src/Pay.tsx": 1,
         "apps/demo/src/App.tsx": 4,
         "apps/demo/src/Showcase.tsx": 6
       }
@@ -125,6 +137,28 @@
         "apps/demo/src/Showcase.tsx": 4
       }
     },
+    "Select": {
+      "files": 4,
+      "usages": 5,
+      "props": {
+        "label": 5,
+        "onChange": 3,
+        "placeholder": 3,
+        "value": 3,
+        "defaultValue": 2,
+        "error": 2,
+        "className": 1,
+        "hint": 1,
+        "name": 1,
+        "required": 1
+      },
+      "byFile": {
+        "apps/bank/src/App.tsx": 1,
+        "apps/bank/src/Pay.tsx": 1,
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 2
+      }
+    },
     "Checkbox": {
       "files": 1,
       "usages": 4,
@@ -138,6 +172,36 @@
       },
       "byFile": {
         "apps/demo/src/Showcase.tsx": 4
+      }
+    },
+    "Skeleton": {
+      "files": 1,
+      "usages": 4,
+      "props": {
+        "lines": 2,
+        "className": 1,
+        "shape": 1,
+        "width": 1
+      },
+      "byFile": {
+        "apps/bank/src/Overview.tsx": 4
+      }
+    },
+    "Dialog": {
+      "files": 3,
+      "usages": 3,
+      "props": {
+        "description": 3,
+        "onClose": 3,
+        "open": 3,
+        "title": 3,
+        "initialFocusRef": 1,
+        "role": 1
+      },
+      "byFile": {
+        "apps/bank/src/Pay.tsx": 1,
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
       }
     },
     "RadioGroup": {
@@ -159,22 +223,18 @@
         "apps/demo/src/Showcase.tsx": 2
       }
     },
-    "Select": {
+    "Switch": {
       "files": 2,
       "usages": 3,
       "props": {
         "label": 3,
-        "placeholder": 3,
-        "defaultValue": 2,
-        "error": 2,
-        "hint": 1,
-        "name": 1,
-        "onChange": 1,
-        "required": 1,
-        "value": 1
+        "checked": 1,
+        "defaultChecked": 1,
+        "description": 1,
+        "onCheckedChange": 1
       },
       "byFile": {
-        "apps/demo/src/App.tsx": 1,
+        "apps/bank/src/App.tsx": 1,
         "apps/demo/src/Showcase.tsx": 2
       }
     },
@@ -191,32 +251,71 @@
         "apps/demo/src/Showcase.tsx": 1
       }
     },
-    "Dialog": {
+    "AnalyticsProvider": {
       "files": 2,
       "usages": 2,
       "props": {
-        "description": 2,
-        "onClose": 2,
-        "open": 2,
-        "title": 2,
-        "initialFocusRef": 1,
-        "role": 1
+        "adapters": 2,
+        "enabled": 1
       },
       "byFile": {
-        "apps/demo/src/App.tsx": 1,
-        "apps/demo/src/Showcase.tsx": 1
+        "apps/bank/src/App.tsx": 1,
+        "apps/demo/src/App.tsx": 1
       }
     },
-    "Switch": {
+    "AnnouncerProvider": {
+      "files": 2,
+      "usages": 2,
+      "props": {},
+      "byFile": {
+        "apps/bank/src/App.tsx": 1,
+        "apps/demo/src/App.tsx": 1
+      }
+    },
+    "Badge": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "tone": 2
+      },
+      "byFile": {
+        "apps/bank/src/Overview.tsx": 1,
+        "apps/bank/src/Pay.tsx": 1
+      }
+    },
+    "DataTable": {
       "files": 1,
       "usages": 2,
       "props": {
-        "label": 2,
-        "defaultChecked": 1,
-        "description": 1
+        "caption": 2,
+        "columns": 2,
+        "getRowKey": 2,
+        "rows": 2,
+        "captionHidden": 1,
+        "defaultSort": 1
       },
       "byFile": {
-        "apps/demo/src/Showcase.tsx": 2
+        "apps/bank/src/Overview.tsx": 2
+      }
+    },
+    "ErrorSummary": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "errors": 2
+      },
+      "byFile": {
+        "apps/bank/src/Pay.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "SkipLink": {
+      "files": 2,
+      "usages": 2,
+      "props": {},
+      "byFile": {
+        "apps/bank/src/App.tsx": 1,
+        "apps/demo/src/App.tsx": 1
       }
     },
     "TabList": {
@@ -244,49 +343,89 @@
         "apps/demo/src/Showcase.tsx": 1
       }
     },
-    "AnalyticsProvider": {
-      "files": 1,
-      "usages": 1,
-      "props": {
-        "adapters": 1,
-        "enabled": 1
-      },
-      "byFile": {
-        "apps/demo/src/App.tsx": 1
-      }
-    },
-    "AnnouncerProvider": {
-      "files": 1,
-      "usages": 1,
-      "props": {},
-      "byFile": {
-        "apps/demo/src/App.tsx": 1
-      }
-    },
-    "ErrorSummary": {
-      "files": 1,
-      "usages": 1,
-      "props": {
-        "errors": 1
-      },
-      "byFile": {
-        "apps/demo/src/Showcase.tsx": 1
-      }
-    },
-    "SkipLink": {
-      "files": 1,
-      "usages": 1,
-      "props": {},
-      "byFile": {
-        "apps/demo/src/App.tsx": 1
-      }
-    },
     "ToastProvider": {
-      "files": 1,
-      "usages": 1,
+      "files": 2,
+      "usages": 2,
       "props": {},
       "byFile": {
+        "apps/bank/src/App.tsx": 1,
         "apps/demo/src/App.tsx": 1
+      }
+    },
+    "AmountInput": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "error": 1,
+        "hint": 1,
+        "id": 1,
+        "label": 1,
+        "onValueChange": 1,
+        "required": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/bank/src/Pay.tsx": 1
+      }
+    },
+    "Combobox": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "error": 1,
+        "filter": 1,
+        "getKey": 1,
+        "getLabel": 1,
+        "hint": 1,
+        "id": 1,
+        "items": 1,
+        "label": 1,
+        "onValueChange": 1,
+        "placeholder": 1,
+        "renderOption": 1,
+        "required": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/bank/src/Pay.tsx": 1
+      }
+    },
+    "KitProvider": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "currency": 1,
+        "locale": 1
+      },
+      "byFile": {
+        "apps/bank/src/App.tsx": 1
+      }
+    },
+    "MaskedValue": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "label": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/bank/src/Overview.tsx": 1
+      }
+    },
+    "OTPInput": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "error": 1,
+        "label": 1,
+        "onComplete": 1,
+        "onResend": 1,
+        "onValueChange": 1,
+        "resendAfter": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/bank/src/Pay.tsx": 1
       }
     }
   },
@@ -296,6 +435,81 @@
     "byFile": {}
   },
   "files": [
+    {
+      "file": "apps/bank/src/App.tsx",
+      "imports": [
+        "AnalyticsProvider",
+        "AnnouncerProvider",
+        "Button",
+        "KitProvider",
+        "Select",
+        "SkipLink",
+        "Switch",
+        "ToastProvider",
+        "adobeDataLayerAdapter",
+        "consoleAdapter",
+        "useAnnounce",
+        "usePageView"
+      ],
+      "usages": {
+        "AnalyticsProvider": 1,
+        "AnnouncerProvider": 1,
+        "Button": 1,
+        "KitProvider": 1,
+        "Select": 1,
+        "SkipLink": 1,
+        "Switch": 1,
+        "ToastProvider": 1
+      },
+      "rawElements": {}
+    },
+    {
+      "file": "apps/bank/src/Overview.tsx",
+      "imports": ["Badge", "Button", "DataTable", "MaskedValue", "Skeleton", "useAnnounce", "useKit"],
+      "usages": {
+        "Badge": 1,
+        "Button": 2,
+        "DataTable": 2,
+        "MaskedValue": 1,
+        "Skeleton": 4
+      },
+      "rawElements": {}
+    },
+    {
+      "file": "apps/bank/src/Pay.tsx",
+      "imports": [
+        "AmountInput",
+        "Badge",
+        "Button",
+        "Combobox",
+        "Dialog",
+        "ErrorSummary",
+        "OTPInput",
+        "Select",
+        "TextField",
+        "useKit",
+        "useToast",
+        "useTrack"
+      ],
+      "usages": {
+        "AmountInput": 1,
+        "Badge": 1,
+        "Button": 8,
+        "Combobox": 1,
+        "Dialog": 1,
+        "ErrorSummary": 1,
+        "OTPInput": 1,
+        "Select": 1,
+        "TextField": 1
+      },
+      "rawElements": {}
+    },
+    {
+      "file": "apps/bank/src/bank.tsx",
+      "imports": ["useKit"],
+      "usages": {},
+      "rawElements": {}
+    },
     {
       "file": "apps/demo/src/App.tsx",
       "imports": [

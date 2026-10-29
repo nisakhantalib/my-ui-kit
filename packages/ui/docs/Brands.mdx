@@ -8,11 +8,14 @@ import { contrastReport } from '../src/tokens';
 
 The same components, re-skinned only by tokens. `data-brand` works on any element, so a page can host two brands at once — the panels below are siblings on one page. Nothing in the components knows which brand it's in.
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}
+>
   {['civic', 'orchid'].map((brand) => (
     <div
       key={brand}
       data-brand={brand}
+      className="sb-unstyled"
       style={{
         background: 'var(--kit-bg)',
         color: 'var(--kit-text)',
