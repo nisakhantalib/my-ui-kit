@@ -25,56 +25,96 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
 
-      # Standards that are enforced, not just written down (see CONTRIBUTING.md).
+      # Standards that are enforced, not just written down (CONTRIBUTING.md, docs/governance.md).
       - name: Lint (typescript-eslint, react-hooks, jsx-a11y)
         run: npm run lint
       - name: Formatting (Prettier)
         run: npm run format:check
-      - name: Design tokens are regenerated
+      - name: Design tokens regenerated, brand contract intact, every contrast pair passes
         run: npm run tokens:check -w @nisakhantalib/my-ui-kit
       - name: Typecheck
         run: npm run typecheck
 
-      # unit = jsdom (logic + ARIA); browser = real Chromium via Vitest Browser Mode
-      # (real focus, real keyboard, axe colour-contrast). Coverage has minimum floors.
+      # unit = jsdom (logic + ARIA); browser = real Chromium (focus, keyboard, contrast). Coverage floors.
       - name: Component tests (unit + real browser) with coverage
         run: npm test -- --coverage
+      - name: Web Components tests (real Chromium)
+        run: npm test -w @nisakhantalib/my-ui-kit-elements
+      - name: Governance tooling tests (ESLint plugin, codemods, scanner)
+        run: npm run test:governance
+      - name: No deprecated API in our own apps
+        run: node packages/scanner/bin/kit-scan.js apps --fail-on-deprecated
 
-      - name: Build library and PWA
+      - name: Build library, Web Components and apps
         run: npm run build
-
-      # publint + Are the Types Wrong: the package resolves for ESM and bundler consumers.
-      - name: Check npm package
+      - name: Check npm package (publint + Are the Types Wrong)
         run: npm run check:package
-      # Bundle budgets: fails if tree-shaking breaks or a component grows unexpectedly.
-      - name: Bundle size
+      - name: Bundle size budgets
         run: npm run size
 
       - name: Build Storybook
         run: npm run build:storybook
-      - name: Accessibility audit of every story (light + dark)
+      - name: Accessibility audit of every story (2 brands × light/dark)
         run: npm run test:storybook -w @nisakhantalib/my-ui-kit
 
-      # Playwright on desktop and a phone viewport: booking flow, axe WCAG 2.2 A/AA in light
-      # and dark, 320px reflow, keyboard path, share fallback, offline PWA.
-      - name: End-to-end tests
-        run: npm run test:e2e
+      # Desktop + Pixel 7: journeys, axe in both themes and two markets, strict CSP, 320px reflow, offline PWA.
+      - name: End-to-end tests (ClinicBook)
+        run: npm run test:e2e -w demo
+      - name: End-to-end tests (Orchid Bank)
+        run: npm run test:e2e -w bank -- --grep-invert "visual regression"
+
+      - name: Lighthouse budgets (Orchid Bank)
+        run: npx -y @lhci/cli@0.15.1 autorun
+        working-directory: apps/bank
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage
-          path: packages/ui/coverage/lcov.info
+          name: reports
+          path: |
+            packages/ui/coverage/lcov.info
+            apps/bank/lighthouse
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report
-          path: apps/demo/playwright-report
+          name: playwright-reports
+          path: apps/*/playwright-report
       - uses: actions/upload-artifact@v4
         with:
           name: storybook
           path: packages/ui/storybook-static
+
+  visual:
+    name: Visual regression (pinned Linux image)
+    runs-on: ubuntu-latest
+    # Same image every run, so fonts and rendering are identical to the committed baselines.
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @nisakhantalib/my-ui-kit
+      - name: Compare screenshots with baselines
+        working-directory: apps/bank
+        run: |
+          if [ -d e2e/__screenshots__ ]; then
+            npx playwright test --grep "visual regression"
+          else
+            echo "::warning::No visual baselines yet. Run the 'Update visual baselines' workflow to create them."
+            npx playwright test --grep "visual regression" --update-snapshots
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: visual-diffs
+          path: |
+            apps/bank/test-results
+            apps/bank/e2e/__screenshots__
+          if-no-files-found: ignore
 
   android:
     name: Android app (Capacitor)
@@ -91,7 +131,7 @@ jobs:
           java-version: 21 # Capacitor 8 needs JDK 21
           cache: gradle
       - run: npm ci
-      - run: npm run build
+      - run: npm run build -w @nisakhantalib/my-ui-kit && npm run build -w demo
       - name: Copy web build into the native project
         run: npx cap sync android
         working-directory: apps/demo
@@ -104,8 +144,8 @@ jobs:
           path: apps/demo/android/app/build/outputs/apk/debug/*.apk
 
   deploy-pages:
-    name: Deploy demo + Storybook to GitHub Pages
-    needs: verify
+    name: Deploy site to GitHub Pages
+    needs: [verify, visual]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
@@ -121,14 +161,25 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run build -w @nisakhantalib/my-ui-kit
+      # One site: Orchid Bank at the root, then ClinicBook, Storybook and the Web Components demo beside it.
+      - run: npm run build -w bank
         env:
           BASE_PATH: /my-ui-kit/
+      - run: npm run build -w demo
+        env:
+          BASE_PATH: /my-ui-kit/clinic/
       - run: npm run build:storybook
-      # One site: the PWA at /my-ui-kit/ and Storybook at /my-ui-kit/storybook/.
-      - run: cp -r packages/ui/storybook-static apps/demo/dist/storybook
+      - run: npm run build:demo -w @nisakhantalib/my-ui-kit-elements
+      - name: Assemble site
+        run: |
+          mkdir -p site
+          cp -r apps/bank/dist/. site/
+          cp -r apps/demo/dist site/clinic
+          cp -r packages/ui/storybook-static site/storybook
+          cp -r packages/elements/dist-demo site/elements
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: apps/demo/dist
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4

@@ -31,7 +31,7 @@
       "default": "./dist/index.js"
     },
     "./styles.css": "./dist/my-ui-kit.css",
-    "./tokens.json": "./tokens/tokens.json",
+    "./tokens/*": "./tokens/*",
     "./package.json": "./package.json"
   },
   "files": [
@@ -52,7 +52,7 @@
     "test:browser": "vitest run --project browser",
     "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run typecheck && npm run test && npm run build && npm run check:package",
-    "check:package": "publint --strict && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./tokens.json ./package.json",
+    "check:package": "publint --strict && attw --pack . --profile esm-only --entrypoints .",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build -o storybook-static",
     "size": "size-limit",
@@ -107,15 +107,21 @@
       "limit": "2 kB"
     },
     {
-      "name": "Whole library",
+      "name": "Banking set (AmountInput, OTPInput, Combobox, DataTable, KitProvider)",
       "path": "dist/index.js",
-      "import": "*",
-      "limit": "7 kB"
+      "import": "{ AmountInput, OTPInput, Combobox, DataTable, KitProvider }",
+      "limit": "6 kB"
     },
     {
-      "name": "Styles",
+      "name": "Whole library (22 components, 3 languages)",
+      "path": "dist/index.js",
+      "import": "*",
+      "limit": "12 kB"
+    },
+    {
+      "name": "Styles (all components, 2 brands x 2 modes)",
       "path": "dist/my-ui-kit.css",
-      "limit": "3 kB",
+      "limit": "4.5 kB",
       "rolldown": false
     }
   ]

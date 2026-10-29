@@ -8,7 +8,7 @@ How ClinicBook SG and My UI Kit look and why. Low-fidelity wireframes came first
 2. **Obvious over clever.** Visible labels above every field, native pickers, words instead of icons alone.
 3. **Mistakes are normal.** Every error says how to fix it, in place, and focus goes there.
 4. **Same in every mode.** Light, dark, forced colours, 200% zoom and 320px are designed states, not afterthoughts.
-5. **Tokens or it didn't happen.** Every colour and space comes from `tokens.json`, so design and code can't drift.
+5. **Tokens or it didn't happen.** Every colour and space comes from `packages/ui/tokens/`, so design and code can't drift.
 
 ## Wireframes
 
@@ -55,7 +55,7 @@ Low fidelity, to agree flow and hierarchy with stakeholders before any visual de
 
 ## Handoff with design tools
 
-`packages/ui/tokens/tokens.json` uses the W3C Design Tokens format, which Tokens Studio for Figma imports directly. A designer changing a colour in Figma exports the JSON, a developer runs `npm run tokens`, and review sees both the value and its contrast note in one diff.
+The files in `packages/ui/tokens/` use the W3C Design Tokens format, which Tokens Studio for Figma imports directly. A designer changing a colour in Figma exports the JSON, a developer runs `npm run tokens`, and review sees both the value and its contrast note in one diff.
 
 ## Screenshots of the built UI
 

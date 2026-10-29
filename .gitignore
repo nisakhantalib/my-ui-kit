@@ -9,3 +9,5 @@ playwright-report
 storybook-static
 .claude/
 dist-demo
+lighthouse
+.lighthouseci

@@ -27,7 +27,7 @@ The deprecation table that drives the lint rule and the scanner is one file, [`p
 - own their app's adoption: keep the lint config on, run codemods within the deprecation window
 - nominate a **kit champion** per team: the first contact for questions and the reviewer for that team's kit upgrades
 
-**Design** owns Figma and the tokens' intent; code owns the token values in `packages/ui/tokens/tokens.json` ([ADR 0005](adr/0005-design-tokens-single-source.md)). A token change needs both.
+**Design** owns Figma and the tokens' intent; code owns the token values in `packages/ui/tokens/` ([ADR 0005](adr/0005-design-tokens-single-source.md)). A token change needs both.
 
 ## Proposing a change (RFC and spec)
 
@@ -42,7 +42,7 @@ An RFC must show **evidence of need from at least two teams** (a component one p
 
 ## Versioning and releases
 
-- **Semver, strictly.** The public API is everything exported from `src/index.ts`, every prop, every CSS custom property and BEM class documented in Storybook, and `tokens.json`. The bump table is in [CONTRIBUTING.md](../CONTRIBUTING.md#commits-and-releases).
+- **Semver, strictly.** The public API is everything exported from `src/index.ts`, every prop, every CSS custom property and BEM class documented in Storybook, and the token files in `tokens/`. The bump table is in [CONTRIBUTING.md](../CONTRIBUTING.md#commits-and-releases).
 - **Changesets.** Every library PR adds a changeset (`npm run changeset`) written for consumers: what changed, and for a minor or major, what they need to do. Merging to `main` opens a *Version Packages* PR; merging that publishes to npm with provenance.
 - **Release cadence.** Patches as needed, minors on a regular cadence (fortnightly), majors at most twice a year, announced a release ahead.
 - The governance packages are versioned with the kit: a release that deprecates something ships the matching lint rule entry and codemod in the same release.

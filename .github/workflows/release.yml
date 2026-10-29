@@ -36,9 +36,21 @@ jobs:
       - run: npm test -w @nisakhantalib/my-ui-kit -- --project unit
 
       - uses: changesets/action@v1
+        id: changesets
         with:
           version: npm run version-packages
           publish: npm run release
           title: 'chore: version packages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Software bill of materials for each release (CycloneDX), for supply-chain and vendor reviews.
+      - name: Attach SBOM to the GitHub release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISHED: ${{ steps.changesets.outputs.publishedPackages }}
+        run: |
+          npm sbom --sbom-format cyclonedx --omit dev -w @nisakhantalib/my-ui-kit > sbom.cdx.json
+          version=$(node -p "JSON.parse(process.env.PUBLISHED).find(p => p.name === '@nisakhantalib/my-ui-kit')?.version ?? ''")
+          if [ -n "$version" ]; then gh release upload "@nisakhantalib/my-ui-kit@$version" sbom.cdx.json --clobber; fi
