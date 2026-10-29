@@ -8,7 +8,8 @@ Thanks for helping. This guide is also the team's written standard: anything her
 npm install
 npx playwright install chromium   # once, for browser and e2e tests
 npm run storybook                 # component workshop at http://localhost:6006
-npm run dev                       # reference PWA at http://localhost:5173
+npm run dev                       # Orchid Bank at http://localhost:5174
+npm run dev:clinic                # ClinicBook PWA at http://localhost:5173
 ```
 
 Node 22+ for development (the package itself supports Node 20.19+).
@@ -17,10 +18,13 @@ Node 22+ for development (the package itself supports Node 20.19+).
 |---|---|
 | `npm run lint` / `npm run format` | ESLint (typescript-eslint, react-hooks, jsx-a11y) / Prettier |
 | `npm test` | Vitest: jsdom unit tests + real-Chromium browser tests |
-| `npm run test:e2e` | Playwright on desktop and Pixel 7 |
+| `npm run test:e2e` | Playwright on desktop and Pixel 7, both apps |
+| `npm run test:governance` | ESLint plugin, codemods and scanner tests |
+| `npm run governance:report` | Regenerate the adoption report (`docs/governance/`) |
+| `npm run tokens -w @nisakhantalib/my-ui-kit` | Rebuild tokens; fails on contract or contrast problems |
 | `npm run test:storybook -w @nisakhantalib/my-ui-kit` | axe on every story, light and dark (after `npm run build:storybook`) |
 | `npm run size` | Bundle budgets |
-| `npm run ci` | Everything CI runs except e2e |
+| `npm run ci` | Everything CI runs except e2e, Lighthouse and visual regression |
 
 ## How a component gets added
 
