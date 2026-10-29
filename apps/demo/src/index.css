@@ -1,0 +1,18 @@
+@import 'tailwindcss';
+
+/* Map Tailwind's theme to the library's tokens so app and components share one palette. */
+@theme inline {
+  --color-bg: var(--kit-bg);
+  --color-surface: var(--kit-surface);
+  --color-ink: var(--kit-text);
+  --color-muted: var(--kit-text-muted);
+  --color-line: var(--kit-border);
+  --color-brand: var(--kit-primary);
+  --color-danger: var(--kit-danger);
+}
+
+body {
+  background: var(--kit-bg);
+  color: var(--kit-text);
+  font-family: var(--kit-font);
+}

@@ -1,0 +1,43 @@
+name: Release
+
+# Changesets flow:
+# 1. Each PR that changes the library adds a changeset (`npm run changeset`).
+# 2. On main, this job opens/updates a "Version Packages" PR (bumps version + CHANGELOG.md).
+# 3. Merging that PR publishes to npm.
+#
+# Publishing uses npm trusted publishing (OIDC): no NPM_TOKEN secret to store or rotate,
+# and provenance attestations are added automatically. One-time setup on npmjs.com:
+# package → Settings → Trusted publishing → GitHub Actions, repo nisakhantalib/my-ui-kit,
+# workflow release.yml. Needs npm CLI 11.5.1+, which ships with Node 24.
+
+on:
+  push:
+    branches: [main]
+
+concurrency: release-${{ github.ref }}
+
+permissions:
+  contents: write       # commit the version bump
+  pull-requests: write  # open the Version Packages PR
+  id-token: write       # OIDC token for npm trusted publishing
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - run: npm ci
+      - run: npm test -w @nisakhantalib/my-ui-kit -- --project unit
+
+      - uses: changesets/action@v1
+        with:
+          version: npm run version-packages
+          publish: npm run release
+          title: 'chore: version packages'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
