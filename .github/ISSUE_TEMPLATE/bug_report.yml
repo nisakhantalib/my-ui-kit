@@ -1,0 +1,25 @@
+name: Bug report
+description: Something does not work, looks wrong, or is not accessible.
+labels: [bug, triage]
+body:
+  - type: input
+    id: component
+    attributes: { label: Component, placeholder: 'e.g. RadioGroup' }
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+      placeholder: Steps to reproduce. A Storybook story link or a StackBlitz is ideal.
+    validations: { required: true }
+  - type: dropdown
+    id: a11y
+    attributes:
+      label: Is this an accessibility problem?
+      options: ['No', 'Yes – keyboard', 'Yes – screen reader', 'Yes – contrast / zoom / reflow', 'Yes – other']
+    validations: { required: true }
+  - type: input
+    id: env
+    attributes:
+      label: Browser, assistive technology and package version
+      placeholder: 'Chrome 141 + NVDA 2025.3, @nisakhantalib/my-ui-kit 0.2.0'

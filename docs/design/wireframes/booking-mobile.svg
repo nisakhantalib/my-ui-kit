@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 950" width="1060" height="950" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<title id="t">Booking flow wireframe, phone</title>
+<desc id="d">Three phone screens: step 1 details with field errors, step 2 clinic radio cards with date and time, step 3 review with confirm dialog and a success toast. Seven numbered annotations explain the decisions.</desc>
+<rect width="1060" height="950" fill="#fafafa"/>
+<text x="40" y="34" font-size="16" font-weight="700" fill="#2b2f38" text-anchor="start">ClinicBook SG — booking flow, phone (320–414px). Low fidelity.</text>
+<rect x="40" y="70" width="300" height="640" rx="28" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<text x="190.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Step 1 — details (after Continue with errors)</text>
+<line x1="40" y1="122" x2="340" y2="122" stroke="#c5c9d2"/>
+<text x="60" y="103" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">✚ ClinicBook SG</text>
+<rect x="266" y="88" width="56" height="22" rx="11" fill="#f3f4f6" stroke="#f3f4f6" stroke-width="1.5"/>
+<text x="294" y="103" font-size="10" font-weight="600" fill="#2b2f38" text-anchor="middle">Online</text>
+<text x="60" y="160" font-size="17" font-weight="700" fill="#2b2f38" text-anchor="start">Book an appointment</text>
+<line x1="60" y1="206" x2="320" y2="206" stroke="#8a90a0" stroke-width="2"/>
+<text x="103.33333333333334" y="194" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="middle">1. Details</text>
+<rect x="66.0" y="204" width="74.66666666666667" height="4" fill="#2b2f38"/>
+<text x="190.00000000000003" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">2. Clinic</text>
+<text x="276.6666666666667" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">3. Review</text>
+<text x="60" y="240" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Full name *</text>
+<rect x="60" y="248" width="260" height="36" rx="6" fill="#fff" stroke="#d14343" stroke-width="2"/>
+<text x="60" y="299" font-size="11" font-weight="600" fill="#b42318" text-anchor="start">⚠ Enter your full name</text>
+<text x="60" y="318" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">NRIC / FIN *</text>
+<rect x="60" y="328" width="156.0" height="6" rx="4" fill="#dcdfe5"/>
+<rect x="60" y="340" width="260" height="36" rx="6" fill="#fff" stroke="#d14343" stroke-width="2"/>
+<text x="60" y="391" font-size="11" font-weight="600" fill="#b42318" text-anchor="start">⚠ Enter a valid NRIC or FIN</text>
+<text x="60" y="410" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Email *</text>
+<rect x="60" y="418" width="260" height="36" rx="6" fill="#fff" stroke="#d14343" stroke-width="2"/>
+<text x="60" y="469" font-size="11" font-weight="600" fill="#b42318" text-anchor="start">⚠ Enter an email address</text>
+<rect x="60" y="492" width="120" height="40" rx="8" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/><text x="120.0" y="517.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Continue</text>
+<circle cx="330" cy="190" r="11" fill="#b45309"/><text x="330" y="194.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<circle cx="330" cy="266" r="11" fill="#b45309"/><text x="330" y="270.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<circle cx="200" cy="512" r="11" fill="#b45309"/><text x="200" y="516.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<rect x="380" y="70" width="300" height="640" rx="28" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<text x="530.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Step 2 — clinic, date and time</text>
+<line x1="380" y1="122" x2="680" y2="122" stroke="#c5c9d2"/>
+<text x="400" y="103" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">✚ ClinicBook SG</text>
+<rect x="606" y="88" width="56" height="22" rx="11" fill="#f3f4f6" stroke="#f3f4f6" stroke-width="1.5"/>
+<text x="634" y="103" font-size="10" font-weight="600" fill="#2b2f38" text-anchor="middle">Online</text>
+<text x="400" y="160" font-size="17" font-weight="700" fill="#2b2f38" text-anchor="start">Book an appointment</text>
+<line x1="400" y1="206" x2="660" y2="206" stroke="#8a90a0" stroke-width="2"/>
+<text x="443.3333333333333" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">1. Details</text>
+<text x="530.0" y="194" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="middle">2. Clinic</text>
+<rect x="492.6666666666667" y="204" width="74.66666666666667" height="4" fill="#2b2f38"/>
+<text x="616.6666666666667" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">3. Review</text>
+<text x="400" y="240" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Clinic *</text>
+<rect x="400" y="250" width="260" height="50" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<circle cx="420" cy="275" r="8" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<text x="438" y="272" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Tampines Family Clinic</text>
+<text x="438" y="288" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">East region</text>
+<rect x="400" y="308" width="260" height="50" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<circle cx="420" cy="333" r="8" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<text x="438" y="330" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Jurong West Medical</text>
+<text x="438" y="346" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">West region</text>
+<rect x="400" y="366" width="260" height="50" rx="8" fill="#fff" stroke="#2b2f38" stroke-width="3"/>
+<circle cx="420" cy="391" r="8" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<circle cx="420" cy="391" r="4" fill="#2b2f38"/>
+<text x="438" y="388" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Toa Payoh Health Hub</text>
+<text x="438" y="404" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Central region</text>
+<text x="400" y="436" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Date *</text>
+<rect x="400" y="444" width="124" height="36" rx="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="536" y="436" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Time slot *</text>
+<rect x="536" y="444" width="124" height="36" rx="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<path d="M642 458 l5 5 l5 -5" fill="none" stroke="#2b2f38" stroke-width="2"/>
+<rect x="400" y="498" width="90" height="40" rx="8" fill="#fff" stroke="#2b2f38" stroke-width="2"/><text x="445.0" y="523.0" font-size="13" font-weight="600" fill="#2b2f38" text-anchor="middle">Back</text>
+<rect x="502" y="498" width="120" height="40" rx="8" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/><text x="562.0" y="523.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Continue</text>
+<circle cx="670" cy="270" r="11" fill="#b45309"/><text x="670" y="274.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<circle cx="670" cy="464" r="11" fill="#b45309"/><text x="670" y="468.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<rect x="720" y="70" width="300" height="640" rx="28" fill="#fff" stroke="#2b2f38" stroke-width="2"/>
+<text x="870.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Step 3 — review, confirm, then toast</text>
+<line x1="720" y1="122" x2="1020" y2="122" stroke="#c5c9d2"/>
+<text x="740" y="103" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">✚ ClinicBook SG</text>
+<rect x="946" y="88" width="56" height="22" rx="11" fill="#f3f4f6" stroke="#f3f4f6" stroke-width="1.5"/>
+<text x="974" y="103" font-size="10" font-weight="600" fill="#2b2f38" text-anchor="middle">Online</text>
+<text x="740" y="160" font-size="17" font-weight="700" fill="#2b2f38" text-anchor="start">Book an appointment</text>
+<line x1="740" y1="206" x2="1000" y2="206" stroke="#8a90a0" stroke-width="2"/>
+<text x="783.3333333333334" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">1. Details</text>
+<text x="870.0" y="194" font-size="12" font-weight="500" fill="#8a90a0" text-anchor="middle">2. Clinic</text>
+<text x="956.6666666666667" y="194" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="middle">3. Review</text>
+<rect x="919.3333333333334" y="204" width="74.66666666666667" height="4" fill="#2b2f38"/>
+<text x="740" y="242" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Name</text>
+<text x="830" y="242" font-size="12" font-weight="400" fill="#2b2f38" text-anchor="start">Tan Wei Ling</text>
+<text x="740" y="264" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">NRIC / FIN</text>
+<text x="830" y="264" font-size="12" font-weight="400" fill="#2b2f38" text-anchor="start">*****567D</text>
+<text x="740" y="286" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Clinic</text>
+<text x="830" y="286" font-size="12" font-weight="400" fill="#2b2f38" text-anchor="start">Toa Payoh Health Hub</text>
+<text x="740" y="308" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Date</text>
+<text x="830" y="308" font-size="12" font-weight="400" fill="#2b2f38" text-anchor="start">30 Oct 2026</text>
+<text x="740" y="330" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Time</text>
+<text x="830" y="330" font-size="12" font-weight="400" fill="#2b2f38" text-anchor="start">2:00 pm</text>
+<clipPath id="screen3"><rect x="720" y="70" width="300" height="640" rx="28"/></clipPath>
+<rect x="720" y="123" width="300" height="587" fill="#2b2f38" opacity="0.45" clip-path="url(#screen3)"/>
+<rect x="742" y="320" width="256" height="150" rx="12" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<text x="760" y="352" font-size="15" font-weight="700" fill="#2b2f38" text-anchor="start">Confirm this booking?</text>
+<rect x="760" y="366" width="200" height="7" rx="4" fill="#dcdfe5"/>
+<rect x="760" y="380" width="150" height="7" rx="4" fill="#dcdfe5"/>
+<text x="870" y="442" font-size="13" font-weight="600" fill="#2b2f38" text-anchor="middle">Cancel</text>
+<rect x="906" y="420" width="76" height="36" rx="8" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/><text x="944.0" y="443.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Confirm</text>
+<rect x="736" y="626" width="268" height="62" rx="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<rect x="736" y="626" width="6" height="62" rx="3" fill="#2b2f38"/>
+<text x="754" y="650" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Booking confirmed</text>
+<text x="754" y="668" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Toa Payoh · 30 Oct · 2:00 pm</text>
+<rect x="926" y="642" width="52" height="28" rx="6" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="952" y="660" font-size="11" font-weight="600" fill="#2b2f38" text-anchor="middle">Share</text>
+<text x="990" y="650" font-size="16" font-weight="600" fill="#8a90a0" text-anchor="middle">×</text>
+<circle cx="1010" cy="332" r="11" fill="#b45309"/><text x="1010" y="336.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+<circle cx="1010" cy="640" r="11" fill="#b45309"/><text x="1010" y="644.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+<text x="40" y="760" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="start">Annotations</text>
+<circle cx="52" cy="782" r="11" fill="#b45309"/><text x="52" y="786.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<text x="72" y="786" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Errors: each field says how to fix it. Focus moves to the first; a screen reader hears “3 errors on this step. Enter your full name.”</text>
+<circle cx="52" cy="806" r="11" fill="#b45309"/><text x="52" y="810.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<text x="72" y="810" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Hint text sits between label and input, so it is read before typing (aria-describedby).</text>
+<circle cx="52" cy="830" r="11" fill="#b45309"/><text x="52" y="834.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<text x="72" y="834" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">One primary action per step, full 44px height, thumb-reachable.</text>
+<circle cx="52" cy="854" r="11" fill="#b45309"/><text x="52" y="858.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<text x="72" y="858" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Radio cards: whole card is the target; region shown as description, not part of the name.</text>
+<circle cx="52" cy="878" r="11" fill="#b45309"/><text x="52" y="882.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<text x="72" y="882" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Native date and select: the phone’s own pickers. Side by side from 640px, stacked below.</text>
+<circle cx="52" cy="902" r="11" fill="#b45309"/><text x="52" y="906.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+<text x="72" y="906" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Confirm dialog repeats the key facts; focus starts on Confirm; page behind is inert.</text>
+<circle cx="52" cy="926" r="11" fill="#b45309"/><text x="52" y="930.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+<text x="72" y="930" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Toast with Share (native share sheet in the app). Has an action, so it never times out.</text>
+</svg>

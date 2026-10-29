@@ -27,6 +27,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png}'],
+        // Storybook is deployed beside the app under /storybook/; don't answer its URLs with the app shell.
+        navigateFallbackDenylist: [/\/storybook\//],
       },
     }),
   ],

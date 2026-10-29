@@ -1,0 +1,19 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 5
+    groups:
+      # One PR per family instead of one per package.
+      storybook: { patterns: ['storybook', '@storybook/*'] }
+      testing:
+        {
+          patterns:
+            ['vitest', '@vitest/*', '@testing-library/*', 'playwright', '@playwright/*', 'axe-core', '@axe-core/*'],
+        }
+      lint: { patterns: ['eslint', '@eslint/*', 'eslint-*', 'typescript-eslint', 'prettier'] }
+      capacitor: { patterns: ['@capacitor/*'] }
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: monthly }

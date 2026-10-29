@@ -1,6 +1,6 @@
 import { Capacitor } from '@capacitor/core';
 import { Share } from '@capacitor/share';
-import type { Booking } from './App';
+import { formatDate, type Booking } from './App';
 
 /**
  * Platform layer. The same React code runs as a website, an installed PWA, and inside the
@@ -14,7 +14,7 @@ export const platform = Capacitor.getPlatform(); // 'android' | 'ios' | 'web'
 export const isNativeApp = Capacitor.isNativePlatform();
 
 export async function shareBooking(booking: Booking, time: string): Promise<'shared' | 'copied' | 'cancelled'> {
-  const text = `Clinic appointment: ${booking.clinic}, ${booking.date} at ${time}.`;
+  const text = `Clinic appointment: ${booking.clinic}, ${formatDate(booking.date)} at ${time}.`;
   try {
     if ((await Share.canShare()).value) {
       await Share.share({ title: 'My clinic appointment', text, dialogTitle: 'Share appointment' });
