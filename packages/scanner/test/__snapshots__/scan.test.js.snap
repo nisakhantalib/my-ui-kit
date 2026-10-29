@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`toMarkdown > renders the report as tables 1`] = `
+"# @nisakhantalib/my-ui-kit adoption report
+
+Generated 2026-01-01T00:00:00.000Z by \`kit-scan app\`.
+
+## Summary
+
+| Metric | Value |
+| --- | ---: |
+| Files scanned | 4 |
+| Files importing the kit | 2 |
+| Kit components used | 4 |
+| JSX usages of kit components | 7 |
+| Deprecated prop usages | 1 |
+| Raw \`<button>\` / \`<input>\` / \`<select>\` in kit files | 4 |
+
+## Kit version by package
+
+| package.json | Package | Kit version | Dependency type |
+| --- | --- | --- | --- |
+| app/package.json | fixture-app | \`^0.1.0\` | dependencies |
+| app/packages/widgets/package.json | @fixture/widgets | \`>=0.1.0\` | peerDependencies |
+
+## Components
+
+| Component | Usages | Files | Most-used props |
+| --- | ---: | ---: | --- |
+| Button | 3 | 2 | \`{...spread}\` (1), \`variant\` (1) |
+| TextField | 2 | 1 | \`label\` (2), \`hint\` (1), \`required\` (1), \`type\` (1) |
+| Dialog | 1 | 1 | \`open\` (1), \`title\` (1) |
+| ErrorSummary | 1 | 1 | \`autoFocus\` (1), \`errors\` (1) |
+
+## Deprecated prop usages
+
+| Location | Component | Prop | Use instead | Removed in | Codemod |
+| --- | --- | --- | --- | --- | --- |
+| app/src/Form.tsx:7:28 | ErrorSummary | \`autoFocus\` | \`focusOnShow\` | 1.0.0 | \`error-summary-focus-on-show\` |
+
+## Adoption gaps (raw controls in files that import the kit)
+
+| File | Raw elements |
+| --- | --- |
+| app/src/Form.tsx | \`<button>\` × 1, \`<input[type=checkbox]>\` × 1, \`<input[type=text]>\` × 1 |
+| app/src/Namespace.jsx | \`<select>\` × 1 |
+"
+`;

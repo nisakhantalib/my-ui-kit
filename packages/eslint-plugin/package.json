@@ -1,0 +1,49 @@
+{
+  "name": "@nisakhantalib/eslint-plugin-my-ui-kit",
+  "version": "0.1.0",
+  "description": "ESLint rules that keep apps on @nisakhantalib/my-ui-kit tokens, components and current APIs",
+  "license": "MIT",
+  "author": "Khairunnisa Khan Binti Talib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nisakhantalib/my-ui-kit.git",
+    "directory": "packages/eslint-plugin"
+  },
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "design-system",
+    "governance",
+    "my-ui-kit"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./src/index.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@nisakhantalib/my-ui-kit-scanner": "^0.1.0"
+  },
+  "peerDependencies": {
+    "eslint": ">=9.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.5",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
