@@ -13,6 +13,7 @@ export default tseslint.config(
     ignores: [
       '.claude/**',
       '**/dist/**',
+      '**/dist-demo/**',
       '**/coverage/**',
       '**/storybook-static/**',
       '**/android/**',
