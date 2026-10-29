@@ -32,6 +32,9 @@ jobs:
         run: npm run format:check
       - name: Design tokens regenerated, brand contract intact, every contrast pair passes
         run: npm run tokens:check -w @nisakhantalib/my-ui-kit
+      # Apps and Web Components consume the library's published types (dist/), as npm users do.
+      - name: Build library
+        run: npm run build:lib
       - name: Typecheck
         run: npm run typecheck
 
