@@ -83,6 +83,7 @@
     "publint": "^0.3.25",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
+    "remark-gfm": "^4.0.1",
     "size-limit": "^14.3.0",
     "storybook": "^10.6.5",
     "typescript": "^7.0.2",

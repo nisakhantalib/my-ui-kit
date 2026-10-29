@@ -1,0 +1,83 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import report from '../../../docs/governance/adoption-report.json';
+
+<Meta title="Governance/Adoption report" />
+
+# Adoption report
+
+How the kit is actually used, measured from source code by [`kit-scan`](https://github.com/nisakhantalib/my-ui-kit/tree/main/packages/scanner). Each consumer repo runs it in CI. This page shows the report for this repository's two reference apps, regenerated with `npm run governance:report`.
+
+The policy behind it (contribution model, RFCs, semver, deprecation timeline) is in [docs/governance.md](https://github.com/nisakhantalib/my-ui-kit/blob/main/docs/governance.md).
+
+<div
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, margin: '24px 0' }}
+>
+  {[
+    ['Files using the kit', `${report.summary.filesImportingKit} of ${report.summary.filesScanned}`],
+    ['Kit exports in use', report.summary.componentsUsed],
+    ['JSX usages', report.summary.jsxUsages],
+    ['Deprecated usages', report.summary.deprecatedUsages],
+    ['Raw controls next to the kit', report.summary.rawElementsInKitFiles],
+  ].map(([label, value]) => (
+    <div key={label} style={{ padding: 16, borderRadius: 12, background: 'var(--kit-surface)' }}>
+      <div style={{ fontSize: 28, fontWeight: 700 }}>{value}</div>
+      <div style={{ fontSize: 13, color: 'var(--kit-text-muted)' }}>{label}</div>
+    </div>
+  ))}
+</div>
+
+**Deprecated usages** is the gate for removing an API in the next major. **Raw controls** (a `<button>` or `<input>` in a file that already imports the kit) is the clearest sign that a component is missing something a team needed.
+
+## Usage by component
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>Usages</th>
+      <th>Files</th>
+      <th>Most-used props</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(report.components)
+      .sort((a, b) => b[1].usages - a[1].usages)
+      .map(([name, c]) => (
+        <tr key={name}>
+          <td>
+            <code>{name}</code>
+          </td>
+          <td>{c.usages}</td>
+          <td>{c.files}</td>
+          <td>
+            {Object.entries(c.props ?? {})
+              .sort((a, b) => b[1] - a[1])
+              .slice(0, 4)
+              .map(([p, n]) => `${p} (${n})`)
+              .join(', ') || '—'}
+          </td>
+        </tr>
+      ))}
+  </tbody>
+</table>
+
+## Kit version per package
+
+<table>
+  <thead>
+    <tr>
+      <th>Package</th>
+      <th>Depends on</th>
+    </tr>
+  </thead>
+  <tbody>
+    {report.packages.map((p) => (
+      <tr key={p.path}>
+        <td>
+          <code>{p.name}</code> <span style={{ color: 'var(--kit-text-muted)' }}>{p.path}</span>
+        </td>
+        <td>{p.kitVersion}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
