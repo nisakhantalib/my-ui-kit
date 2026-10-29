@@ -1,5 +1,24 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Button, Dialog, Tab, TabList, TabPanel, Tabs, TextField, useAnnounce } from '@nisakhantalib/my-ui-kit';
+import {
+  Accordion,
+  AccordionItem,
+  Alert,
+  Button,
+  Checkbox,
+  Dialog,
+  ErrorSummary,
+  Radio,
+  RadioGroup,
+  Select,
+  Switch,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+  TextField,
+  useAnnounce,
+  useToast,
+} from '@nisakhantalib/my-ui-kit';
 
 /**
  * Living style guide: every component in every state, rendered from the real library.
@@ -32,8 +51,10 @@ const TOKENS = [
   { token: '--kit-text-muted', label: 'Muted text', min: 4.5 },
   { token: '--kit-primary', label: 'Primary', min: 4.5 },
   { token: '--kit-danger', label: 'Danger', min: 4.5 },
+  { token: '--kit-success', label: 'Success', min: 4.5 },
+  { token: '--kit-warning', label: 'Warning', min: 4.5 },
   { token: '--kit-border', label: 'Input border', min: 3 },
-  { token: '--kit-focus', label: 'Focus ring', min: 1 },
+  { token: '--kit-focus', label: 'Focus ring', min: 3 },
 ];
 
 function TokenTable({ theme }: { theme: string }) {
@@ -115,7 +136,12 @@ export function Showcase({ theme }: { theme: string }) {
   const [dialog, setDialog] = useState<null | 'dialog' | 'alertdialog'>(null);
   const [saving, setSaving] = useState(false);
   const [email, setEmail] = useState('weiling@');
+  const [reminders, setReminders] = useState({ sms: true, email: false });
+  const [showSummary, setShowSummary] = useState(false);
   const announce = useAnnounce();
+  const toast = useToast();
+  const allReminders = reminders.sms && reminders.email;
+  const someReminders = reminders.sms !== reminders.email;
 
   return (
     <div className="grid gap-6">
@@ -176,6 +202,51 @@ export function Showcase({ theme }: { theme: string }) {
         </div>
       </Section>
 
+      <Section id="sc-choice" title="Select, Checkbox, RadioGroup, Switch">
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="grid content-start gap-5">
+            <Select label="Time slot" hint="Native select: the phone's own picker opens" placeholder="Choose a time" defaultValue="">
+              <option value="0900">9:00 am</option>
+              <option value="1400">2:00 pm</option>
+            </Select>
+            <Select label="Language" error="Choose a language" defaultValue="" placeholder="Choose">
+              <option value="en">English</option>
+              <option value="zh">中文</option>
+              <option value="ms">Bahasa Melayu</option>
+              <option value="ta">தமிழ்</option>
+            </Select>
+            <div className="grid gap-3">
+              <Checkbox
+                label="All reminders"
+                checked={allReminders}
+                indeterminate={someReminders}
+                onChange={(e) => setReminders({ sms: e.target.checked, email: e.target.checked })}
+              />
+              <div className="grid gap-3 pl-9">
+                <Checkbox label="SMS" hint="The day before" checked={reminders.sms} onChange={(e) => setReminders((r) => ({ ...r, sms: e.target.checked }))} />
+                <Checkbox label="Email" checked={reminders.email} onChange={(e) => setReminders((r) => ({ ...r, email: e.target.checked }))} />
+              </div>
+              <Checkbox label="I agree to the terms" error="You must agree to continue" />
+            </div>
+          </div>
+          <div className="grid content-start gap-6">
+            <RadioGroup legend="Clinic" name="sc-clinic" variant="cards" defaultValue="tampines" hint="Cards: the whole box is the target">
+              <Radio value="tampines" label="Tampines Family Clinic" description="East region" />
+              <Radio value="jurong" label="Jurong West Medical Centre" description="West region" />
+              <Radio value="toapayoh" label="Toa Payoh Health Hub" description="Fully booked" disabled />
+            </RadioGroup>
+            <RadioGroup legend="Contact me by" name="sc-contact" error="Choose how we contact you">
+              <Radio value="sms" label="SMS" />
+              <Radio value="call" label="Phone call" />
+            </RadioGroup>
+            <div className="grid gap-4">
+              <Switch label="Appointment reminders" description="Applies straight away" defaultChecked />
+              <Switch label="Share data with my GP" />
+            </div>
+          </div>
+        </div>
+      </Section>
+
       <Section id="sc-tabs" title="Tabs">
         <Tabs defaultValue="details">
           <TabList label="Example steps">
@@ -218,6 +289,63 @@ export function Showcase({ theme }: { theme: string }) {
             </Button>
           </div>
         </Dialog>
+      </Section>
+
+      <Section id="sc-accordion" title="Accordion">
+        <Accordion type="single" defaultValue={['bring']} headingLevel={3}>
+          <AccordionItem value="bring" title="What should I bring?">
+            Headers are real headings, so screen-reader users can jump between them. ↑ ↓ Home End move focus.
+          </AccordionItem>
+          <AccordionItem value="cancel" title="Can I cancel?">
+            type=&quot;single&quot; closes the others; type=&quot;multiple&quot; lets several stay open.
+          </AccordionItem>
+          <AccordionItem value="pay" title="How do I pay?" disabled>
+            Not available.
+          </AccordionItem>
+        </Accordion>
+      </Section>
+
+      <Section id="sc-feedback" title="Alert, ErrorSummary, Toast">
+        <div className="grid gap-4">
+          <Alert tone="info" title="Clinic hours changed">
+            Open 8 am to 9 pm from 1 November.
+          </Alert>
+          <Alert tone="success" title="Booking confirmed" />
+          <Alert tone="warning" title="Bring your NRIC">
+            Screen readers hear &quot;Warning:&quot; first, so the tone is not colour alone.
+          </Alert>
+          <Alert tone="danger" title="Payment failed">
+            Your card was not charged.
+          </Alert>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="secondary" onClick={() => setShowSummary((v) => !v)}>
+              {showSummary ? 'Hide error summary' : 'Show error summary'}
+            </Button>
+            <Button variant="secondary" onClick={() => toast({ title: 'Saved', description: 'Your changes are saved.', tone: 'success' })}>
+              Show toast
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => toast({ title: 'Booking cancelled', action: { label: 'Undo', onClick: () => announce('Booking restored') } })}
+            >
+              Toast with action
+            </Button>
+          </div>
+          {showSummary && (
+            <ErrorSummary
+              errors={[
+                { id: 'sc-err-name', message: 'Enter your full name' },
+                { id: 'sc-err-nric', message: 'Enter a valid NRIC or FIN' },
+              ]}
+            />
+          )}
+          {showSummary && (
+            <div className="grid gap-4 md:grid-cols-2">
+              <TextField id="sc-err-name" label="Full name" error="Enter your full name" />
+              <TextField id="sc-err-nric" label="NRIC / FIN" error="Enter a valid NRIC or FIN" />
+            </div>
+          )}
+        </div>
       </Section>
 
       <Section id="sc-tokens" title="Design tokens">

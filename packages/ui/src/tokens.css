@@ -1,0 +1,65 @@
+/* Generated from tokens/tokens.json by scripts/build-tokens.mjs. Do not edit. */
+
+@layer kit.tokens {
+  :root {
+    --kit-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-radius: 10px;
+    --kit-space-1: 4px;
+    --kit-space-2: 8px;
+    --kit-space-3: 12px;
+    --kit-space-4: 16px;
+    --kit-space-6: 24px;
+    --kit-bg: #ffffff;
+    --kit-surface: #f6f7f9;
+    --kit-text: #14171f;
+    --kit-text-muted: #4a5163;
+    --kit-border: #8a90a0;
+    --kit-primary: #0b5cad;
+    --kit-primary-hover: #084a8c;
+    --kit-on-primary: #ffffff;
+    --kit-danger: #b42318;
+    --kit-on-danger: #ffffff;
+    --kit-success: #1a7f37;
+    --kit-warning: #9a6700;
+    --kit-focus: #b45309;
+    --kit-backdrop: rgb(10 14 22 / 0.55);
+    color-scheme: light; /* native controls (date picker, scrollbars) follow the theme */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --kit-bg: #12151c;
+      --kit-surface: #1b1f29;
+      --kit-text: #eef0f4;
+      --kit-text-muted: #b3b9c6;
+      --kit-border: #6b7385;
+      --kit-primary: #7ab8f5;
+      --kit-primary-hover: #a3cdf8;
+      --kit-on-primary: #0a1626;
+      --kit-danger: #ff8a7a;
+      --kit-on-danger: #2a0905;
+      --kit-success: #6fdd8b;
+      --kit-warning: #f0b72f;
+      --kit-focus: #f5a524;
+      color-scheme: dark;
+    }
+  }
+
+  /* An explicit choice from a theme toggle wins over the system setting. */
+  :root[data-theme='dark'] {
+    --kit-bg: #12151c;
+    --kit-surface: #1b1f29;
+    --kit-text: #eef0f4;
+    --kit-text-muted: #b3b9c6;
+    --kit-border: #6b7385;
+    --kit-primary: #7ab8f5;
+    --kit-primary-hover: #a3cdf8;
+    --kit-on-primary: #0a1626;
+    --kit-danger: #ff8a7a;
+    --kit-on-danger: #2a0905;
+    --kit-success: #6fdd8b;
+    --kit-warning: #f0b72f;
+    --kit-focus: #f5a524;
+    color-scheme: dark;
+  }
+}

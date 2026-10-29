@@ -1,23 +1,32 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Showcase } from './Showcase';
 import {
+  Accordion,
+  AccordionItem,
+  Alert,
   AnalyticsProvider,
   AnnouncerProvider,
   Button,
   Dialog,
+  Radio,
+  RadioGroup,
+  Select,
   SkipLink,
   Tab,
   TabList,
   TabPanel,
   Tabs,
   TextField,
+  ToastProvider,
   adobeDataLayerAdapter,
   adobeWebSdkAdapter,
   consoleAdapter,
   useAnnounce,
   usePageView,
+  useToast,
   useTrack,
 } from '@nisakhantalib/my-ui-kit';
+import { shareBooking } from './native';
 
 // ---------------------------------------------------------------------------
 // Data + validation
@@ -30,11 +39,19 @@ const CLINICS = [
 ] as const;
 
 type Step = 'details' | 'clinic' | 'review';
-type Form = { name: string; nric: string; email: string; date: string; clinic: string };
-type Errors = Partial<Record<keyof Form, string>>;
-type Booking = { id: string; name: string; nricMasked: string; clinic: string; date: string };
+const SLOTS = [
+  ['0900', '9:00 am'],
+  ['0930', '9:30 am'],
+  ['1400', '2:00 pm'],
+  ['1630', '4:30 pm'],
+] as const;
 
-const EMPTY: Form = { name: '', nric: '', email: '', date: '', clinic: '' };
+type Form = { name: string; nric: string; email: string; date: string; time: string; clinic: string };
+type Errors = Partial<Record<keyof Form, string>>;
+export type Booking = { id: string; name: string; nricMasked: string; clinic: string; date: string; time?: string };
+
+const EMPTY: Form = { name: '', nric: '', email: '', date: '', time: '', clinic: '' };
+const slotLabel = (time: string | undefined) => SLOTS.find(([v]) => v === time)?.[1] ?? '';
 
 /**
  * Singapore NRIC/FIN check (S, T, F, G prefixes).
@@ -68,6 +85,7 @@ function validate(step: Step, f: Form): Errors {
     const today = new Date().toISOString().slice(0, 10);
     if (!f.date) e.date = 'Choose an appointment date';
     else if (f.date < today) e.date = 'The date must be today or later';
+    if (!f.time) e.time = 'Choose a time slot';
   }
   return e;
 }
@@ -149,6 +167,7 @@ function BookingFlow() {
   const confirmRef = useRef<HTMLButtonElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const announce = useAnnounce();
+  const toast = useToast();
   const track = useTrack();
   const pageView = usePageView();
   const online = useOnline();
@@ -193,16 +212,32 @@ function BookingFlow() {
     setSaving(true);
     await new Promise((r) => setTimeout(r, 600)); // stand-in for an API call
     const clinic = CLINICS.find((c) => c.id === form.clinic)!;
-    setBookings((b) => [
-      { id: crypto.randomUUID(), name: form.name.trim(), nricMasked: maskNric(form.nric), clinic: clinic.name, date: form.date },
-      ...b,
-    ]);
+    const booking: Booking = {
+      id: crypto.randomUUID(),
+      name: form.name.trim(),
+      nricMasked: maskNric(form.nric),
+      clinic: clinic.name,
+      date: form.date,
+      time: form.time,
+    };
+    setBookings((b) => [booking, ...b]);
     track('form_submit', { component: 'BookingForm', clinic: clinic.id, offline: !online });
     setSaving(false);
     setConfirmOpen(false);
     setForm(EMPTY);
     setStep('details');
-    announce(`Booking confirmed at ${clinic.name} on ${form.date}.`);
+    // The toast announces itself through its own live region, so no separate announce() here.
+    toast({
+      title: 'Booking confirmed',
+      description: `${clinic.name} on ${form.date} at ${slotLabel(form.time)}.`,
+      tone: 'success',
+      action: {
+        label: 'Share',
+        onClick: async () => {
+          if ((await shareBooking(booking, slotLabel(booking.time))) === 'copied') toast({ title: 'Booking details copied' });
+        },
+      },
+    });
   }
 
   const clinicName = useMemo(() => CLINICS.find((c) => c.id === form.clinic)?.name ?? '—', [form.clinic]);
@@ -215,6 +250,12 @@ function BookingFlow() {
         <h2 id="book-heading" className="mb-4 text-xl font-bold">
           Book an appointment
         </h2>
+
+        {!online && (
+          <Alert tone="warning" title="You are offline" className="mb-4">
+            You can still book. It is saved on this device.
+          </Alert>
+        )}
 
         <form ref={formRef} onSubmit={onSubmit} noValidate>
           <Tabs value={step} onValueChange={(v) => setStep(v as Step)} activation="manual">
@@ -239,23 +280,21 @@ function BookingFlow() {
 
             <TabPanel value="clinic">
               <div className="grid gap-4">
-                <fieldset aria-describedby={errors.clinic ? 'clinic-error' : undefined} className="grid gap-2">
-                  <legend className="mb-1 font-semibold">
-                    Clinic <span aria-hidden="true" className="text-danger">*</span>
-                  </legend>
+                <RadioGroup legend="Clinic" name="clinic" variant="cards" required value={form.clinic} error={errors.clinic} onValueChange={set('clinic')}>
                   {CLINICS.map((c) => (
-                    <label key={c.id} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border-2 border-line/50 px-3 has-checked:border-brand">
-                      <input type="radio" name="clinic" value={c.id} checked={form.clinic === c.id} onChange={() => set('clinic')(c.id)} className="size-5 accent-brand" />
-                      <span>
-                        {c.name} <span className="text-muted">({c.area})</span>
-                      </span>
-                    </label>
+                    <Radio key={c.id} value={c.id} label={c.name} description={`${c.area} region`} />
                   ))}
-                  <p id="clinic-error" aria-live="polite" className="min-h-5 text-sm font-semibold text-danger">
-                    {errors.clinic}
-                  </p>
-                </fieldset>
-                <TextField label="Appointment date" name="date" type="date" required value={form.date} error={errors.date} onChange={(e) => set('date')(e.target.value)} />
+                </RadioGroup>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <TextField label="Appointment date" name="date" type="date" required value={form.date} error={errors.date} onChange={(e) => set('date')(e.target.value)} />
+                  <Select label="Time slot" name="time" placeholder="Choose a time" required value={form.time} error={errors.time} onChange={(e) => set('time')(e.target.value)}>
+                    {SLOTS.map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
                 <div className="flex gap-3">
                   <Button variant="secondary" onClick={() => setStep('details')}>
                     Back
@@ -279,6 +318,8 @@ function BookingFlow() {
                 <dd>{clinicName}</dd>
                 <dt className="font-semibold">Date</dt>
                 <dd>{form.date || '—'}</dd>
+                <dt className="font-semibold">Time</dt>
+                <dd>{slotLabel(form.time) || '—'}</dd>
               </dl>
               <div className="flex gap-3">
                 <Button variant="secondary" onClick={() => setStep('clinic')}>
@@ -303,19 +344,33 @@ function BookingFlow() {
               <li key={b.id} className="rounded-lg bg-surface p-3">
                 <p className="font-semibold">{b.clinic}</p>
                 <p className="text-sm text-muted">
-                  {b.date} · {b.name} · {b.nricMasked}
+                  {b.date}
+                  {b.time && ` ${slotLabel(b.time)}`} · {b.name} · {b.nricMasked}
                 </p>
               </li>
             ))}
           </ul>
         )}
+
+        <h2 className="mt-8 mb-2 text-lg font-bold">Questions</h2>
+        <Accordion type="single" headingLevel={3}>
+          <AccordionItem value="bring" title="What should I bring?">
+            Your NRIC or FIN card, and any referral letter or medication you are taking.
+          </AccordionItem>
+          <AccordionItem value="cancel" title="Can I change or cancel?">
+            Yes, up to 24 hours before your appointment, from this page.
+          </AccordionItem>
+          <AccordionItem value="offline" title="Does it work without internet?">
+            Yes. Install the app and bookings are saved on your device.
+          </AccordionItem>
+        </Accordion>
       </aside>
 
       <Dialog
         open={confirmOpen}
         onClose={() => !saving && setConfirmOpen(false)}
         title="Confirm this booking?"
-        description={`${clinicName} on ${form.date}. You can cancel up to 24 hours before.`}
+        description={`${clinicName} on ${form.date} at ${slotLabel(form.time)}. You can cancel up to 24 hours before.`}
         initialFocusRef={confirmRef}
       >
         <div className="flex justify-end gap-3">
@@ -379,6 +434,7 @@ export function App() {
   return (
     <AnalyticsProvider adapters={adapters} enabled={consent}>
       <AnnouncerProvider>
+        <ToastProvider>
         <SkipLink />
         <header className="border-b border-line/40">
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4">
@@ -448,6 +504,7 @@ export function App() {
             </div>
           </div>
         )}
+        </ToastProvider>
       </AnnouncerProvider>
     </AnalyticsProvider>
   );

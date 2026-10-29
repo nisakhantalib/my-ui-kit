@@ -63,16 +63,41 @@ test('keyboard user: skip link first, then errors move focus and are announced',
   await expect(page.getByLabel('NRIC / FIN')).toHaveAttribute('aria-invalid', 'true');
 });
 
-test('completes a booking and stores only a masked NRIC', async ({ page }) => {
+async function fillDetails(page: Page) {
   await page.getByLabel('Full name').fill('Tan Wei Ling');
   await page.getByLabel('NRIC / FIN').fill('S1234567D');
   await page.getByLabel('Email').fill('weiling@example.com');
   await page.getByRole('button', { name: 'Continue' }).first().click();
-
   await expect(page.getByRole('tab', { selected: true })).toHaveText('2. Clinic & date');
-  await page.getByLabel('Toa Payoh Health Hub').check();
+}
+
+async function bookToaPayoh(page: Page) {
+  await fillDetails(page);
+  await page.getByRole('radio', { name: 'Toa Payoh Health Hub' }).check();
   await page.getByLabel('Appointment date').fill(tomorrow);
+  await page.getByRole('combobox', { name: /Time slot/ }).selectOption({ label: '2:00 pm' });
   await page.getByRole('tabpanel').getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: 'Confirm booking' }).click();
+  await page.getByRole('dialog', { name: 'Confirm this booking?' }).getByRole('button', { name: 'Confirm' }).click();
+  await expect(page.getByRole('region', { name: 'Notifications' })).toContainText('Booking confirmed');
+}
+
+test('step 2 errors: clinic group and time slot are flagged, focus goes to the first radio', async ({ page }) => {
+  await fillDetails(page);
+  await page.getByRole('tabpanel').getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByRole('alert')).toHaveText('3 errors on this step. Choose a clinic.');
+  await expect(page.getByRole('radio', { name: 'Tampines Family Clinic' })).toBeFocused();
+  await expect(page.getByRole('radiogroup', { name: 'Clinic' })).toHaveAttribute('aria-invalid', 'true');
+  await expect(page.getByRole('combobox', { name: /Time slot/ })).toHaveAccessibleDescription('Choose a time slot');
+});
+
+test('completes a booking and stores only a masked NRIC', async ({ page }) => {
+  await fillDetails(page);
+  await page.getByRole('radio', { name: 'Toa Payoh Health Hub' }).check();
+  await page.getByLabel('Appointment date').fill(tomorrow);
+  await page.getByRole('combobox', { name: /Time slot/ }).selectOption({ label: '2:00 pm' });
+  await page.getByRole('tabpanel').getByRole('button', { name: 'Continue' }).click();
+  await expect(page.getByRole('tabpanel')).toContainText('2:00 pm');
 
   await page.getByRole('button', { name: 'Confirm booking' }).click();
   const dialog = page.getByRole('dialog', { name: 'Confirm this booking?' });
@@ -82,12 +107,39 @@ test('completes a booking and stores only a masked NRIC', async ({ page }) => {
 
   await page.keyboard.press('Enter');
   await expect(dialog).toBeHidden();
+  // Toast is visible, and its text is announced through a polite live region.
+  await expect(page.getByRole('region', { name: 'Notifications' })).toContainText('Booking confirmed');
   await expect(page.getByRole('status').filter({ hasText: 'Booking confirmed' })).toHaveText(
-    `Booking confirmed at Toa Payoh Health Hub on ${tomorrow}.`,
+    `Booking confirmed. Toa Payoh Health Hub on ${tomorrow} at 2:00 pm.`,
   );
+  await expectNoAxeViolations(page);
   const mine = page.getByRole('complementary');
   await expect(mine).toContainText('*****567D');
   await expect(mine).not.toContainText('S1234567D');
+});
+
+test('Share falls back to the clipboard where there is no share sheet (web)', async ({ page, context, browserName }) => {
+  test.skip(browserName !== 'chromium', 'clipboard permissions are Chromium-only in Playwright');
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.evaluate(() => Object.defineProperty(navigator, 'share', { value: undefined })); // desktop Chrome on Linux has none anyway
+  await bookToaPayoh(page);
+  await page.getByRole('region', { name: 'Notifications' }).getByRole('button', { name: 'Share' }).click();
+  await expect(page.getByRole('region', { name: 'Notifications' })).toContainText('Booking details copied');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    `Clinic appointment: Toa Payoh Health Hub, ${tomorrow} at 2:00 pm.`,
+  );
+});
+
+test('FAQ accordion: headings, expand state and arrow keys', async ({ page }) => {
+  const faq = page.getByRole('complementary');
+  const bring = faq.getByRole('button', { name: 'What should I bring?' });
+  await expect(faq.getByRole('heading', { level: 3, name: 'What should I bring?' })).toBeVisible();
+  await expect(bring).toHaveAttribute('aria-expanded', 'false');
+  await bring.click();
+  await expect(bring).toHaveAttribute('aria-expanded', 'true');
+  await expect(faq.getByRole('region', { name: 'What should I bring?' })).toContainText('NRIC');
+  await page.keyboard.press('ArrowDown');
+  await expect(faq.getByRole('button', { name: 'Can I change or cancel?' })).toBeFocused();
 });
 
 test('PWA: reloads and works offline once the service worker is installed', async ({ page, context }) => {
@@ -97,5 +149,6 @@ test('PWA: reloads and works offline once the service worker is installed', asyn
   await page.reload();
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Clinic appointments');
   await expect(page.getByText('Offline — bookings saved on this device')).toBeVisible();
+  await expect(page.getByText('You are offline')).toBeVisible();
   await context.setOffline(false);
 });

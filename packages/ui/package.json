@@ -15,7 +15,10 @@
     "accessibility",
     "a11y",
     "design-system",
-    "typescript"
+    "typescript",
+    "design-tokens",
+    "wcag",
+    "adobe-analytics"
   ],
   "type": "module",
   "sideEffects": [
@@ -25,27 +28,31 @@
   "exports": {
     ".": {
       "types": "./dist/types/index.d.ts",
-      "default": "./dist/my-ui-kit.js"
+      "default": "./dist/index.js"
     },
     "./styles.css": "./dist/my-ui-kit.css",
+    "./tokens.json": "./tokens/tokens.json",
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "tokens"
   ],
   "publishConfig": {
     "access": "public",
     "provenance": true
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json && node scripts/strip-css-from-types.mjs",
+    "tokens": "node scripts/build-tokens.mjs",
+    "tokens:check": "node scripts/build-tokens.mjs --check",
+    "build": "npm run tokens:check && vite build && tsc -p tsconfig.build.json && node scripts/strip-css-from-types.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
-    "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run typecheck && npm run test && npm run build && npm run check:package",
     "test:unit": "vitest run --project unit",
     "test:browser": "vitest run --project browser",
-    "check:package": "publint --strict && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./package.json"
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build && npm run check:package",
+    "check:package": "publint --strict && attw --pack . --profile esm-only --exclude-entrypoints ./styles.css ./tokens.json ./package.json"
   },
   "peerDependencies": {
     "react": ">=18",
