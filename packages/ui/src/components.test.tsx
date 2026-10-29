@@ -39,7 +39,11 @@ describe('Button', () => {
 
   it('stays focusable but blocks clicks while loading', async () => {
     const onClick = vi.fn();
-    render(<Button loading onClick={onClick}>Save</Button>);
+    render(
+      <Button loading onClick={onClick}>
+        Save
+      </Button>,
+    );
     const btn = screen.getByRole('button', { name: 'Save' });
     expect(btn).toHaveAttribute('aria-busy', 'true');
     expect(btn).toHaveAttribute('aria-disabled', 'true');
@@ -151,8 +155,12 @@ function DialogHarness() {
         role="alertdialog"
         initialFocusRef={confirmRef}
       >
-        <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-        <Button ref={confirmRef} variant="danger" onClick={() => setOpen(false)}>Delete</Button>
+        <Button variant="ghost" onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+        <Button ref={confirmRef} variant="danger" onClick={() => setOpen(false)}>
+          Delete
+        </Button>
       </Dialog>
     </>
   );

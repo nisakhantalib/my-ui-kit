@@ -42,14 +42,18 @@ export function useControllableState<T>(
   return [current, set];
 }
 
+function setRef<T>(ref: Ref<T> | undefined, node: T | null) {
+  if (typeof ref === 'function') ref(node);
+  else if (ref) (ref as { current: T | null }).current = node;
+}
+
 /** Forward a ref while also keeping a local one, e.g. to set `indeterminate` on a checkbox. */
 export function useMergedRef<T>(forwarded: Ref<T> | undefined): [RefCallback<T>, { current: T | null }] {
   const local = useRef<T | null>(null);
   const merged = useCallback<RefCallback<T>>(
     (node) => {
       local.current = node;
-      if (typeof forwarded === 'function') forwarded(node);
-      else if (forwarded) forwarded.current = node;
+      setRef(forwarded, node);
     },
     [forwarded],
   );

@@ -29,7 +29,14 @@ export default defineConfig({
     sourcemap: true,
   },
   test: {
-    coverage: { reporter: ['text', 'lcov'] },
+    coverage: {
+      provider: 'v8',
+      reporter: ['text-summary', 'lcov'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.tsx', 'src/**/*.stories.tsx', 'src/test-setup.ts', 'src/css.d.ts'],
+      // Floors, just under today's numbers: coverage can go up freely but not quietly erode.
+      thresholds: { statements: 90, branches: 80, functions: 80, lines: 92 },
+    },
     projects: [
       {
         // Fast logic + ARIA tests in jsdom.

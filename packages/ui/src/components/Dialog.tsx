@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useId,
-  useRef,
-  type KeyboardEvent,
-  type ReactNode,
-  type RefObject,
-} from 'react';
+import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
 import { getFocusable } from '../utils.js';
 
@@ -28,15 +21,7 @@ export interface DialogProps {
  * - Escape and backdrop click close it
  * - page scroll is locked while open
  */
-export function Dialog({
-  open,
-  onClose,
-  title,
-  description,
-  children,
-  initialFocusRef,
-  role = 'dialog',
-}: DialogProps) {
+export function Dialog({ open, onClose, title, description, children, initialFocusRef, role = 'dialog' }: DialogProps) {
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descId = useId();
@@ -92,7 +77,11 @@ export function Dialog({
   }
 
   return createPortal(
+    // Backdrop click is a mouse convenience; Escape is the keyboard equivalent (handled on the panel).
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div className="kit-dialog__backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+      {/* role is dialog | alertdialog (a prop), which the lint rule can't see statically. */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
         ref={panelRef}
         role={role}

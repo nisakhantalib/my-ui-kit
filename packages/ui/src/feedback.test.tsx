@@ -140,7 +140,7 @@ describe('ErrorSummary', () => {
   });
 
   it('has no axe violations', async () => {
-    const { container } = render(<ErrorSummary errors={errors} autoFocus={false} />);
+    const { container } = render(<ErrorSummary errors={errors} focusOnShow={false} />);
     await expectNoA11yViolations(container);
   });
 });
@@ -201,12 +201,16 @@ describe('Toast', () => {
     act(() => vi.advanceTimersByTime(60_000));
     await user.click(screen.getByRole('button', { name: 'Undo' }));
     expect(undo).toHaveBeenCalledTimes(1);
-    expect(within(screen.getByRole('region', { name: 'Notifications' })).queryByText('Booking cancelled')).not.toBeInTheDocument();
+    expect(
+      within(screen.getByRole('region', { name: 'Notifications' })).queryByText('Booking cancelled'),
+    ).not.toBeInTheDocument();
   });
 
   it('throws a helpful error outside the provider', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {});
-    expect(() => render(<ToastHarness options={{ title: 'x' }} />)).toThrow('useToast must be used inside <ToastProvider>.');
+    expect(() => render(<ToastHarness options={{ title: 'x' }} />)).toThrow(
+      'useToast must be used inside <ToastProvider>.',
+    );
     vi.restoreAllMocks();
   });
 

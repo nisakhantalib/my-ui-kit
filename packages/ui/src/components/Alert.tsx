@@ -56,7 +56,7 @@ export interface ErrorSummaryProps {
   /** `id` is the id of the field with the problem; the link moves focus there. */
   errors: { id: string; message: string }[];
   /** Move focus to the summary when errors appear (the GOV.UK / SGDS pattern). Default true. */
-  autoFocus?: boolean;
+  focusOnShow?: boolean;
   className?: string;
 }
 
@@ -65,7 +65,7 @@ export interface ErrorSummaryProps {
  * summary, so screen-reader users hear the title and count straight away (WCAG 3.3.1, 2.4.3).
  */
 export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(function ErrorSummary(
-  { title = 'There is a problem', errors, autoFocus = true, className },
+  { title = 'There is a problem', errors, focusOnShow = true, className },
   ref,
 ) {
   const [mergedRef, local] = useMergedRef(ref);
@@ -75,10 +75,10 @@ export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(functi
 
   useEffect(() => {
     // Refocus only when the set of errors changes, not on every re-render.
-    if (!autoFocus || count === 0 || lastFocused.current === signature) return;
+    if (!focusOnShow || count === 0 || lastFocused.current === signature) return;
     lastFocused.current = signature;
     local.current?.focus();
-  }, [autoFocus, count, signature, local]);
+  }, [focusOnShow, count, signature, local]);
 
   if (count === 0) return null;
 
@@ -97,9 +97,7 @@ export const ErrorSummary = forwardRef<HTMLDivElement, ErrorSummaryProps>(functi
     <div ref={mergedRef} tabIndex={-1} className={cx('kit-error-summary', className)}>
       <h2 className="kit-error-summary__title">
         {title}
-        <VisuallyHidden>
-          {`, ${count} ${count === 1 ? 'error' : 'errors'}`}
-        </VisuallyHidden>
+        <VisuallyHidden>{`, ${count} ${count === 1 ? 'error' : 'errors'}`}</VisuallyHidden>
       </h2>
       <ul className="kit-error-summary__list">
         {errors.map((err) => (

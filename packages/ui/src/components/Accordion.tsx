@@ -56,7 +56,9 @@ export function Accordion({
 
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
     const triggers = Array.from(
-      rootRef.current!.querySelectorAll<HTMLButtonElement>(':scope > .kit-accordion__item > * > .kit-accordion__trigger:not([disabled])'),
+      rootRef.current!.querySelectorAll<HTMLButtonElement>(
+        ':scope > .kit-accordion__item > * > .kit-accordion__trigger:not([disabled])',
+      ),
     );
     const current = triggers.indexOf(document.activeElement as HTMLButtonElement);
     if (current === -1) return;
@@ -72,6 +74,8 @@ export function Accordion({
 
   return (
     <AccordionContext.Provider value={{ open, toggle, headingLevel }}>
+      {/* Delegated arrow-key handling; the header buttons inside are the interactive elements. */}
+      {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div ref={rootRef} className={cx('kit-accordion', className)} onKeyDown={onKeyDown}>
         {children}
       </div>

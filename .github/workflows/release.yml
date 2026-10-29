@@ -17,9 +17,9 @@ on:
 concurrency: release-${{ github.ref }}
 
 permissions:
-  contents: write       # commit the version bump
-  pull-requests: write  # open the Version Packages PR
-  id-token: write       # OIDC token for npm trusted publishing
+  contents: write # commit the version bump
+  pull-requests: write # open the Version Packages PR
+  id-token: write # OIDC token for npm trusted publishing
 
 jobs:
   release:

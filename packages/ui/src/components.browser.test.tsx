@@ -33,7 +33,10 @@ async function axeViolations(root: Element = document.body) {
   const { violations } = await axe.run(root, {
     runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'] },
   });
-  return violations.map((v) => `${v.id} (${v.nodes.length}): ${v.nodes.map((n) => n.target.join(" ") + " " + n.any.map((a) => a.message).join(";")).join(" | ")}`);
+  return violations.map(
+    (v) =>
+      `${v.id} (${v.nodes.length}): ${v.nodes.map((n) => n.target.join(' ') + ' ' + n.any.map((a) => a.message).join(';')).join(' | ')}`,
+  );
 }
 
 /** WCAG 2.x contrast ratio between two computed rgb() colours. */
@@ -80,15 +83,19 @@ function Showcase() {
       <Switch label="Email reminders" description="Sent the day before" />
       <Switch label="SMS reminders" defaultChecked />
       <Accordion defaultValue={['a']} headingLevel={2}>
-        <AccordionItem value="a" title="What should I bring?">Your NRIC.</AccordionItem>
-        <AccordionItem value="b" title="Can I cancel?">Yes.</AccordionItem>
+        <AccordionItem value="a" title="What should I bring?">
+          Your NRIC.
+        </AccordionItem>
+        <AccordionItem value="b" title="Can I cancel?">
+          Yes.
+        </AccordionItem>
       </Accordion>
       {(['info', 'success', 'warning', 'danger'] as const).map((tone) => (
         <Alert key={tone} tone={tone} title={`Tone ${tone}`}>
           Body text in the {tone} tone.
         </Alert>
       ))}
-      <ErrorSummary errors={[{ id: 'x', message: 'Enter your full name' }]} autoFocus={false} />
+      <ErrorSummary errors={[{ id: 'x', message: 'Enter your full name' }]} focusOnShow={false} />
       <Button onClick={() => setOpen(true)}>Open dialog</Button>
       <Dialog open={open} onClose={() => setOpen(false)} title="Confirm" description="Are you sure?">
         <Button onClick={() => setOpen(false)}>Close</Button>

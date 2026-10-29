@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useId,
-  useRef,
-  type KeyboardEvent,
-  type ReactNode,
-} from 'react';
+import { createContext, useContext, useId, useRef, type KeyboardEvent, type ReactNode } from 'react';
 import { cx, useControllableState } from '../utils.js';
 import { useTrack } from '../analytics/analytics.js';
 
@@ -50,7 +43,14 @@ export interface TabsProps {
   className?: string;
 }
 
-export function Tabs({ defaultValue = '', value, onValueChange, activation = 'automatic', children, className }: TabsProps) {
+export function Tabs({
+  defaultValue = '',
+  value,
+  onValueChange,
+  activation = 'automatic',
+  children,
+  className,
+}: TabsProps) {
   const [selected, setSelected] = useControllableState(value, defaultValue, onValueChange);
   const baseId = useId();
   const track = useTrack();
@@ -73,9 +73,7 @@ export function TabList({ label, children }: { label: string; children: ReactNod
   const listRef = useRef<HTMLDivElement>(null);
 
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-    const tabs = Array.from(
-      listRef.current!.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])'),
-    );
+    const tabs = Array.from(listRef.current!.querySelectorAll<HTMLButtonElement>('[role="tab"]:not([disabled])'));
     const current = tabs.indexOf(document.activeElement as HTMLButtonElement);
     if (current === -1) return;
 
@@ -93,6 +91,8 @@ export function TabList({ label, children }: { label: string; children: ReactNod
   }
 
   return (
+    // APG: the tablist itself is not focusable; its tabs are (roving tabindex).
+    // eslint-disable-next-line jsx-a11y/interactive-supports-focus
     <div ref={listRef} role="tablist" aria-label={label} className="kit-tabs__list" onKeyDown={onKeyDown}>
       {children}
     </div>

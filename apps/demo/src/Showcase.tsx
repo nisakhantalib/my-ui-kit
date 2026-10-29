@@ -69,10 +69,12 @@ function TokenTable({ theme }: { theme: string }) {
       const probe = probeRef.current;
       if (!probe) return;
       const bg = resolveColor('--kit-bg', probe);
-      setRows(TOKENS.map((t) => {
-        const color = resolveColor(t.token, probe);
-        return { ...t, color, ratio: contrastRatio(color, bg) };
-      }));
+      setRows(
+        TOKENS.map((t) => {
+          const color = resolveColor(t.token, probe);
+          return { ...t, color, ratio: contrastRatio(color, bg) };
+        }),
+      );
       probe.style.color = '';
     });
     return () => cancelAnimationFrame(frame);
@@ -82,12 +84,20 @@ function TokenTable({ theme }: { theme: string }) {
     <>
       <span ref={probeRef} hidden />
       <table className="w-full border-collapse text-left">
-        <caption className="mb-2 text-left text-sm text-muted">Contrast against the page background, measured from the live CSS</caption>
+        <caption className="mb-2 text-left text-sm text-muted">
+          Contrast against the page background, measured from the live CSS
+        </caption>
         <thead>
           <tr className="border-b border-line/50">
-            <th scope="col" className="py-2">Token</th>
-            <th scope="col" className="py-2">Colour</th>
-            <th scope="col" className="py-2 text-right">Contrast</th>
+            <th scope="col" className="py-2">
+              Token
+            </th>
+            <th scope="col" className="py-2">
+              Colour
+            </th>
+            <th scope="col" className="py-2 text-right">
+              Contrast
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -98,12 +108,21 @@ function TokenTable({ theme }: { theme: string }) {
               </td>
               <td className="py-2">
                 <span className="inline-flex items-center gap-2">
-                  <span aria-hidden="true" className="inline-block size-5 rounded border border-line/50" style={{ background: r.color }} />
+                  <span
+                    aria-hidden="true"
+                    className="inline-block size-5 rounded border border-line/50"
+                    style={{ background: r.color }}
+                  />
                   <code className="text-sm">{r.color}</code>
                 </span>
               </td>
               <td className="py-2 text-right font-semibold tabular-nums">
-                {r.ratio.toFixed(1)}:1 {r.min > 1 && <span className="text-sm font-normal text-muted">{r.ratio >= r.min ? `meets ${r.min}:1` : `below ${r.min}:1`}</span>}
+                {r.ratio.toFixed(1)}:1{' '}
+                {r.min > 1 && (
+                  <span className="text-sm font-normal text-muted">
+                    {r.ratio >= r.min ? `meets ${r.min}:1` : `below ${r.min}:1`}
+                  </span>
+                )}
               </td>
             </tr>
           ))}
@@ -195,7 +214,9 @@ export function Showcase({ theme }: { theme: string }) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? undefined : 'Enter an email address like name@example.com'}
+            error={
+              /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? undefined : 'Enter an email address like name@example.com'
+            }
             required
           />
           <TextField label="Reference number" value="BK-20261029" readOnly hint="Read only" />
@@ -205,7 +226,12 @@ export function Showcase({ theme }: { theme: string }) {
       <Section id="sc-choice" title="Select, Checkbox, RadioGroup, Switch">
         <div className="grid gap-8 md:grid-cols-2">
           <div className="grid content-start gap-5">
-            <Select label="Time slot" hint="Native select: the phone's own picker opens" placeholder="Choose a time" defaultValue="">
+            <Select
+              label="Time slot"
+              hint="Native select: the phone's own picker opens"
+              placeholder="Choose a time"
+              defaultValue=""
+            >
               <option value="0900">9:00 am</option>
               <option value="1400">2:00 pm</option>
             </Select>
@@ -223,14 +249,29 @@ export function Showcase({ theme }: { theme: string }) {
                 onChange={(e) => setReminders({ sms: e.target.checked, email: e.target.checked })}
               />
               <div className="grid gap-3 pl-9">
-                <Checkbox label="SMS" hint="The day before" checked={reminders.sms} onChange={(e) => setReminders((r) => ({ ...r, sms: e.target.checked }))} />
-                <Checkbox label="Email" checked={reminders.email} onChange={(e) => setReminders((r) => ({ ...r, email: e.target.checked }))} />
+                <Checkbox
+                  label="SMS"
+                  hint="The day before"
+                  checked={reminders.sms}
+                  onChange={(e) => setReminders((r) => ({ ...r, sms: e.target.checked }))}
+                />
+                <Checkbox
+                  label="Email"
+                  checked={reminders.email}
+                  onChange={(e) => setReminders((r) => ({ ...r, email: e.target.checked }))}
+                />
               </div>
               <Checkbox label="I agree to the terms" error="You must agree to continue" />
             </div>
           </div>
           <div className="grid content-start gap-6">
-            <RadioGroup legend="Clinic" name="sc-clinic" variant="cards" defaultValue="tampines" hint="Cards: the whole box is the target">
+            <RadioGroup
+              legend="Clinic"
+              name="sc-clinic"
+              variant="cards"
+              defaultValue="tampines"
+              hint="Cards: the whole box is the target"
+            >
               <Radio value="tampines" label="Tampines Family Clinic" description="East region" />
               <Radio value="jurong" label="Jurong West Medical Centre" description="West region" />
               <Radio value="toapayoh" label="Toa Payoh Health Hub" description="Fully booked" disabled />
@@ -257,7 +298,9 @@ export function Showcase({ theme }: { theme: string }) {
               Payment
             </Tab>
           </TabList>
-          <TabPanel value="details">Use ← → to move between tabs, Home and End to jump. Disabled tabs are skipped.</TabPanel>
+          <TabPanel value="details">
+            Use ← → to move between tabs, Home and End to jump. Disabled tabs are skipped.
+          </TabPanel>
           <TabPanel value="clinic">Panels are linked to their tab with aria-controls and aria-labelledby.</TabPanel>
           <TabPanel value="review">Only the selected tab is in the Tab order (roving tabindex).</TabPanel>
           <TabPanel value="paid">Not available.</TabPanel>
@@ -278,7 +321,9 @@ export function Showcase({ theme }: { theme: string }) {
           onClose={() => setDialog(null)}
           role={dialog ?? 'dialog'}
           title={dialog === 'alertdialog' ? 'Delete this booking?' : 'Booking details'}
-          description={dialog === 'alertdialog' ? 'This cannot be undone.' : 'Toa Payoh Health Hub, 30 Oct 2026, 9:30 am.'}
+          description={
+            dialog === 'alertdialog' ? 'This cannot be undone.' : 'Toa Payoh Health Hub, 30 Oct 2026, 9:30 am.'
+          }
         >
           <div className="flex justify-end gap-3">
             <Button variant="ghost" onClick={() => setDialog(null)}>
@@ -321,12 +366,20 @@ export function Showcase({ theme }: { theme: string }) {
             <Button variant="secondary" onClick={() => setShowSummary((v) => !v)}>
               {showSummary ? 'Hide error summary' : 'Show error summary'}
             </Button>
-            <Button variant="secondary" onClick={() => toast({ title: 'Saved', description: 'Your changes are saved.', tone: 'success' })}>
+            <Button
+              variant="secondary"
+              onClick={() => toast({ title: 'Saved', description: 'Your changes are saved.', tone: 'success' })}
+            >
               Show toast
             </Button>
             <Button
               variant="secondary"
-              onClick={() => toast({ title: 'Booking cancelled', action: { label: 'Undo', onClick: () => announce('Booking restored') } })}
+              onClick={() =>
+                toast({
+                  title: 'Booking cancelled',
+                  action: { label: 'Undo', onClick: () => announce('Booking restored') },
+                })
+              }
             >
               Toast with action
             </Button>

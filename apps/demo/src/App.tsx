@@ -234,7 +234,8 @@ function BookingFlow() {
       action: {
         label: 'Share',
         onClick: async () => {
-          if ((await shareBooking(booking, slotLabel(booking.time))) === 'copied') toast({ title: 'Booking details copied' });
+          if ((await shareBooking(booking, slotLabel(booking.time))) === 'copied')
+            toast({ title: 'Booking details copied' });
         },
       },
     });
@@ -267,9 +268,35 @@ function BookingFlow() {
 
             <TabPanel value="details">
               <div className="grid gap-4">
-                <TextField label="Full name" name="name" autoComplete="name" required value={form.name} error={errors.name} onChange={(e) => set('name')(e.target.value)} />
-                <TextField label="NRIC / FIN" name="nric" hint="Demo only. Try S1234567D. We store the last 4 characters." required value={form.nric} error={errors.nric} onChange={(e) => set('nric')(e.target.value)} />
-                <TextField label="Email" name="email" type="email" autoComplete="email" inputMode="email" required value={form.email} error={errors.email} onChange={(e) => set('email')(e.target.value)} />
+                <TextField
+                  label="Full name"
+                  name="name"
+                  autoComplete="name"
+                  required
+                  value={form.name}
+                  error={errors.name}
+                  onChange={(e) => set('name')(e.target.value)}
+                />
+                <TextField
+                  label="NRIC / FIN"
+                  name="nric"
+                  hint="Demo only. Try S1234567D. We store the last 4 characters."
+                  required
+                  value={form.nric}
+                  error={errors.nric}
+                  onChange={(e) => set('nric')(e.target.value)}
+                />
+                <TextField
+                  label="Email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  inputMode="email"
+                  required
+                  value={form.email}
+                  error={errors.email}
+                  onChange={(e) => set('email')(e.target.value)}
+                />
                 <div>
                   <Button onClick={() => next('details', 'clinic')} trackId="step-details-next">
                     Continue
@@ -280,14 +307,38 @@ function BookingFlow() {
 
             <TabPanel value="clinic">
               <div className="grid gap-4">
-                <RadioGroup legend="Clinic" name="clinic" variant="cards" required value={form.clinic} error={errors.clinic} onValueChange={set('clinic')}>
+                <RadioGroup
+                  legend="Clinic"
+                  name="clinic"
+                  variant="cards"
+                  required
+                  value={form.clinic}
+                  error={errors.clinic}
+                  onValueChange={set('clinic')}
+                >
                   {CLINICS.map((c) => (
                     <Radio key={c.id} value={c.id} label={c.name} description={`${c.area} region`} />
                   ))}
                 </RadioGroup>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <TextField label="Appointment date" name="date" type="date" required value={form.date} error={errors.date} onChange={(e) => set('date')(e.target.value)} />
-                  <Select label="Time slot" name="time" placeholder="Choose a time" required value={form.time} error={errors.time} onChange={(e) => set('time')(e.target.value)}>
+                  <TextField
+                    label="Appointment date"
+                    name="date"
+                    type="date"
+                    required
+                    value={form.date}
+                    error={errors.date}
+                    onChange={(e) => set('date')(e.target.value)}
+                  />
+                  <Select
+                    label="Time slot"
+                    name="time"
+                    placeholder="Choose a time"
+                    required
+                    value={form.time}
+                    error={errors.time}
+                    onChange={(e) => set('time')(e.target.value)}
+                  >
                     {SLOTS.map(([value, label]) => (
                       <option key={value} value={value}>
                         {label}
@@ -396,7 +447,11 @@ export function App() {
   const bannerRef = useRef<HTMLDivElement>(null);
   // Each adapter is a no-op until its Adobe library is loaded on the page (via Adobe Tags).
   const adapters = useMemo(
-    () => [consoleAdapter, adobeDataLayerAdapter(), adobeWebSdkAdapter({ variableMap: { component: 'eVar5', id: 'prop3' } })],
+    () => [
+      consoleAdapter,
+      adobeDataLayerAdapter(),
+      adobeWebSdkAdapter({ variableMap: { component: 'eVar5', id: 'prop3' } }),
+    ],
     [],
   );
   const online = useOnline();
@@ -435,75 +490,88 @@ export function App() {
     <AnalyticsProvider adapters={adapters} enabled={consent}>
       <AnnouncerProvider>
         <ToastProvider>
-        <SkipLink />
-        <header className="border-b border-line/40">
-          <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4">
-            <p className="text-lg font-bold">
-              <span aria-hidden="true">✚ </span>ClinicBook SG
-            </p>
-            <nav aria-label="Main" className="flex gap-1">
-              {(
-                [
-                  ['book', '#/', 'Book'],
-                  ['components', '#/components', 'Components'],
-                ] as const
-              ).map(([key, href, label]) => (
-                <a
-                  key={key}
-                  href={href}
-                  aria-current={route === key ? 'page' : undefined}
-                  className="rounded-lg px-3 py-2 font-semibold text-muted hover:text-ink aria-[current=page]:bg-surface aria-[current=page]:text-brand"
+          <SkipLink />
+          <header className="border-b border-line/40">
+            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4">
+              <p className="text-lg font-bold">
+                <span aria-hidden="true">✚ </span>ClinicBook SG
+              </p>
+              <nav aria-label="Main" className="flex gap-1">
+                {(
+                  [
+                    ['book', '#/', 'Book'],
+                    ['components', '#/components', 'Components'],
+                  ] as const
+                ).map(([key, href, label]) => (
+                  <a
+                    key={key}
+                    href={href}
+                    aria-current={route === key ? 'page' : undefined}
+                    className="rounded-lg px-3 py-2 font-semibold text-muted hover:text-ink aria-[current=page]:bg-surface aria-[current=page]:text-brand"
+                  >
+                    {label}
+                  </a>
+                ))}
+              </nav>
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  aria-pressed={theme === 'dark'}
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 >
-                  {label}
-                </a>
-              ))}
-            </nav>
-            <div className="flex items-center gap-3">
-              <Button variant="ghost" size="sm" aria-pressed={theme === 'dark'} onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-                Dark mode
-              </Button>
-              <p role="status" className={`rounded-full px-3 py-1 text-sm font-semibold ${online ? 'bg-surface' : 'bg-danger text-white'}`}>
-                {online ? 'Online' : 'Offline — bookings saved on this device'}
-              </p>
-            </div>
-          </div>
-        </header>
-
-        <main id="main" tabIndex={-1} className={`mx-auto max-w-5xl px-4 py-8 ${asked ? '' : 'pb-48'}`}>
-          {route === 'components' ? (
-            <>
-              <h1 className="mb-2 text-3xl font-bold">Components</h1>
-              <p className="mb-8 max-w-prose text-muted">
-                Every <strong>My UI Kit</strong> component in every state, rendered from the published library.
-                Switch dark mode to see the same components re-themed by design tokens.
-              </p>
-              <Showcase theme={theme} />
-            </>
-          ) : (
-            <>
-              <h1 className="mb-2 text-3xl font-bold">Clinic appointments</h1>
-              <p className="mb-8 max-w-prose text-muted">
-                A reference app for <strong>My UI Kit</strong>: every control works with keyboard only and with
-                screen readers (NVDA, VoiceOver, TalkBack), and the app installs and runs offline as a PWA.
-              </p>
-              <BookingFlow />
-            </>
-          )}
-        </main>
-
-        {!asked && (
-          <div ref={bannerRef} role="region" aria-label="Cookie consent" className="fixed inset-x-0 bottom-0 z-50 border-t border-line/40 bg-bg p-4 shadow-2xl">
-            <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
-              <p>We use analytics to improve this service. Allow anonymous usage tracking?</p>
-              <div className="flex gap-2">
-                <Button variant="secondary" onClick={() => giveConsent(false)}>
-                  No thanks
+                  Dark mode
                 </Button>
-                <Button onClick={() => giveConsent(true)}>Allow</Button>
+                <p
+                  role="status"
+                  className={`rounded-full px-3 py-1 text-sm font-semibold ${online ? 'bg-surface' : 'bg-danger text-white'}`}
+                >
+                  {online ? 'Online' : 'Offline — bookings saved on this device'}
+                </p>
               </div>
             </div>
-          </div>
-        )}
+          </header>
+
+          <main id="main" tabIndex={-1} className={`mx-auto max-w-5xl px-4 py-8 ${asked ? '' : 'pb-48'}`}>
+            {route === 'components' ? (
+              <>
+                <h1 className="mb-2 text-3xl font-bold">Components</h1>
+                <p className="mb-8 max-w-prose text-muted">
+                  Every <strong>My UI Kit</strong> component in every state, rendered from the published library. Switch
+                  dark mode to see the same components re-themed by design tokens.
+                </p>
+                <Showcase theme={theme} />
+              </>
+            ) : (
+              <>
+                <h1 className="mb-2 text-3xl font-bold">Clinic appointments</h1>
+                <p className="mb-8 max-w-prose text-muted">
+                  A reference app for <strong>My UI Kit</strong>: every control works with keyboard only and with screen
+                  readers (NVDA, VoiceOver, TalkBack), and the app installs and runs offline as a PWA.
+                </p>
+                <BookingFlow />
+              </>
+            )}
+          </main>
+
+          {!asked && (
+            <div
+              ref={bannerRef}
+              role="region"
+              aria-label="Cookie consent"
+              className="fixed inset-x-0 bottom-0 z-50 border-t border-line/40 bg-bg p-4 shadow-2xl"
+            >
+              <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3">
+                <p>We use analytics to improve this service. Allow anonymous usage tracking?</p>
+                <div className="flex gap-2">
+                  <Button variant="secondary" onClick={() => giveConsent(false)}>
+                    No thanks
+                  </Button>
+                  <Button onClick={() => giveConsent(true)}>Allow</Button>
+                </div>
+              </div>
+            </div>
+          )}
         </ToastProvider>
       </AnnouncerProvider>
     </AnalyticsProvider>

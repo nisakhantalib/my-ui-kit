@@ -12,7 +12,18 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading = false, trackId, className, children, onClick, type = 'button', disabled, ...rest },
+  {
+    variant = 'primary',
+    size = 'md',
+    loading = false,
+    trackId,
+    className,
+    children,
+    onClick,
+    type = 'button',
+    disabled,
+    ...rest
+  },
   ref,
 ) {
   const track = useTrack();

@@ -10,11 +10,17 @@
   "scripts": {
     "dev": "npm run build -w @nisakhantalib/my-ui-kit && npm run dev -w demo",
     "build": "npm run build -w @nisakhantalib/my-ui-kit && npm run build -w demo",
+    "lint": "eslint . --max-warnings 0",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "npm run typecheck -w @nisakhantalib/my-ui-kit && npm run typecheck -w demo",
     "test": "npm run test -w @nisakhantalib/my-ui-kit",
-    "typecheck": "npm run typecheck -w @nisakhantalib/my-ui-kit",
-    "ci": "npm run typecheck && npm run test && npm run build && npm run check:package",
     "test:e2e": "npm run test:e2e -w demo",
     "check:package": "npm run check:package -w @nisakhantalib/my-ui-kit",
+    "size": "npm run size -w @nisakhantalib/my-ui-kit",
+    "storybook": "npm run storybook -w @nisakhantalib/my-ui-kit",
+    "build:storybook": "npm run build:storybook -w @nisakhantalib/my-ui-kit",
+    "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build && npm run check:package && npm run size",
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "npm run build -w @nisakhantalib/my-ui-kit && changeset publish"
@@ -23,6 +29,15 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@changesets/cli": "^3.0.3"
+    "@changesets/cli": "^3.0.3",
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.1"
   }
 }

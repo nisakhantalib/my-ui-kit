@@ -30,7 +30,8 @@ export function RequiredMark({ show }: { show: boolean | undefined }) {
   // Screen readers get "required" from the control itself, so the asterisk is visual only.
   return (
     <span className="kit-field__required" aria-hidden="true">
-      {' '}*
+      {' '}
+      *
     </span>
   );
 }

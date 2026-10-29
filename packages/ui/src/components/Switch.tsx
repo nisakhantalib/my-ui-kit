@@ -2,7 +2,10 @@ import { forwardRef, useId, type ButtonHTMLAttributes, type ReactNode } from 're
 import { cx, useControllableState } from '../utils.js';
 import { useTrack } from '../analytics/analytics.js';
 
-export interface SwitchProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'onChange' | 'value' | 'defaultValue'> {
+export interface SwitchProps extends Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'onChange' | 'value' | 'defaultValue'
+> {
   label: ReactNode;
   /** Extra text read after the label, e.g. what turning it on does. */
   description?: ReactNode;
@@ -18,7 +21,19 @@ export interface SwitchProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
  * with aria-checked. Use a Checkbox instead when the choice is only applied on form submit.
  */
 export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(function Switch(
-  { label, description, checked, defaultChecked = false, onCheckedChange, trackId, id, className, disabled, onClick, ...rest },
+  {
+    label,
+    description,
+    checked,
+    defaultChecked = false,
+    onCheckedChange,
+    trackId,
+    id,
+    className,
+    disabled,
+    onClick,
+    ...rest
+  },
   ref,
 ) {
   const [on, setOn] = useControllableState(checked, defaultChecked, onCheckedChange);
