@@ -3,6 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+const tomorrowDay = Number(tomorrow.slice(8)); // day of month, as the UI shows it
 
 async function expectNoAxeViolations(page: Page) {
   const { violations } = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
@@ -116,8 +117,11 @@ test('completes a booking and stores only a masked NRIC', async ({ page }) => {
   await expect(dialog).toBeHidden();
   // Toast is visible, and its text is announced through a polite live region.
   await expect(page.getByRole('region', { name: 'Notifications' })).toContainText('Booking confirmed');
+  // Dates are shown for people ("Fri, 30 Oct 2026"), not as ISO strings.
   await expect(page.getByRole('status').filter({ hasText: 'Booking confirmed' })).toHaveText(
-    `Booking confirmed. Toa Payoh Health Hub on ${tomorrow} at 2:00 pm.`,
+    new RegExp(
+      String.raw`^Booking confirmed\. Toa Payoh Health Hub on \w{3}, ${tomorrowDay} \w{3} \d{4} at 2:00 pm\.$`,
+    ),
   );
   await expectNoAxeViolations(page);
   const mine = page.getByRole('complementary');
@@ -136,8 +140,8 @@ test('Share falls back to the clipboard where there is no share sheet (web)', as
   await bookToaPayoh(page);
   await page.getByRole('region', { name: 'Notifications' }).getByRole('button', { name: 'Share' }).click();
   await expect(page.getByRole('region', { name: 'Notifications' })).toContainText('Booking details copied');
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
-    `Clinic appointment: Toa Payoh Health Hub, ${tomorrow} at 2:00 pm.`,
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(
+    new RegExp(String.raw`^Clinic appointment: Toa Payoh Health Hub, \w{3}, ${tomorrowDay} \w{3} \d{4} at 2:00 pm\.$`),
   );
 });
 

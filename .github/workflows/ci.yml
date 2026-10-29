@@ -14,6 +14,7 @@ concurrency:
 
 jobs:
   verify:
+    name: Lint, test, build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,12 +25,19 @@ jobs:
       - run: npm ci
       - run: npx playwright install --with-deps chromium
 
+      # Standards that are enforced, not just written down (see CONTRIBUTING.md).
+      - name: Lint (typescript-eslint, react-hooks, jsx-a11y)
+        run: npm run lint
+      - name: Formatting (Prettier)
+        run: npm run format:check
+      - name: Design tokens are regenerated
+        run: npm run tokens:check -w @nisakhantalib/my-ui-kit
       - name: Typecheck
         run: npm run typecheck
 
       # unit = jsdom (logic + ARIA); browser = real Chromium via Vitest Browser Mode
-      # (real focus, real keyboard, axe colour-contrast).
-      - name: Component tests (unit + real browser)
+      # (real focus, real keyboard, axe colour-contrast). Coverage has minimum floors.
+      - name: Component tests (unit + real browser) with coverage
         run: npm test -- --coverage
 
       - name: Build library and PWA
@@ -38,19 +46,65 @@ jobs:
       # publint + Are the Types Wrong: the package resolves for ESM and bundler consumers.
       - name: Check npm package
         run: npm run check:package
+      # Bundle budgets: fails if tree-shaking breaks or a component grows unexpectedly.
+      - name: Bundle size
+        run: npm run size
+
+      - name: Build Storybook
+        run: npm run build:storybook
+      - name: Accessibility audit of every story (light + dark)
+        run: npm run test:storybook -w @nisakhantalib/my-ui-kit
 
       # Playwright on desktop and a phone viewport: booking flow, axe WCAG 2.2 A/AA in light
-      # and dark, 320px reflow, keyboard path, offline PWA.
+      # and dark, 320px reflow, keyboard path, share fallback, offline PWA.
       - name: End-to-end tests
         run: npm run test:e2e
 
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage
+          path: packages/ui/coverage/lcov.info
+          if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: playwright-report
           path: apps/demo/playwright-report
+      - uses: actions/upload-artifact@v4
+        with:
+          name: storybook
+          path: packages/ui/storybook-static
 
-  deploy-demo:
+  android:
+    name: Android app (Capacitor)
+    runs-on: ubuntu-latest # has the Android SDK preinstalled
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21 # Capacitor 8 needs JDK 21
+          cache: gradle
+      - run: npm ci
+      - run: npm run build
+      - name: Copy web build into the native project
+        run: npx cap sync android
+        working-directory: apps/demo
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+        working-directory: apps/demo/android
+      - uses: actions/upload-artifact@v4
+        with:
+          name: clinicbook-debug-apk
+          path: apps/demo/android/app/build/outputs/apk/debug/*.apk
+
+  deploy-pages:
+    name: Deploy demo + Storybook to GitHub Pages
     needs: verify
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -70,6 +124,9 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /my-ui-kit/
+      - run: npm run build:storybook
+      # One site: the PWA at /my-ui-kit/ and Storybook at /my-ui-kit/storybook/.
+      - run: cp -r packages/ui/storybook-static apps/demo/dist/storybook
       - uses: actions/upload-pages-artifact@v3
         with:
           path: apps/demo/dist

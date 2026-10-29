@@ -1,0 +1,4 @@
+# Library changes need a review from the design-system maintainers.
+/packages/ui/        @nisakhantalib
+/packages/ui/tokens/ @nisakhantalib
+/docs/adr/           @nisakhantalib

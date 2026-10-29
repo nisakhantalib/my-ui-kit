@@ -53,6 +53,17 @@ export type Booking = { id: string; name: string; nricMasked: string; clinic: st
 const EMPTY: Form = { name: '', nric: '', email: '', date: '', time: '', clinic: '' };
 const slotLabel = (time: string | undefined) => SLOTS.find(([v]) => v === time)?.[1] ?? '';
 
+/** '2026-10-30' -> 'Fri, 30 Oct 2026'. Parsed as local midnight so the day never shifts by time zone. */
+export const formatDate = (iso: string) =>
+  iso
+    ? new Date(`${iso}T00:00`).toLocaleDateString('en-SG', {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+    : '';
+
 /**
  * Singapore NRIC/FIN check (S, T, F, G prefixes).
  * Weights 2,7,6,5,4,3,2; T/G add 4; remainder mod 11 picks the check letter.
@@ -229,7 +240,7 @@ function BookingFlow() {
     // The toast announces itself through its own live region, so no separate announce() here.
     toast({
       title: 'Booking confirmed',
-      description: `${clinic.name} on ${form.date} at ${slotLabel(form.time)}.`,
+      description: `${clinic.name} on ${formatDate(form.date)} at ${slotLabel(form.time)}.`,
       tone: 'success',
       action: {
         label: 'Share',
@@ -368,7 +379,7 @@ function BookingFlow() {
                 <dt className="font-semibold">Clinic</dt>
                 <dd>{clinicName}</dd>
                 <dt className="font-semibold">Date</dt>
-                <dd>{form.date || '—'}</dd>
+                <dd>{formatDate(form.date) || '—'}</dd>
                 <dt className="font-semibold">Time</dt>
                 <dd>{slotLabel(form.time) || '—'}</dd>
               </dl>
@@ -395,7 +406,7 @@ function BookingFlow() {
               <li key={b.id} className="rounded-lg bg-surface p-3">
                 <p className="font-semibold">{b.clinic}</p>
                 <p className="text-sm text-muted">
-                  {b.date}
+                  {formatDate(b.date)}
                   {b.time && ` ${slotLabel(b.time)}`} · {b.name} · {b.nricMasked}
                 </p>
               </li>
@@ -421,7 +432,7 @@ function BookingFlow() {
         open={confirmOpen}
         onClose={() => !saving && setConfirmOpen(false)}
         title="Confirm this booking?"
-        description={`${clinicName} on ${form.date} at ${slotLabel(form.time)}. You can cancel up to 24 hours before.`}
+        description={`${clinicName} on ${formatDate(form.date)} at ${slotLabel(form.time)}. You can cancel up to 24 hours before.`}
         initialFocusRef={confirmRef}
       >
         <div className="flex justify-end gap-3">
@@ -441,6 +452,16 @@ function BookingFlow() {
 // Shell
 // ---------------------------------------------------------------------------
 
+const ADOBE_VARIABLES = {
+  component: 'eVar5',
+  id: 'prop3',
+  step: 'eVar10',
+  clinic: 'eVar11',
+  tab: 'prop5',
+  item: 'prop6',
+};
+const ADOBE_EVENTS = { form_submit: 'event12', form_error: 'event13' };
+
 export function App() {
   const [consent, setConsent] = useState(() => localStorage.getItem('analytics-consent') === 'yes');
   const [asked, setAsked] = useState(() => localStorage.getItem('analytics-consent') !== null);
@@ -450,7 +471,8 @@ export function App() {
     () => [
       consoleAdapter,
       adobeDataLayerAdapter(),
-      adobeWebSdkAdapter({ variableMap: { component: 'eVar5', id: 'prop3' } }),
+      // Mapping agreed in the tracking plan: docs/specs/booking-flow.md#analytics-tracking-plan
+      adobeWebSdkAdapter({ variableMap: ADOBE_VARIABLES, eventMap: ADOBE_EVENTS }),
     ],
     [],
   );

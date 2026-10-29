@@ -1,0 +1,31 @@
+name: Component request
+description: Propose a new component or a change to one. Becomes a spec in docs/specs/ once agreed.
+labels: [component-request, needs-spec]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Start from the **user need**, not the UI. We will check whether an existing component or a
+        native HTML element already covers it, then write a spec with you (see docs/specs/component-spec-template.md).
+  - type: textarea
+    id: need
+    attributes:
+      label: User need
+      description: Who is trying to do what, and why? Which service or journey?
+      placeholder: As a patient booking on my phone, I need to pick a time slot so that…
+    validations: { required: true }
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Research, analytics, support tickets, or how many teams need it.
+  - type: textarea
+    id: design
+    attributes:
+      label: Design
+      description: Figma link, wireframe or screenshot. Include error, empty, loading and disabled states if known.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What have you tried?
+      description: Existing components, native elements or other design systems (SGDS, GOV.UK) you looked at.
