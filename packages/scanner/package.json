@@ -1,0 +1,51 @@
+{
+  "name": "@nisakhantalib/my-ui-kit-scanner",
+  "version": "0.1.0",
+  "description": "Adoption scanner for @nisakhantalib/my-ui-kit: component usage, props, deprecated props and adoption gaps",
+  "license": "MIT",
+  "author": "Khairunnisa Khan Binti Talib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nisakhantalib/my-ui-kit.git",
+    "directory": "packages/scanner"
+  },
+  "keywords": [
+    "design-system",
+    "governance",
+    "adoption",
+    "metrics",
+    "my-ui-kit"
+  ],
+  "type": "module",
+  "exports": {
+    ".": "./src/scan.js",
+    "./deprecations.json": "./deprecations.json",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "kit-scan": "./bin/kit-scan.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "deprecations.json"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "scripts": {
+    "test": "vitest run",
+    "report": "node bin/kit-scan.js ../../apps --root ../.. --json ../../docs/governance/adoption-report.json --markdown ../../docs/governance/adoption-report.md && prettier --write ../../docs/governance/adoption-report.json"
+  },
+  "peerDependencies": {
+    "typescript": ">=5.0.0 <7"
+  },
+  "devDependencies": {
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "engines": {
+    "node": ">=20.19"
+  }
+}
