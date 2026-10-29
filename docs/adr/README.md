@@ -12,5 +12,6 @@ Short records of decisions that shape the library, so new contributors (and futu
 | [0006](0006-testing-strategy.md) | Four test layers, with real-browser tests for anything visual | Accepted |
 | [0007](0007-vendor-neutral-analytics.md) | Vendor-neutral analytics with Adobe adapters | Accepted |
 | [0008](0008-hybrid-native-with-capacitor.md) | Native apps through a Capacitor shell, not a React Native rewrite | Accepted |
+| [0009](0009-governance-tooling.md) | Govern the library with a lint plugin, codemods and an adoption scanner | Accepted |
 
 New ADR: copy [the template](template.md), take the next number, open a PR. Superseded ADRs stay, marked *Superseded by 00xx*.
