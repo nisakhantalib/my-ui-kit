@@ -25,7 +25,7 @@ Consumer teams style their apps in different ways: Tailwind, SCSS, CSS Modules, 
 
 One stylesheet (`@nisakhantalib/my-ui-kit/styles.css`):
 
-- **Tokens** are CSS custom properties (`--kit-primary`), generated from `tokens.json` (ADR 0005). Themes switch by `prefers-color-scheme` or `<html data-theme="dark">`.
+- **Tokens** are CSS custom properties (`--kit-primary`), generated from `tokens/` (ADR 0005). Themes switch by `prefers-color-scheme` or `<html data-theme="dark">`.
 - **Cascade layers:** everything is in `@layer kit.tokens, kit.components`. Un-layered app CSS always wins, whatever its specificity.
 - With **Tailwind**, the app declares `@layer theme, base, kit, components, utilities;` before both imports, so Tailwind's preflight can't reset kit buttons but utilities (`className="mt-4"`) still override them. The demo app does exactly this, and maps Tailwind's theme onto the kit tokens (`--color-brand: var(--kit-primary)`) so app and components share one palette.
 

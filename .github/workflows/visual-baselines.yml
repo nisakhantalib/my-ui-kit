@@ -1,0 +1,32 @@
+name: Update visual baselines
+
+# Run by hand after an intended visual change. Regenerates the screenshots in the same pinned
+# container the CI comparison uses, and commits them to the branch it was run on.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.64.1-noble
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @nisakhantalib/my-ui-kit
+      - run: npx playwright test --grep "visual regression" --update-snapshots
+        working-directory: apps/bank
+      - name: Commit baselines
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/bank/e2e/__screenshots__
+          git diff --cached --quiet || git commit -m "test(visual): update baselines"
+          git push
