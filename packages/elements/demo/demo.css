@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  background: var(--kit-bg);
+  color: var(--kit-text);
+  font-family: var(--kit-font);
+  line-height: 1.5;
+}
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 48px 16px 64px;
+}
+.eyebrow {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--kit-primary);
+}
+h1 {
+  margin: 4px 0 8px;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  letter-spacing: -0.02em;
+}
+.lead {
+  margin: 0 0 32px;
+  color: var(--kit-text-muted);
+}
+.panel {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 24px;
+  border: 1px solid color-mix(in srgb, var(--kit-border) 40%, transparent);
+  border-radius: var(--kit-card-radius);
+}
+.panel h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+form {
+  display: grid;
+  gap: 16px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+}
+.event-log {
+  margin: 0;
+  padding: 12px 16px;
+  border-radius: var(--kit-radius);
+  background: var(--kit-surface);
+  font-size: 0.9375rem;
+}
+pre {
+  overflow-x: auto;
+  margin: 0;
+  padding: 16px;
+  border-radius: var(--kit-radius);
+  background: var(--kit-surface);
+  font-size: 0.875rem;
+}
+a {
+  color: var(--kit-primary);
+  font-weight: 600;
+}

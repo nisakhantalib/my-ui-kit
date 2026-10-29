@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en-SG" data-currency="SGD" data-brand="orchid">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My UI Kit · Web Components</title>
+    <meta
+      name="description"
+      content="The same accessible components as custom elements: no React, no build step needed"
+    />
+    <link rel="stylesheet" href="./demo.css" />
+    <script type="module" src="./main.ts"></script>
+  </head>
+  <body>
+    <main id="main">
+      <p class="eyebrow">My UI Kit · Web Components</p>
+      <h1>Same components, no React</h1>
+      <p class="lead">
+        This page is plain HTML with one script. Teams on Angular, Vue or server-rendered pages use the kit as
+        <code>&lt;kit-*&gt;</code> elements: same accessibility, same tokens, same brands. Values come back as DOM
+        events.
+      </p>
+
+      <section aria-labelledby="try-heading" class="panel">
+        <h2 id="try-heading">Try it</h2>
+        <form id="transfer" novalidate>
+          <kit-text-field label="Payee name" name="payee" autocomplete="name" required></kit-text-field>
+          <kit-amount-input id="amount" label="Amount" hint="Daily limit SGD 5,000" required></kit-amount-input>
+          <kit-switch id="notify" label="Notify the payee by SMS" description="Free of charge"></kit-switch>
+          <kit-button type="submit">Continue</kit-button>
+        </form>
+        <p class="event-log" aria-live="polite">Events: <output id="log">none yet</output></p>
+      </section>
+
+      <section aria-labelledby="more-heading" class="panel">
+        <h2 id="more-heading">Display components</h2>
+        <kit-alert tone="info" heading="Scheduled maintenance">Transfers pause from 2 am to 3 am on Sunday.</kit-alert>
+        <p class="row">
+          Everyday Account <kit-masked-value value="0123456789" label="account number"></kit-masked-value>
+          <kit-badge tone="success">Active</kit-badge>
+        </p>
+        <kit-otp-input label="One-time password" hint="Demo: any 6 digits" resend-after="20"></kit-otp-input>
+      </section>
+
+      <section aria-labelledby="code-heading" class="panel">
+        <h2 id="code-heading">The code</h2>
+        <pre><code>&lt;script type="module" src="kit-elements.js"&gt;&lt;/script&gt;
+&lt;link rel="stylesheet" href="kit-elements.css"&gt;
+
+&lt;kit-amount-input label="Amount"&gt;&lt;/kit-amount-input&gt;
+
+document.querySelector('kit-amount-input')
+  .addEventListener('kit-change', (e) =&gt; console.log(e.detail.value)); // minor units</code></pre>
+        <p>
+          Angular: add <code>CUSTOM_ELEMENTS_SCHEMA</code> to the component and bind with
+          <code>(kit-change)="onAmount($event.detail.value)"</code>. Vue: listen with <code>@kit-change</code>.
+        </p>
+      </section>
+
+      <p class="back"><a href="../">← Orchid Bank reference app</a></p>
+    </main>
+  </body>
+</html>
