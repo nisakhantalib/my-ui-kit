@@ -1,0 +1,14 @@
+{
+  "$comment": "Single source of deprecated kit APIs, read by kit-scan and by no-deprecated-props in @nisakhantalib/eslint-plugin-my-ui-kit. Policy: docs/governance.md#deprecation-policy",
+  "package": "@nisakhantalib/my-ui-kit",
+  "props": [
+    {
+      "component": "ErrorSummary",
+      "prop": "autoFocus",
+      "replacement": "focusOnShow",
+      "deprecatedIn": "0.2.0",
+      "removedIn": "1.0.0",
+      "codemod": "error-summary-focus-on-show"
+    }
+  ]
+}
