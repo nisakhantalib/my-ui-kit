@@ -1,0 +1,391 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-29T15:11:19.195Z",
+  "kitPackage": "@nisakhantalib/my-ui-kit",
+  "roots": ["apps"],
+  "summary": {
+    "filesScanned": 8,
+    "filesImportingKit": 2,
+    "componentsUsed": 20,
+    "jsxUsages": 93,
+    "deprecatedUsages": 0,
+    "rawElementsInKitFiles": 0
+  },
+  "packages": [
+    {
+      "path": "apps/demo/package.json",
+      "name": "demo",
+      "kitVersion": "^0.1.0",
+      "dependencyType": "dependencies"
+    }
+  ],
+  "components": {
+    "Button": {
+      "files": 2,
+      "usages": 27,
+      "props": {
+        "onClick": 17,
+        "variant": 15,
+        "loading": 3,
+        "size": 3,
+        "trackId": 3,
+        "disabled": 2,
+        "aria-pressed": 1,
+        "ref": 1,
+        "type": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 10,
+        "apps/demo/src/Showcase.tsx": 17
+      }
+    },
+    "TextField": {
+      "files": 2,
+      "usages": 10,
+      "props": {
+        "label": 10,
+        "error": 7,
+        "required": 6,
+        "value": 6,
+        "onChange": 5,
+        "name": 4,
+        "autoComplete": 3,
+        "hint": 3,
+        "type": 3,
+        "id": 2,
+        "inputMode": 1,
+        "readOnly": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 4,
+        "apps/demo/src/Showcase.tsx": 6
+      }
+    },
+    "Tab": {
+      "files": 2,
+      "usages": 7,
+      "props": {
+        "value": 7,
+        "disabled": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 3,
+        "apps/demo/src/Showcase.tsx": 4
+      }
+    },
+    "TabPanel": {
+      "files": 2,
+      "usages": 7,
+      "props": {
+        "value": 7
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 3,
+        "apps/demo/src/Showcase.tsx": 4
+      }
+    },
+    "AccordionItem": {
+      "files": 2,
+      "usages": 6,
+      "props": {
+        "title": 6,
+        "value": 6,
+        "disabled": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 3,
+        "apps/demo/src/Showcase.tsx": 3
+      }
+    },
+    "Radio": {
+      "files": 2,
+      "usages": 6,
+      "props": {
+        "label": 6,
+        "value": 6,
+        "description": 4,
+        "disabled": 1,
+        "key": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 5
+      }
+    },
+    "Alert": {
+      "files": 2,
+      "usages": 5,
+      "props": {
+        "title": 5,
+        "tone": 5,
+        "className": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 4
+      }
+    },
+    "Checkbox": {
+      "files": 1,
+      "usages": 4,
+      "props": {
+        "label": 4,
+        "checked": 3,
+        "onChange": 3,
+        "error": 1,
+        "hint": 1,
+        "indeterminate": 1
+      },
+      "byFile": {
+        "apps/demo/src/Showcase.tsx": 4
+      }
+    },
+    "RadioGroup": {
+      "files": 2,
+      "usages": 3,
+      "props": {
+        "legend": 3,
+        "name": 3,
+        "error": 2,
+        "variant": 2,
+        "defaultValue": 1,
+        "hint": 1,
+        "onValueChange": 1,
+        "required": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 2
+      }
+    },
+    "Select": {
+      "files": 2,
+      "usages": 3,
+      "props": {
+        "label": 3,
+        "placeholder": 3,
+        "defaultValue": 2,
+        "error": 2,
+        "hint": 1,
+        "name": 1,
+        "onChange": 1,
+        "required": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 2
+      }
+    },
+    "Accordion": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "headingLevel": 2,
+        "type": 2,
+        "defaultValue": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "Dialog": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "description": 2,
+        "onClose": 2,
+        "open": 2,
+        "title": 2,
+        "initialFocusRef": 1,
+        "role": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "Switch": {
+      "files": 1,
+      "usages": 2,
+      "props": {
+        "label": 2,
+        "defaultChecked": 1,
+        "description": 1
+      },
+      "byFile": {
+        "apps/demo/src/Showcase.tsx": 2
+      }
+    },
+    "TabList": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "label": 2
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "Tabs": {
+      "files": 2,
+      "usages": 2,
+      "props": {
+        "activation": 1,
+        "defaultValue": 1,
+        "onValueChange": 1,
+        "value": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1,
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "AnalyticsProvider": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "adapters": 1,
+        "enabled": 1
+      },
+      "byFile": {
+        "apps/demo/src/App.tsx": 1
+      }
+    },
+    "AnnouncerProvider": {
+      "files": 1,
+      "usages": 1,
+      "props": {},
+      "byFile": {
+        "apps/demo/src/App.tsx": 1
+      }
+    },
+    "ErrorSummary": {
+      "files": 1,
+      "usages": 1,
+      "props": {
+        "errors": 1
+      },
+      "byFile": {
+        "apps/demo/src/Showcase.tsx": 1
+      }
+    },
+    "SkipLink": {
+      "files": 1,
+      "usages": 1,
+      "props": {},
+      "byFile": {
+        "apps/demo/src/App.tsx": 1
+      }
+    },
+    "ToastProvider": {
+      "files": 1,
+      "usages": 1,
+      "props": {},
+      "byFile": {
+        "apps/demo/src/App.tsx": 1
+      }
+    }
+  },
+  "deprecatedUsages": [],
+  "adoptionGaps": {
+    "totals": {},
+    "byFile": {}
+  },
+  "files": [
+    {
+      "file": "apps/demo/src/App.tsx",
+      "imports": [
+        "Accordion",
+        "AccordionItem",
+        "Alert",
+        "AnalyticsProvider",
+        "AnnouncerProvider",
+        "Button",
+        "Dialog",
+        "Radio",
+        "RadioGroup",
+        "Select",
+        "SkipLink",
+        "Tab",
+        "TabList",
+        "TabPanel",
+        "Tabs",
+        "TextField",
+        "ToastProvider",
+        "adobeDataLayerAdapter",
+        "adobeWebSdkAdapter",
+        "consoleAdapter",
+        "useAnnounce",
+        "usePageView",
+        "useToast",
+        "useTrack"
+      ],
+      "usages": {
+        "Accordion": 1,
+        "AccordionItem": 3,
+        "Alert": 1,
+        "AnalyticsProvider": 1,
+        "AnnouncerProvider": 1,
+        "Button": 10,
+        "Dialog": 1,
+        "Radio": 1,
+        "RadioGroup": 1,
+        "Select": 1,
+        "SkipLink": 1,
+        "Tab": 3,
+        "TabList": 1,
+        "TabPanel": 3,
+        "Tabs": 1,
+        "TextField": 4,
+        "ToastProvider": 1
+      },
+      "rawElements": {}
+    },
+    {
+      "file": "apps/demo/src/Showcase.tsx",
+      "imports": [
+        "Accordion",
+        "AccordionItem",
+        "Alert",
+        "Button",
+        "Checkbox",
+        "Dialog",
+        "ErrorSummary",
+        "Radio",
+        "RadioGroup",
+        "Select",
+        "Switch",
+        "Tab",
+        "TabList",
+        "TabPanel",
+        "Tabs",
+        "TextField",
+        "useAnnounce",
+        "useToast"
+      ],
+      "usages": {
+        "Accordion": 1,
+        "AccordionItem": 3,
+        "Alert": 4,
+        "Button": 17,
+        "Checkbox": 4,
+        "Dialog": 1,
+        "ErrorSummary": 1,
+        "Radio": 5,
+        "RadioGroup": 2,
+        "Select": 2,
+        "Switch": 2,
+        "Tab": 4,
+        "TabList": 1,
+        "TabPanel": 4,
+        "Tabs": 1,
+        "TextField": 6
+      },
+      "rawElements": {}
+    }
+  ]
+}
