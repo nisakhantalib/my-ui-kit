@@ -9,7 +9,14 @@ import { AnalyticsProvider, Checkbox, Radio, RadioGroup, Select, Switch, type An
 describe('Select', () => {
   function Clinic({ error }: { error?: string }) {
     return (
-      <Select label="Time slot" hint="Morning slots fill up first" placeholder="Choose a time" defaultValue="" error={error} required>
+      <Select
+        label="Time slot"
+        hint="Morning slots fill up first"
+        placeholder="Choose a time"
+        defaultValue=""
+        error={error}
+        required
+      >
         <option value="0930">9:30 am</option>
         <option value="1400">2:00 pm</option>
       </Select>
@@ -143,7 +150,12 @@ describe('Switch', () => {
     const onCheckedChange = vi.fn();
     render(
       <AnalyticsProvider adapters={[adapter]}>
-        <Switch label="Email reminders" description="Sent the day before" trackId="reminders" onCheckedChange={onCheckedChange} />
+        <Switch
+          label="Email reminders"
+          description="Sent the day before"
+          trackId="reminders"
+          onCheckedChange={onCheckedChange}
+        />
       </AnalyticsProvider>,
     );
     const sw = screen.getByRole('switch', { name: 'Email reminders' });

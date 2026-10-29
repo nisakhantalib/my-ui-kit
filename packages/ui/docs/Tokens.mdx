@@ -1,0 +1,74 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+import { tokens } from '../src/tokens';
+
+<Meta title="Foundations/Design tokens" />
+
+# Design tokens
+
+Source of truth: `tokens/tokens.json` (W3C Design Tokens format). `npm run tokens` generates the CSS custom properties and the typed `tokens` export below, and CI fails if they drift.
+
+Use the CSS variables in web code (`var(--kit-primary)`) and the `tokens` object where CSS cannot reach: native status bars, charts, email templates.
+
+## Colour
+
+<table>
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>CSS variable</th>
+      <th>Light</th>
+      <th>Dark</th>
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(tokens.color).map(([name, { light, dark }]) => (
+      <tr key={name}>
+        <td>
+          <strong>{name}</strong>
+        </td>
+        <td>
+          <code>--kit-{name}</code>
+        </td>
+        {[light, dark].map((value) => (
+          <td key={value}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              <span
+                aria-hidden="true"
+                style={{ width: 24, height: 24, borderRadius: 6, background: value, border: '1px solid #8a90a0' }}
+              />
+              <code>{value}</code>
+            </span>
+          </td>
+        ))}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
+## Spacing
+
+<table>
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>Value</th>
+      <th aria-label="Preview" />
+    </tr>
+  </thead>
+  <tbody>
+    {Object.entries(tokens.space).map(([step, value]) => (
+      <tr key={step}>
+        <td>
+          <code>--kit-space-{step}</code>
+        </td>
+        <td>{value}</td>
+        <td>
+          <span
+            aria-hidden="true"
+            style={{ display: 'block', width: value, height: 12, background: 'var(--kit-primary)' }}
+          />
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>

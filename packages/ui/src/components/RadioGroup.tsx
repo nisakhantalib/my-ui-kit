@@ -62,9 +62,10 @@ export function RadioGroup({
 
   return (
     <RadioGroupContext.Provider value={{ name, selected, select, required, disabled }}>
-      {/* role="radiogroup" (allowed on fieldset) is what lets aria-invalid / aria-required apply to the group. */}
+      {/* role="radiogroup" (allowed on fieldset by ARIA in HTML) is what lets aria-invalid / aria-required apply to the group. */}
       <fieldset
         id={inputId}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-element-to-interactive-role
         role="radiogroup"
         aria-describedby={describedBy}
         aria-invalid={error ? true : undefined}

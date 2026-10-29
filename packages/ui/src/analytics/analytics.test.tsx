@@ -116,7 +116,16 @@ describe('AnalyticsProvider', () => {
     const good = vi.fn();
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
     render(
-      <AnalyticsProvider adapters={[{ track: () => { throw new Error('boom'); } }, { track: good }]}>
+      <AnalyticsProvider
+        adapters={[
+          {
+            track: () => {
+              throw new Error('boom');
+            },
+          },
+          { track: good },
+        ]}
+      >
         <Tracker />
       </AnalyticsProvider>,
     );

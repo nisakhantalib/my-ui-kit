@@ -42,14 +42,21 @@ test('component gallery: every state passes axe in both themes, contrast table i
   await expect(page.getByRole('alertdialog', { name: 'Delete this booking?' })).toBeVisible();
   // Wait for the dialog's open animation (finite ones only: the loading spinner loops forever).
   await page.evaluate(() =>
-    Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished)),
+    Promise.all(
+      document
+        .getAnimations()
+        .filter((a) => a.effect?.getTiming().iterations !== Infinity)
+        .map((a) => a.finished),
+    ),
   );
   await expectNoAxeViolations(page);
 });
 
 test('reflows with no horizontal scrolling at 320px wide (WCAG 1.4.10)', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 640 });
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
   expect(overflow).toBe(0);
 });
 
@@ -118,7 +125,11 @@ test('completes a booking and stores only a masked NRIC', async ({ page }) => {
   await expect(mine).not.toContainText('S1234567D');
 });
 
-test('Share falls back to the clipboard where there is no share sheet (web)', async ({ page, context, browserName }) => {
+test('Share falls back to the clipboard where there is no share sheet (web)', async ({
+  page,
+  context,
+  browserName,
+}) => {
   test.skip(browserName !== 'chromium', 'clipboard permissions are Chromium-only in Playwright');
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.evaluate(() => Object.defineProperty(navigator, 'share', { value: undefined })); // desktop Chrome on Linux has none anyway

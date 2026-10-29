@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 /**
  * Vendor-neutral analytics layer.
@@ -52,8 +52,7 @@ export interface AdobeAdapterOptions {
  * page()  -> s.pageName = name; s.t() (page view call)
  */
 export function adobeAnalyticsAdapter(options: AdobeAdapterOptions = {}): AnalyticsAdapter {
-  const getS =
-    options.getS ?? (() => (globalThis as unknown as { s?: AdobeAppMeasurement }).s);
+  const getS = options.getS ?? (() => (globalThis as unknown as { s?: AdobeAppMeasurement }).s);
   const variableMap = options.variableMap ?? {};
   const eventMap = options.eventMap ?? {};
 
@@ -160,8 +159,7 @@ export function adobeDataLayerAdapter(): AnalyticsAdapter {
   };
   return {
     track: ({ name, properties }) => layer().push({ event: name, eventInfo: properties ?? {} }),
-    page: (pageName, properties) =>
-      layer().push({ event: 'page_view', page: { pageName, ...properties } }),
+    page: (pageName, properties) => layer().push({ event: 'page_view', page: { pageName, ...properties } }),
   };
 }
 
@@ -195,18 +193,16 @@ export function AnalyticsProvider({ adapters, enabled = true, children }: Analyt
     };
     return {
       track: (name, properties) => adapters.forEach((a) => safe(() => a.track({ name, properties }))),
-      page: (pageName, properties) =>
-        adapters.forEach((a) => a.page && safe(() => a.page!(pageName, properties))),
+      page: (pageName, properties) => adapters.forEach((a) => a.page && safe(() => a.page!(pageName, properties))),
     };
   }, [adapters, enabled]);
 
   return <AnalyticsContext.Provider value={value}>{children}</AnalyticsContext.Provider>;
 }
 
-/** Returns a stable track function. Safe to call outside a provider (no-op). */
+/** Returns a stable track function (memoised by the provider). Safe to call outside a provider (no-op). */
 export function useTrack() {
-  const { track } = useContext(AnalyticsContext);
-  return useCallback(track, [track]);
+  return useContext(AnalyticsContext).track;
 }
 
 export function usePageView() {

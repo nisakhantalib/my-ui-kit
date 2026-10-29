@@ -6,7 +6,13 @@ export function VisuallyHidden({ children }: { children: ReactNode }) {
 }
 
 /** First focusable element on the page; lets keyboard users jump past the header (WCAG 2.4.1). */
-export function SkipLink({ href = '#main', children = 'Skip to main content' }: { href?: string; children?: ReactNode }) {
+export function SkipLink({
+  href = '#main',
+  children = 'Skip to main content',
+}: {
+  href?: string;
+  children?: ReactNode;
+}) {
   return (
     <a className="kit-skip-link" href={href}>
       {children}
