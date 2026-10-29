@@ -126,7 +126,7 @@ describe('ErrorSummary', () => {
         <TextField id="email" label="Email" />
       </>,
     );
-    const heading = screen.getByRole('heading', { name: 'There is a problem, 2 errors' });
+    const heading = screen.getByRole('heading', { name: /^There is a problem ?\(2 errors\)$/ });
     expect(heading.parentElement).toHaveFocus();
 
     Element.prototype.scrollIntoView = vi.fn(); // not implemented in jsdom

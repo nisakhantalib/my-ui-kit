@@ -73,7 +73,7 @@ describe('useKit money helpers', () => {
       </KitProvider>,
     );
     expect(screen.getByRole('region', { name: 'Notifikasi' })).toBeInTheDocument();
-    expect(screen.getByRole('heading', { name: 'Ada masalah, 1 kesalahan' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /^Ada masalah ?\(1 kesalahan\)$/ })).toBeInTheDocument();
   });
 });
 
@@ -111,7 +111,7 @@ describe('AmountInput', () => {
     );
   }
 
-  it('stores minor units, groups digits on blur and ungroups them for editing', async () => {
+  it('stores minor units and groups digits when you leave the field', async () => {
     const user = userEvent.setup();
     const onValueChange = vi.fn();
     render(<Harness onValueChange={onValueChange} />);
@@ -120,8 +120,23 @@ describe('AmountInput', () => {
     expect(onValueChange).toHaveBeenLastCalledWith(123450);
     await user.tab();
     expect(input).toHaveValue('1,234.50');
-    await user.click(input);
-    expect(input).toHaveValue('1234.50');
+  });
+
+  it('select-all and retype replaces the amount (focus never rewrites the text)', async () => {
+    const user = userEvent.setup();
+    const onValueChange = vi.fn();
+    render(<Harness onValueChange={onValueChange} />);
+    const input = screen.getByRole('textbox', { name: 'Amount' });
+    await user.type(input, '20000');
+    await user.tab();
+    expect(input).toHaveValue('20,000.00');
+    await user.tripleClick(input); // regression: reformatting on focus used to drop this selection
+    await user.keyboard('6000');
+    expect(input).toHaveValue('6000');
+    expect(onValueChange).toHaveBeenLastCalledWith(600000);
+    await user.clear(input);
+    await user.type(input, '1,500.25'); // grouped input is accepted too
+    expect(onValueChange).toHaveBeenLastCalledWith(150025);
   });
 
   it('speaks the currency and the hint as its description', () => {

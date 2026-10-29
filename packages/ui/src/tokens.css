@@ -24,6 +24,9 @@
     --kit-primary-hover: #084a8c;
     --kit-on-primary: #ffffff;
     --kit-accent: #0f766e;
+    --kit-brand-surface: #0b5cad;
+    --kit-brand-surface-end: #0f766e;
+    --kit-on-brand-surface: #ffffff;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
@@ -48,6 +51,8 @@
       --kit-primary-hover: #a3cdf8;
       --kit-on-primary: #0a1626;
       --kit-accent: #5eead4;
+      --kit-brand-surface: #084a8c;
+      --kit-brand-surface-end: #0f766e;
       --kit-danger: #ff8a7a;
       --kit-on-danger: #2a0905;
       --kit-success: #6fdd8b;
@@ -68,6 +73,8 @@
     --kit-primary-hover: #a3cdf8;
     --kit-on-primary: #0a1626;
     --kit-accent: #5eead4;
+    --kit-brand-surface: #084a8c;
+    --kit-brand-surface-end: #0f766e;
     --kit-danger: #ff8a7a;
     --kit-on-danger: #2a0905;
     --kit-success: #6fdd8b;
@@ -89,6 +96,9 @@
     --kit-primary-hover: #551a8f;
     --kit-on-primary: #ffffff;
     --kit-accent: #c0267a;
+    --kit-brand-surface: #6a1fb0;
+    --kit-brand-surface-end: #c0267a;
+    --kit-on-brand-surface: #ffffff;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
@@ -112,6 +122,8 @@
       --kit-primary-hover: #dcc5fa;
       --kit-on-primary: #1d0b33;
       --kit-accent: #f472b6;
+      --kit-brand-surface: #551a8f;
+      --kit-brand-surface-end: #c0267a;
       --kit-danger: #ff8a7a;
       --kit-on-danger: #2a0905;
       --kit-success: #6fdd8b;
@@ -131,6 +143,8 @@
     --kit-primary-hover: #dcc5fa;
     --kit-on-primary: #1d0b33;
     --kit-accent: #f472b6;
+    --kit-brand-surface: #551a8f;
+    --kit-brand-surface-end: #c0267a;
     --kit-danger: #ff8a7a;
     --kit-on-danger: #2a0905;
     --kit-success: #6fdd8b;
