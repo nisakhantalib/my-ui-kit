@@ -65,7 +65,7 @@ Current deprecations:
 |---|---|---|---|---|---|
 | `ErrorSummary` | `autoFocus` | `focusOnShow` | 0.2.0 | 1.0.0 | `error-summary-focus-on-show` |
 
-This entry is the worked example of the policy, scheduled for the 0.2.0 minor. `autoFocus` is being retired on `ErrorSummary` because it isn't the native attribute: the summary moves focus each time a *new* set of errors appears, not on mount. Sharing the native name confused both developers and `jsx-a11y/no-autofocus`.
+This entry is the worked example of the policy, shipped in 0.2.0: the old prop still works, `warnDeprecated()` in `packages/ui/src/utils.ts` prints the dev warning once, the lint rule and scanner flag it, and the codemod migrates it. `autoFocus` is being retired on `ErrorSummary` because it isn't the native attribute: the summary moves focus each time a *new* set of errors appears, not on mount. Sharing the native name confused both developers and `jsx-a11y/no-autofocus`.
 
 ## Adoption metrics
 
