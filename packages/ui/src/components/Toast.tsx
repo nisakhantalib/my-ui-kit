@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { cx } from '../utils.js';
+import { useKit } from '../i18n.js';
 import { VisuallyHidden } from './VisuallyHidden.js';
 
 /**
@@ -36,7 +37,8 @@ type ShowToast = (options: ToastOptions) => () => void;
 
 const ToastContext = createContext<ShowToast | null>(null);
 
-export function ToastProvider({ children, label = 'Notifications' }: { children: ReactNode; label?: string }) {
+export function ToastProvider({ children, label }: { children: ReactNode; label?: string }) {
+  const { t } = useKit();
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [message, setMessage] = useState('');
   const nextId = useRef(0);
@@ -58,7 +60,7 @@ export function ToastProvider({ children, label = 'Notifications' }: { children:
   return (
     <ToastContext.Provider value={show}>
       {children}
-      <section aria-label={label} className="kit-toaster">
+      <section aria-label={label ?? t('toast.region')} className="kit-toaster">
         <ol className="kit-toaster__list">
           {toasts.map((t) => (
             <Toast key={t.id} toast={t} onDismiss={dismiss} />
@@ -76,6 +78,7 @@ export function ToastProvider({ children, label = 'Notifications' }: { children:
 
 // onDismiss is the provider's stable callback, so a new toast doesn't restart the others' timers.
 function Toast({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: number) => void }) {
+  const { t } = useKit();
   const { id, title, description, tone = 'info', duration = 6000, action } = toast;
   const [paused, setPaused] = useState(false);
   const persistent = action !== undefined || duration === Infinity;
@@ -110,7 +113,12 @@ function Toast({ toast, onDismiss }: { toast: ToastItem; onDismiss: (id: number)
           {action.label}
         </button>
       )}
-      <button type="button" className="kit-toast__close" aria-label={`Dismiss: ${title}`} onClick={() => onDismiss(id)}>
+      <button
+        type="button"
+        className="kit-toast__close"
+        aria-label={t('toast.dismiss', { title })}
+        onClick={() => onDismiss(id)}
+      >
         <span aria-hidden="true">×</span>
       </button>
     </li>

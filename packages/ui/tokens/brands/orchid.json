@@ -1,0 +1,36 @@
+{
+  "$description": "Orchid: premium retail-banking brand (Orchid Bank, the fictional bank in the reference app).",
+  "font": {
+    "$type": "fontFamily",
+    "$value": ["Inter Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  "radius": { "$type": "dimension", "$value": "14px" },
+  "color": {
+    "$type": "color",
+    "bg": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.plum.950}" } } },
+    "surface": { "$value": "{palette.plum.50}", "$extensions": { "mode": { "dark": "{palette.plum.800}" } } },
+    "text": { "$value": "{palette.plum.900}", "$extensions": { "mode": { "dark": "{palette.plum.25}" } } },
+    "text-muted": { "$value": "{palette.plum.700}", "$extensions": { "mode": { "dark": "{palette.plum.300}" } } },
+    "border": { "$value": "{palette.plum.400}", "$extensions": { "mode": { "dark": "{palette.plum.500}" } } },
+    "primary": { "$value": "{palette.violet.700}", "$extensions": { "mode": { "dark": "{palette.violet.300}" } } },
+    "primary-hover": {
+      "$value": "{palette.violet.800}",
+      "$extensions": { "mode": { "dark": "{palette.violet.200}" } }
+    },
+    "on-primary": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.plum.990}" } } },
+    "accent": { "$value": "{palette.magenta.600}", "$extensions": { "mode": { "dark": "{palette.magenta.400}" } } },
+    "danger": { "$value": "{palette.red.700}", "$extensions": { "mode": { "dark": "{palette.red.300}" } } },
+    "on-danger": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.red.990}" } } },
+    "success": { "$value": "{palette.green.700}", "$extensions": { "mode": { "dark": "{palette.green.300}" } } },
+    "warning": { "$value": "{palette.amber.700}", "$extensions": { "mode": { "dark": "{palette.amber.300}" } } },
+    "focus": { "$value": "{palette.teal.700}", "$extensions": { "mode": { "dark": "{palette.teal.300}" } } },
+    "backdrop": { "$value": "{palette.backdrop}" }
+  },
+  "component": {
+    "button": {
+      "radius": { "$type": "dimension", "$value": "999px", "$description": "Pill buttons are part of the Orchid look" }
+    },
+    "control": { "height": { "$type": "dimension", "$value": "48px" } },
+    "card": { "radius": { "$type": "dimension", "$value": "20px" } }
+  }
+}

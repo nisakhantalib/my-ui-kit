@@ -15,6 +15,33 @@ export const FOCUSABLE_SELECTOR = [
   '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
+declare const process: { env: { NODE_ENV?: string } };
+
+/** Consumers' bundlers replace the literal `process.env.NODE_ENV`; unbundled, `process` doesn't exist. */
+function isProduction(): boolean {
+  try {
+    return process.env.NODE_ENV === 'production';
+  } catch {
+    return false;
+  }
+}
+
+const warned = new Set<string>();
+
+/**
+ * Development-only, once per prop: deprecated props keep working until the next major
+ * (see docs/governance.md), but every team hears about it while they still have time.
+ */
+export function warnDeprecated(component: string, prop: string, replacement: string, codemod?: string) {
+  const key = `${component}.${prop}`;
+  if (isProduction() || warned.has(key)) return;
+  warned.add(key);
+  console.warn(
+    `[my-ui-kit] <${component} ${prop}> is deprecated and will be removed in 1.0.0. Use \`${replacement}\` instead.` +
+      (codemod ? ` Codemod: npx @nisakhantalib/my-ui-kit-codemods ${codemod} src/` : ''),
+  );
+}
+
 export function getFocusable(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
 }

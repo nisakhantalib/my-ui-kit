@@ -1,5 +1,5 @@
 // Runs axe-core (WCAG 2.2 A/AA, including colour contrast) on every story of the built
-// Storybook, in light and dark themes, in real Chromium. New stories are covered automatically.
+// Storybook, for every brand in light and dark, in real Chromium. New stories are covered automatically.
 //   npm run build:storybook && npm run test:storybook
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
@@ -38,9 +38,12 @@ const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePa
 const page = await browser.newPage();
 const failures = [];
 
+const BRANDS = ['civic', 'orchid'];
+const combos = BRANDS.flatMap((brand) => ['light', 'dark'].map((theme) => ({ brand, theme })));
+
 for (const story of stories) {
-  for (const theme of ['light', 'dark']) {
-    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story&globals=theme:${theme}`);
+  for (const { brand, theme } of combos) {
+    await page.goto(`${base}/iframe.html?id=${story.id}&viewMode=story&globals=theme:${theme};brand:${brand}`);
     await page.waitForSelector('#storybook-root > *', { timeout: 15_000 });
     // Let entry animations settle; looping ones (spinners) never finish, so skip those.
     await page.evaluate(() =>
@@ -66,7 +69,7 @@ for (const story of stories) {
         }
       }
     });
-    const label = `${story.title} › ${story.name} (${theme})`;
+    const label = `${story.title} › ${story.name} (${brand}, ${theme})`;
     if (violations.length) failures.push(`${label}\n    ${violations.join('\n    ')}`);
     else console.log(`  ✓ ${label}`);
   }
@@ -79,4 +82,4 @@ if (failures.length) {
   console.error(`\n✗ ${failures.length} story/theme combinations have violations:\n${failures.join('\n')}`);
   process.exit(1);
 }
-console.log(`\n${stories.length} stories × 2 themes pass WCAG 2.2 A/AA.`);
+console.log(`\n${stories.length} stories × ${BRANDS.length} brands × 2 themes pass WCAG 2.2 A/AA.`);
