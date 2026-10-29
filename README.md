@@ -1,65 +1,82 @@
 # My UI Kit
 
-Accessible, composable React components (WCAG 2.2 AA, light and dark), published as an npm package with design tokens and pluggable Adobe Analytics. Alongside it is **ClinicBook SG**, a reference app that ships as a website, an installable offline PWA, and an Android app (Capacitor) from one codebase.
+**An accessible, multi-brand, multi-market React component library, governed like a product.** It ships 22 components (including the hard banking ones), design tokens that refuse to build if contrast fails, Web Components for non-React teams, and lint, codemod and adoption tooling. Two reference apps use it: a fictional bank in five markets, and a public-service PWA with an Android app.
 
 [![CI](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml)
-**Live:** [reference app](https://nisakhantalib.github.io/my-ui-kit/) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · [npm](https://www.npmjs.com/package/@nisakhantalib/my-ui-kit)
 
-| Booking flow, desktop (light) | Phone (dark), after booking |
-|---|---|
-| ![Booking step 2 on desktop: clinic radio cards and time slot with error messages](docs/screenshots/booking-desktop-light.png) | ![Booking on a phone in dark mode with a success toast and Share button](docs/screenshots/booking-phone-dark.png) |
+**Live:** [Orchid Bank](https://nisakhantalib.github.io/my-ui-kit/) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · [ClinicBook SG](https://nisakhantalib.github.io/my-ui-kit/clinic/) · [Web Components demo](https://nisakhantalib.github.io/my-ui-kit/elements/) · **Start here:** [one-page case study](docs/case-study.md)
 
-| Component gallery (light) | Component gallery (dark) |
+| Orchid Bank: overview, Singapore (light) | Hong Kong · 繁體中文 (dark) |
 |---|---|
-| ![Every component and state in light mode, with a live contrast table](docs/screenshots/gallery-light.png) | ![The same components re-themed in dark mode by design tokens](docs/screenshots/gallery-dark.png) |
+| ![Bank dashboard: balance card, accounts with masked numbers, spending chart, transactions table](docs/screenshots/bank-overview-light.png) | ![The same dashboard in Traditional Chinese, dark mode, HKD](docs/screenshots/bank-overview-dark-hk.png) |
+
+| Payee search (APG combobox) | OTP approval (one real input) | Receipt, Indonesia, phone (dark) |
+|---|---|---|
+| ![Combobox listing payees with initials and masked account details](docs/screenshots/bank-pay-combobox.png) | ![Approve this transfer dialog with a six-box one-time password field](docs/screenshots/bank-pay-otp.png) | ![Transfer sent receipt in Bahasa Indonesia with rupiah amount](docs/screenshots/bank-receipt-phone-dark-id.png) |
+
+<details>
+<summary>The same library, second brand: ClinicBook SG (public service, PWA + Android)</summary>
+
+| Booking flow | Component gallery (dark) |
+|---|---|
+| ![Clinic booking step with radio cards and time slot errors](docs/screenshots/booking-desktop-light.png) | ![Every component re-themed in dark mode](docs/screenshots/gallery-dark.png) |
+
+</details>
 
 ## What's in the repo
 
 ```
-packages/ui          @nisakhantalib/my-ui-kit: 15 components, tokens, analytics adapters, Storybook
-  tokens/tokens.json   design tokens (W3C format), the single source for CSS + TS + Figma
-apps/demo            ClinicBook SG: Vite + Tailwind PWA, Capacitor Android shell, Playwright e2e
+packages/
+  ui              @nisakhantalib/my-ui-kit: 22 components, KitProvider (locale/currency/i18n), analytics adapters
+    tokens/       palette → semantic → component tokens; brands/civic.json, brands/orchid.json; contrast.json
+  elements        @nisakhantalib/my-ui-kit-elements: the same components as <kit-*> Web Components
+  eslint-plugin   lint rules: no hard-coded colours, prefer kit components, no deprecated props (autofix)
+  codemods        jscodeshift migrations, one for each deprecation
+  scanner         kit-scan: adoption report across repos (usage, props, versions, deprecated usages, gaps)
+apps/
+  bank            Orchid Bank: 5 markets, strict CSP, Lighthouse budgets, visual regression
+  demo            ClinicBook SG: offline PWA + Capacitor Android shell
 docs/
-  specs/               business brief → user stories → acceptance criteria → tests; component specs
-  adr/                 8 architecture decision records
-  design/              principles, visual language, wireframes
+  case-study.md   one page for reviewers
+  specs/          brief → user stories → acceptance criteria → the test that proves each one
+  adr/            9 architecture decision records
+  governance.md   contribution model, RFCs, semver, deprecation policy, adoption metrics
+  design/         principles, visual language, annotated wireframes
 ```
 
 ## How this covers the role
 
 | Requirement | Evidence |
 |---|---|
-| **Reusable, composable components across platforms** | 15 components; compound APIs (`Tabs`, `RadioGroup`, `Accordion`), one controlled/uncontrolled contract (`useControllableState`), forwarded refs. The same components run on web, PWA and Android ([ADR 0008](docs/adr/0008-hybrid-native-with-capacitor.md)); tokens ship as CSS, TS and JSON ([ADR 0005](docs/adr/0005-design-tokens-single-source.md)) |
-| **Requirements → functional and development specs** | [Booking spec](docs/specs/booking-flow.md): stakeholder brief, resolved questions, user stories with Given/When/Then criteria, **each mapped to the e2e test that proves it**, and a tracking plan. [Component spec template](docs/specs/component-spec-template.md) + [RadioGroup spec](docs/specs/components/radio-group.md). Issue template for component requests |
-| **Standards, best practices, architecture** | [CONTRIBUTING.md](CONTRIBUTING.md) (API conventions, definition of done, semver policy), [8 ADRs](docs/adr/), enforced by ESLint (typescript-eslint, react-hooks, **jsx-a11y strict**), Prettier, coverage floors and bundle budgets in CI |
-| **Communication with business, product, design** | Storybook with usage guidance ("which message component?"), tokens page, theme toolbar; spec written for non-developers; PR template with screenshots and an a11y checklist |
-| **Web fundamentals, HTML, CSS** | Native elements first ([ADR 0004](docs/adr/0004-native-elements-first.md)), CSS cascade layers, custom properties, `:has()`, `color-mix()`, `accent-color`, safe-area insets, forced-colours and reduced-motion support, 320px reflow |
-| **JavaScript / TypeScript** | Strict TS (`noUncheckedIndexedAccess`), TypeScript 7 native compiler for types, generic hooks, types verified by Are the Types Wrong |
-| **UI testing** | 4 layers ([ADR 0006](docs/adr/0006-testing-strategy.md)): **52** jsdom tests, **8** real-Chromium tests (contrast, focus-ring ratio, target size), **24 stories × 2 themes** axe audit, **9 × 2** Playwright journeys (desktop + Pixel 7). New checks are proven to fail on a broken build first |
-| **React** | React 19, hooks, context, portals, compound components; `'use client'` output for Next.js Server Components |
-| **npm package publishing** | ESM-only per-module build (Button alone: **~0.4 kB**), `exports` map, peer deps, publint + attw, size-limit, **Changesets**, **npm trusted publishing (OIDC) with provenance** ([ADR 0002](docs/adr/0002-esm-only-per-module-output.md)) |
-| **Native / PWA / hybrid** | Workbox PWA (offline reload tested), **Capacitor 8 Android project** built to an APK in CI, native share sheet through `@capacitor/share` with Web Share and clipboard fallbacks |
-| **Accessible UI for screen readers** | WAI-ARIA APG patterns, live regions that exist before content, focus management, `inert` behind dialogs, spoken alert tones. [ACCESSIBILITY.md](ACCESSIBILITY.md): WCAG criterion per component and a manual NVDA/VoiceOver/TalkBack script |
-| **Visual design** | [Design principles and visual language](docs/design/README.md); measured contrast table in the gallery; screenshots above |
-| *UI design, wireframes, mockups* | [Low-fi wireframes](docs/design/README.md#wireframes) (phone + desktop, annotated), mapped decision by decision to the build |
-| *Build tools* | Vite 8 (Rolldown) library + app, tsc, Storybook (Vite builder), a small in-repo token generator |
-| *CSS libraries* | Tailwind CSS 4 in the app, mapped onto the kit's tokens, with a layer order that keeps utilities able to override components ([ADR 0003](docs/adr/0003-css-custom-properties-and-cascade-layers.md)) |
-| *Adobe Analytics / Omniture* | Adapters for **AppMeasurement** (`s.t()` / `s.tl()`), **AEP Web SDK** (`alloy`) and the **Adobe Client Data Layer**; consent-gated ([ADR 0007](docs/adr/0007-vendor-neutral-analytics.md)) |
-| *CI/CD* | GitHub Actions: lint → format → tokens → types → tests + coverage → build → package checks → size → Storybook audit → e2e; Android APK job; Pages deploy; Changesets release; Dependabot |
-| *Open source* | MIT, CONTRIBUTING, Code of Conduct, SECURITY policy, issue/PR templates, CODEOWNERS |
+| **Reusable, composable components across platforms** | 22 components with compound APIs (`Tabs`, `RadioGroup`, `Accordion`) and one controlled/uncontrolled contract. Runs on **web, PWA, Android** (Capacitor) and **non-React stacks** (`<kit-*>` Web Components), in **2 brands × 5 markets** |
+| **Business and design requirements → specs** | [Transfer spec](docs/specs/transfer-flow.md) and [booking spec](docs/specs/booking-flow.md): stakeholder brief, resolved questions, Given/When/Then criteria **each mapped to its e2e test**, tracking plans. [Component spec template](docs/specs/component-spec-template.md) + [RadioGroup spec](docs/specs/components/radio-group.md) |
+| **Standards, best practices, architecture** | [9 ADRs](docs/adr/), [CONTRIBUTING](CONTRIBUTING.md) (API conventions, definition of done), [governance model](docs/governance.md), **enforced** by ESLint (jsx-a11y strict + our own plugin), Prettier, coverage floors, size budgets, a token contrast gate, a deprecated-API gate |
+| **Communication with business, product, design** | Storybook with usage guidance, brand/market/theme toolbars, live contrast report and adoption dashboard; specs written for non-developers; [case study](docs/case-study.md) |
+| **Web fundamentals, HTML, CSS** | Native elements first ([ADR 0004](docs/adr/0004-native-elements-first.md)); cascade layers, custom properties, `:has()`, `color-mix()`, safe-area insets, forced colours, reduced motion, 320px reflow |
+| **JavaScript / TypeScript** | Strict TS (`noUncheckedIndexedAccess`), generic components (`Combobox<T>`, `DataTable<T>`), TS 7 for types; exact money arithmetic |
+| **UI testing** | 80 jsdom + 8 real-Chromium component tests, **45 stories × 2 brands × 2 themes** axe audit, 6 Web Component browser tests, **34 Playwright runs** (two apps, desktop + Pixel 7), visual regression in a pinned container, Lighthouse CI, 49 tooling tests. The contrast, story-audit and token gates were each shown to fail on a deliberately broken build before being trusted |
+| **React** | React 19, hooks, context, portals, compound components, `'use client'` output for Next.js Server Components |
+| **npm package publishing** | Per-module ESM (`Button` alone **365 B**), `exports` map, publint + attw, size-limit, **Changesets**, **trusted publishing (OIDC) with provenance**, **CycloneDX SBOM** per release; 5 publishable packages |
+| **Native / PWA / hybrid** | Workbox PWA (offline reload tested), Capacitor 8 Android APK built in CI, native share sheet with web fallbacks |
+| **Accessible UI for screen readers** | APG patterns; live regions that exist before content; focus management on route and step changes; single-input OTP; spoken currency; masked values read as "ending 6789". [ACCESSIBILITY.md](ACCESSIBILITY.md) has the WCAG criterion per component and NVDA/VoiceOver scripts |
+| **Visual design** | Two complete visual brands from one component set; dark mode designed (not inverted) with a dedicated `brand-surface` role; [design docs](docs/design/README.md) |
+| *UI design, wireframes, mockups* | [Annotated wireframes](docs/design/README.md#wireframes), mapped decision by decision to the build |
+| *Build tools* | Vite 8 (Rolldown) library/app/Web Components builds, tsc, Storybook, an in-repo token compiler |
+| *CSS libraries* | Tailwind 4 in both apps, mapped onto kit tokens, with a layer order that keeps utilities able to override ([ADR 0003](docs/adr/0003-css-custom-properties-and-cascade-layers.md)) |
+| *Adobe Analytics / Omniture* | Adapters for **AppMeasurement** (`s.t()` / `s.tl()`), **AEP Web SDK** (alloy) and the **Adobe Client Data Layer**, consent-gated; tracking plans in both specs |
+| *CI/CD* | GitHub Actions: lint → format → tokens → types → tests → builds → package checks → size → Storybook audit → e2e → Lighthouse → visual → Android APK → Pages; Changesets release with SBOM; Dependabot |
+| *Open source* | MIT, CONTRIBUTING, Code of Conduct, security policy, issue/PR templates, CODEOWNERS |
 
 ## Quick start
 
 ```bash
 npm install
 npx playwright install chromium   # once, for browser and e2e tests
-npm run dev                       # builds the library, starts the app at http://localhost:5173
+npm run dev                       # Orchid Bank at http://localhost:5174 (npm run dev:clinic for ClinicBook)
 npm run storybook                 # http://localhost:6006
-npm run ci                        # lint, format, types, tests, builds, package and size checks
-npm run test:e2e                  # Playwright, desktop + Pixel 7
+npm run ci                        # lint, format, types, all unit/browser/tooling tests, builds, package and size checks
+npm run test:e2e                  # Playwright, both apps, desktop + Pixel 7
 ```
-
-Android: `npm run android:apk -w demo` (needs JDK 21 and the Android SDK; CI builds it on every push).
 
 ## Using the package
 
@@ -68,36 +85,24 @@ npm install @nisakhantalib/my-ui-kit
 ```
 
 ```tsx
-import { AnalyticsProvider, Button, RadioGroup, Radio, TextField, ToastProvider, adobeAnalyticsAdapter } from '@nisakhantalib/my-ui-kit';
+import { AmountInput, Button, Combobox, KitProvider, ToastProvider } from '@nisakhantalib/my-ui-kit';
 import '@nisakhantalib/my-ui-kit/styles.css';
 
-const adobe = adobeAnalyticsAdapter({
-  variableMap: { component: 'eVar5', id: 'prop3' },
-  eventMap: { form_submit: 'event12' },
-});
-
-<AnalyticsProvider adapters={[adobe]} enabled={userConsented}>
+// Brand and dark mode are HTML attributes: <html lang="zh-HK" data-brand="orchid" data-theme="dark">
+<KitProvider locale="zh-HK" currency="HKD">              {/* formats, parses and translates the kit's own words */}
   <ToastProvider>
-    <TextField label="Email" hint="We send the receipt here" error={emailError} required />
-    <RadioGroup legend="Clinic" name="clinic" variant="cards" value={clinic} onValueChange={setClinic}>
-      <Radio value="tampines" label="Tampines Family Clinic" description="East region" />
-    </RadioGroup>
-    <Button trackId="submit-claim">Submit</Button>
+    <Combobox label="收款人" items={payees} getKey={(p) => p.id} getLabel={(p) => p.name} onValueChange={setPayee} />
+    <AmountInput label="金額" value={cents} onValueChange={setCents} />   {/* integer minor units */}
+    <Button trackId="transfer-continue">繼續</Button>                       {/* sends an analytics event */}
   </ToastProvider>
-</AnalyticsProvider>;
+</KitProvider>
 ```
 
-Clicking the button sets `s.eVar5 = 'Button'`, `s.prop3 = 'submit-claim'`, `s.linkTrackVars = 'eVar5,prop3'` and calls `s.tl(true, 'o', 'button_click')`. On the Web SDK, swap in `adobeWebSdkAdapter` with the same config.
-
-**With Tailwind**, declare the layer order once so preflight can't reset components but utilities still win:
-
-```css
-@layer theme, base, kit, components, utilities;
-@import '@nisakhantalib/my-ui-kit/styles.css';
-@import 'tailwindcss';
-```
-
-**Tokens in JS** (charts, native status bar, React Native): `import { tokens } from '@nisakhantalib/my-ui-kit'` → `tokens.color.primary.dark`. Raw JSON: `@nisakhantalib/my-ui-kit/tokens.json`.
+- **Brands:** `data-brand="civic" | "orchid"` on `<html>` or any element; `data-theme="dark"` or the OS setting for dark mode.
+- **Tailwind:** declare `@layer theme, base, kit, components, utilities;` before importing both stylesheets.
+- **Tokens in JS:** `import { tokens, brandTokens, contrastReport } from '@nisakhantalib/my-ui-kit'`; raw JSON at `@nisakhantalib/my-ui-kit/tokens/*`.
+- **Analytics:** wrap in `<AnalyticsProvider adapters={[adobeWebSdkAdapter({ variableMap })]} enabled={consent}>`.
+- **Not on React?** Use [`@nisakhantalib/my-ui-kit-elements`](packages/elements/README.md).
 
 ## Components
 
@@ -105,21 +110,20 @@ Clicking the button sets `s.eVar5 = 'Button'`, `s.prop3 = 'submit-claim'`, `s.li
 |---|---|
 | Actions | `Button` |
 | Forms | `TextField`, `Select`, `Checkbox` (incl. mixed state), `RadioGroup` + `Radio` (plain / cards), `Switch` |
+| Banking | `AmountInput`, `OTPInput`, `Combobox`, `DataTable`, `MaskedValue`, `Badge` |
 | Navigation | `Tabs` (`TabList`, `Tab`, `TabPanel`), `Accordion` + `AccordionItem`, `SkipLink` |
-| Feedback | `Alert`, `ErrorSummary`, `ToastProvider` + `useToast`, `AnnouncerProvider` + `useAnnounce` |
+| Feedback | `Alert`, `ErrorSummary`, `ToastProvider` + `useToast`, `Skeleton`, `AnnouncerProvider` + `useAnnounce` |
 | Overlays | `Dialog` (`dialog` / `alertdialog`) |
-| Utilities | `VisuallyHidden`, `AnalyticsProvider` + `useTrack` / `usePageView`, `useControllableState`, `tokens`, `cx` |
-
-Accessibility behaviour per component: [ACCESSIBILITY.md](ACCESSIBILITY.md). Props and live examples: Storybook.
+| Foundations | `KitProvider` + `useKit`, `AnalyticsProvider` + `useTrack` / `usePageView`, `VisuallyHidden`, `useControllableState`, `tokens` |
 
 ## Release
 
-1. In your PR, run `npm run changeset` and describe the change (patch / minor / major).
-2. On merge to `main`, `release.yml` opens a **Version Packages** PR that bumps the version and writes `CHANGELOG.md`.
-3. Merging that PR publishes to npm with **trusted publishing (OIDC)**: no `NPM_TOKEN` secret, provenance attached automatically.
+1. In your PR, run `npm run changeset` and describe the change (patch / minor / major; see the [deprecation policy](docs/governance.md#deprecation-policy)).
+2. On merge to `main`, `release.yml` opens a **Version Packages** PR that bumps versions and writes the CHANGELOGs.
+3. Merging that PR publishes to npm with **trusted publishing (OIDC)**: no `NPM_TOKEN`, provenance attached, SBOM uploaded to the GitHub release.
 
-One-time setup: publish the first version manually (`npm publish` from `packages/ui`), then on npmjs.com go to package → Settings → Trusted publishing → GitHub Actions, and enter repo `nisakhantalib/my-ui-kit` and workflow `release.yml`.
+One-time setup: publish each package once by hand (`npm publish` in its folder). Then, on npmjs.com, go to package → Settings → Trusted publishing → GitHub Actions and enter repo `nisakhantalib/my-ui-kit` and workflow `release.yml`.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). Orchid Bank is a fictional bank; any resemblance to a real institution is unintended.
