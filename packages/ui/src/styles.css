@@ -1074,6 +1074,25 @@
     opacity: 0.85;
   }
 
+  /* ---------- Guilloche ---------- */
+  .kit-guilloche {
+    display: block;
+    pointer-events: none;
+    forced-color-adjust: auto;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .kit-guilloche--draw path {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      animation: kit-guilloche-draw 1.4s cubic-bezier(0.3, 0, 0.2, 1) forwards;
+    }
+  }
+  @keyframes kit-guilloche-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
   /* ---------- Dialog header, close, sheet ---------- */
   .kit-dialog__header {
     display: flex;
@@ -1115,6 +1134,26 @@
   @keyframes kit-sheet-in {
     from {
       transform: translateX(24px);
+      opacity: 0;
+    }
+  }
+
+  .kit-dialog__backdrop--bottom {
+    place-items: end stretch;
+    padding: 0;
+  }
+  .kit-dialog--bottom {
+    width: 100%;
+    max-width: 40rem;
+    margin: 0 auto;
+    max-height: 85vh;
+    border-radius: calc(var(--kit-radius) * 2) calc(var(--kit-radius) * 2) 0 0;
+    padding: var(--kit-space-6) var(--kit-space-4) calc(var(--kit-space-6) + env(safe-area-inset-bottom));
+    animation: kit-bottom-in 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes kit-bottom-in {
+    from {
+      transform: translateY(32px);
       opacity: 0;
     }
   }

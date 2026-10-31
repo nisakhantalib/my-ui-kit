@@ -17,8 +17,13 @@
   --color-link: var(--kit-accent);
   --color-danger: var(--kit-danger);
   --color-success: var(--kit-success);
+  --color-brand-surface: var(--kit-brand-surface);
+  --color-brand-accent: var(--kit-brand-accent);
   --radius-card: var(--kit-card-radius);
   --font-sans: var(--kit-font);
+  /* Three type roles (tokens): display for headings and headline amounts, mono for account numbers. */
+  --font-display: var(--kit-font-display);
+  --font-mono: var(--kit-font-mono);
 }
 
 /* Categorical data colours (a validated colour-blind-safe order), stepped separately for dark mode.
@@ -60,12 +65,32 @@ body {
   background: var(--kit-surface);
   color: var(--kit-text);
   font-family: var(--kit-font);
-  font-feature-settings: 'cv11', 'ss01'; /* Inter: single-storey a, open digits */
   -webkit-font-smoothing: antialiased;
+}
+/* Inter (the private-client brand): single-storey a, open digits. */
+:root[data-brand='private'] body {
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+/* Headings and headline amounts use the display face, set wide so figures look minted. */
+h1,
+h2,
+.display {
+  font-family: var(--kit-font-display);
+  font-stretch: 112%;
+  letter-spacing: -0.015em;
+}
+h1 {
+  font-stretch: 118%;
+  letter-spacing: -0.025em;
+}
+.serial {
+  font-family: var(--kit-font-mono);
+  letter-spacing: 0.06em;
 }
 
 /* App-level links and buttons get the same focus ring as kit components. */
-:where(a, button, [tabindex]):focus-visible {
+:where(a, button, [tabindex]:not([tabindex='-1'])):focus-visible {
   outline: 3px solid var(--kit-focus);
   outline-offset: 2px;
   border-radius: 0.5rem;
@@ -73,23 +98,25 @@ body {
 
 /* Money is always tabular, so columns of figures line up. */
 .money {
+  font-family: var(--kit-font-display);
+  font-stretch: 108%;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
 }
 
 .card {
   background: var(--kit-bg);
-  border: 1px solid color-mix(in srgb, var(--kit-border) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--kit-border) 18%, transparent);
   border-radius: var(--kit-card-radius);
   box-shadow:
-    0 1px 2px rgb(16 12 30 / 0.04),
-    0 12px 32px -18px rgb(16 12 30 / 0.16);
+    0 1px 2px rgb(14 26 36 / 0.05),
+    0 8px 24px -12px rgb(14 26 36 / 0.12);
 }
 
 /* The balance card and the payment card use the brand-surface tokens: saturated in both modes,
    and the token build checks on-brand-surface text against both gradient stops. */
 .hero-card,
-.credit-card {
+.brand-panel {
   color: var(--kit-on-brand-surface);
   background:
     radial-gradient(
@@ -116,19 +143,13 @@ body {
 }
 
 .credit-card {
-  box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--kit-brand-surface) 80%, black);
+  color: #fff;
+  background: linear-gradient(135deg, #18242e 0%, #0c141b 60%, #121d26 100%);
+  box-shadow:
+    0 24px 48px -24px rgb(14 26 36 / 0.7),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
   transition: filter 0.3s ease;
-}
-/* Subtle guilloché-style rings, like printed card security patterns. Decorative. */
-.credit-card::before {
-  content: '';
-  position: absolute;
-  inset: -40% -20% auto auto;
-  width: 120%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: repeating-radial-gradient(circle, transparent 0 14px, rgb(255 255 255 / 0.06) 14px 15px);
-  pointer-events: none;
+  --kit-focus: #fff;
 }
 .credit-card--off {
   filter: grayscale(0.6);
@@ -137,7 +158,7 @@ body {
   width: 44px;
   height: 34px;
   border-radius: 7px;
-  background: linear-gradient(135deg, #e9d29a, #b9954a 55%, #e7cf93);
+  background: linear-gradient(135deg, #e5c987, #c8a25a 50%, #9c7b3c);
   box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
 }
 .credit-card .kit-masked__toggle:hover {
@@ -377,4 +398,337 @@ body {
       transform: translateY(6px);
     }
   }
+}
+
+/* ---------- Intaglio: the account stack, brand panels, timelines ---------- */
+
+/* Accounts as a stack of cards (wallet-style). The front card is the selected account; the others
+   peek out above it. Cards stay saturated in dark mode, like a real card in a dark room. */
+.deck {
+  position: relative;
+  width: min(100%, 22rem);
+  aspect-ratio: 1.586;
+  margin-top: 2.5rem; /* room for the cards peeking out above */
+}
+.acct-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 1.125rem 1.25rem;
+  overflow: hidden;
+  color: #fff;
+  text-align: left;
+  border: 0;
+  border-radius: 1.125rem;
+  box-shadow:
+    0 18px 36px -18px rgb(14 26 36 / 0.6),
+    inset 0 1px 0 rgb(255 255 255 / 0.08);
+  transform-origin: center top;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.35s;
+  --kit-focus: #fff;
+}
+.acct-card[data-pos='0'] {
+  z-index: 3;
+}
+.acct-card[data-pos='1'] {
+  z-index: 2;
+  transform: translateY(-1.25rem) scale(0.94);
+  cursor: pointer;
+}
+.acct-card[data-pos='2'] {
+  z-index: 1;
+  transform: translateY(-2.375rem) scale(0.88);
+  cursor: pointer;
+}
+/* Back cards only show their edge: their content is hidden so it never peeks out half-cut. */
+.acct-card:not([data-pos='0']) > :not(.kit-guilloche) {
+  visibility: hidden;
+}
+.acct-card--everyday {
+  background: radial-gradient(120% 140% at 90% 0%, #10514a, #0b3d36 50%, #082a2f);
+}
+.acct-card--savings {
+  background: linear-gradient(135deg, #1c6b5f, #0f4a43);
+}
+.acct-card--card {
+  background: linear-gradient(135deg, #18242e 0%, #0c141b 60%, #121d26 100%);
+}
+.acct-card > * {
+  position: relative;
+}
+.acct-card > .kit-guilloche,
+.credit-card > .kit-guilloche {
+  position: absolute;
+}
+.acct-card .kit-masked__toggle:hover,
+.credit-card .kit-masked__toggle:hover {
+  background: rgb(255 255 255 / 0.15);
+}
+
+/* Dark brand panel (balance over time). */
+.brand-panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--kit-card-radius);
+}
+.brand-panel > :not(.kit-guilloche) {
+  position: relative;
+}
+.brand-panel > .kit-guilloche {
+  position: absolute;
+}
+.brand-panel .area-chart__grid {
+  stroke: rgb(255 255 255 / 0.12);
+}
+.brand-panel .area-chart__cursor {
+  stroke: rgb(255 255 255 / 0.4);
+}
+.brand-panel .area-chart__dot {
+  background: var(--kit-brand-accent);
+  box-shadow:
+    0 0 0 3px var(--kit-brand-surface),
+    0 0 0 4px color-mix(in srgb, var(--kit-brand-accent) 40%, transparent);
+}
+.brand-panel .area-chart__tip {
+  color: var(--kit-text);
+}
+.brand-panel .kit-radio-group--segmented .kit-radio-group__options {
+  background: rgb(255 255 255 / 0.08);
+  border-color: rgb(255 255 255 / 0.14);
+}
+.brand-panel .kit-radio-group--segmented .kit-radio__label {
+  color: rgb(255 255 255 / 0.85);
+}
+.brand-panel .kit-radio-group--segmented .kit-radio:has(:checked) .kit-radio__label {
+  color: var(--kit-brand-surface);
+  background: #fff;
+}
+.brand-panel .kit-btn--ghost {
+  color: inherit;
+}
+.brand-panel .kit-btn--ghost:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+/* Merchant initials with a category dot: identity from the name, category from the dot and the text. */
+.monogram {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  font: 700 0.8125rem/1 var(--kit-font-display);
+  font-stretch: 112%;
+  color: var(--kit-text-muted);
+  background: var(--kit-surface);
+  border-radius: 50%;
+}
+.monogram[data-dot]::after {
+  content: '';
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  width: 30%;
+  height: 30%;
+  border-radius: 50%;
+  background: var(--dot);
+  box-shadow: 0 0 0 2px var(--kit-bg);
+}
+
+/* A calendar date tile for bills. */
+.date-tile {
+  display: grid;
+  flex-shrink: 0;
+  width: 3.25rem;
+  padding: 0.375rem 0 0.4375rem;
+  text-align: center;
+  border: 1px solid color-mix(in srgb, var(--kit-border) 35%, transparent);
+  border-radius: 0.75rem;
+}
+.date-tile small {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kit-danger);
+}
+.date-tile b {
+  font: 680 1.25rem/1.1 var(--kit-font-display);
+  font-stretch: 112%;
+}
+
+/* Goal progress in tenths, like a ruled savings book. */
+.tick-bar {
+  height: 0.5rem;
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--kit-border) 25%, transparent) 0 calc(10% - 2px),
+    transparent calc(10% - 2px) 10%
+  );
+  border-radius: 999px;
+}
+.tick-bar > span {
+  display: block;
+  width: calc(var(--p) * 100%);
+  height: 100%;
+  background: repeating-linear-gradient(90deg, var(--kit-accent) 0 calc(10% - 2px), transparent calc(10% - 2px) 10%);
+  background-size: calc(100% / var(--p)) 100%;
+}
+
+/* Category rows: this month's bar with last month as a marker. */
+.compare-bar {
+  position: relative;
+  height: 0.375rem;
+  background: color-mix(in srgb, var(--kit-border) 20%, transparent);
+  border-radius: 999px;
+}
+.compare-bar > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--kit-text);
+  border-radius: 999px;
+}
+.compare-bar > i {
+  position: absolute;
+  top: -0.25rem;
+  width: 2px;
+  height: 0.875rem;
+  margin-left: -1px;
+  background: var(--kit-text-muted);
+  border-radius: 2px;
+}
+
+/* Activity timeline: one rail, a dot per transaction in its category colour. */
+.timeline {
+  position: relative;
+  padding-left: 1.75rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.4375rem;
+  top: 0.75rem;
+  bottom: 0.75rem;
+  width: 2px;
+  background: color-mix(in srgb, var(--kit-border) 25%, transparent);
+}
+.timeline__dot {
+  position: absolute;
+  left: -1.75rem;
+  top: 50%;
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-top: -0.4375rem;
+  border-radius: 50%;
+  background: var(--dot);
+  box-shadow: 0 0 0 3px var(--kit-bg);
+}
+
+/* Mobile action sheet tiles. */
+.action-tile {
+  display: grid;
+  align-content: start;
+  gap: 0.375rem;
+  min-height: 6.5rem;
+  padding: 1rem;
+  font-weight: 600;
+  background: var(--kit-surface);
+  border-radius: 1rem;
+}
+.action-tile svg {
+  color: var(--kit-primary);
+}
+.action-tile small {
+  font-weight: 400;
+  color: var(--kit-text-muted);
+}
+
+/* ---------- Motion: one entrance, then celebrations for outcomes ---------- */
+.celebrate {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  margin: 0 auto;
+}
+.celebrate__ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid var(--kit-success);
+  border-radius: 50%;
+  opacity: 0;
+}
+.celebrate__badge {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: var(--kit-bg);
+  background: var(--kit-success);
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+  .celebrate__ring {
+    animation: celebrate-ring 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .celebrate__ring + .celebrate__ring {
+    animation-delay: 0.18s;
+  }
+  @keyframes celebrate-ring {
+    from {
+      opacity: 0.9;
+      transform: scale(0.6);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .celebrate__tick {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: celebrate-tick 0.5s 0.25s ease-out forwards;
+  }
+  @keyframes celebrate-tick {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .celebrate__badge {
+    animation: celebrate-pop 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  }
+  @keyframes celebrate-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+  }
+}
+
+/* Sidebar items: the current page is a raised tile on the page colour. */
+.nav-item:hover {
+  background: color-mix(in srgb, var(--kit-bg) 60%, transparent);
+}
+.nav-item[aria-current='page'] {
+  font-weight: 600;
+  color: var(--kit-text);
+  background: var(--kit-bg);
+  box-shadow:
+    0 1px 2px rgb(14 26 36 / 0.06),
+    0 0 0 1px color-mix(in srgb, var(--kit-border) 18%, transparent);
 }

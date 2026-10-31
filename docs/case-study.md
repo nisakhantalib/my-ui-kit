@@ -11,7 +11,7 @@ A regional bank has many product teams in several markets (here: Singapore, Hong
 | | |
 |---|---|
 | **The library** (`packages/ui`) | 23 accessible React components, including the hard banking ones: APG **Combobox** (payee search), **AmountInput** (integer minor units, locale parsing), **OTPInput** (one field, SMS autofill), sortable **DataTable**, **MaskedValue** |
-| **Tokens and brands** (`packages/ui/tokens`) | Three-tier tokens (palette → semantic → component), three brands (Civic, Orchid, Private), light/dark. **The build fails if any of 126 WCAG contrast pairs drops below its minimum** |
+| **Tokens and brands** (`packages/ui/tokens`) | Three-tier tokens (palette → semantic → component), three brands (Civic, Orchid, Private), light/dark. **The build fails if any of 138 WCAG contrast pairs drops below its minimum** |
 | **Markets** (`KitProvider`) | Locale, currency and the library's own words in English, Traditional Chinese and Bahasa Indonesia |
 | **Reference bank** (`apps/bank`) | Orchid Bank, a fictional bank built on research into leading banking apps: Home, Activity, Pay & transfer (payee → amount → review → OTP → receipt), Cards, Settings. 5 markets, 3 languages, strict CSP, installable PWA and Android app |
 | **Three brands** | Civic (default), Orchid and Orchid Private: one component set, re-skinned only by tokens; the bank previews the Private tier live |

@@ -6,6 +6,7 @@ import {
   Combobox,
   Dialog,
   ErrorSummary,
+  Guilloche,
   OTPInput,
   Select,
   TextField,
@@ -13,7 +14,7 @@ import {
   useToast,
   useTrack,
 } from '@nisakhantalib/my-ui-kit';
-import { Check, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { useBank, type Receipt } from '../bank';
 import type { Account, Payee } from '../data';
 import { shareText } from '../native';
@@ -145,35 +146,9 @@ export function Pay({ params }: { params: URLSearchParams }) {
       <PageHeader title={t('payTitle')} intro={t('payIntro', { rail: market.rail })} />
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
         <div className="grid grid-cols-[minmax(0,1fr)] gap-6">
-          {/* Stepper: the visual dots are decorative; the text below states the step for everyone. */}
-          <div>
-            <ol aria-hidden="true" className="flex items-center gap-2">
-              {steps.map((label, i) => (
-                <li key={label} className="flex flex-1 items-center gap-2">
-                  <span
-                    className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-semibold ${
-                      i < stepIndex
-                        ? 'bg-brand text-on-brand'
-                        : i === stepIndex
-                          ? 'bg-brand text-on-brand ring-4 ring-brand/20'
-                          : 'border-2 border-line/60 bg-bg text-muted'
-                    }`}
-                  >
-                    {i < stepIndex ? <Check size={14} strokeWidth={3} /> : i + 1}
-                  </span>
-                  <span className={`hidden text-sm font-medium sm:inline ${i === stepIndex ? '' : 'text-muted'}`}>
-                    {label}
-                  </span>
-                  {i < steps.length - 1 && (
-                    <span className={`h-0.5 flex-1 rounded-full ${i < stepIndex ? 'bg-brand' : 'bg-line/40'}`} />
-                  )}
-                </li>
-              ))}
-            </ol>
-            <p className="mt-3 text-sm font-medium text-muted">
-              {t('stepOf', { n: stepIndex + 1 })} · {steps[stepIndex]}
-            </p>
-          </div>
+          <p className="-mb-2 text-sm font-medium text-muted">
+            {t('stepOf', { n: stepIndex + 1 })} · {steps[stepIndex]}
+          </p>
 
           <section className="card p-6 sm:p-8" aria-labelledby="pay-step-heading">
             <h2
@@ -325,8 +300,21 @@ export function Pay({ params }: { params: URLSearchParams }) {
             {step === 'done' && receipt && payee && amount !== null && (
               <div className="grid gap-6">
                 <div className="grid justify-items-center gap-3 text-center">
-                  <span aria-hidden="true" className="grid size-16 place-items-center rounded-full bg-success text-bg">
-                    <Check size={32} strokeWidth={3} />
+                  {/* The one celebration: rings pulse out and the tick draws in (static with reduced motion). */}
+                  <span aria-hidden="true" className="celebrate">
+                    <span className="celebrate__ring" />
+                    <span className="celebrate__ring" />
+                    <span className="celebrate__badge">
+                      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" strokeWidth="3">
+                        <path
+                          className="celebrate__tick"
+                          pathLength={1}
+                          d="M5 12.5l4.5 4.5L19 7.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </svg>
+                    </span>
                   </span>
                   <p className="money text-[2.75rem] leading-none font-semibold tracking-[-0.03em]">
                     <Amount value={amount} />
@@ -365,22 +353,50 @@ export function Pay({ params }: { params: URLSearchParams }) {
         </div>
 
         {/* Context beside the form on wide screens: how much can still go out today, and what went out lately. */}
-        <aside aria-label={t('dailyLimitTitle')} className="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
-          <Panel title={t('dailyLimitTitle')}>
-            <p className="money text-2xl font-semibold tracking-tight">
-              <Amount value={Math.max(dailyLimit - sentToday, 0)} />
+        <aside aria-label={t('summary')} className="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
+          {/* Live summary: updates as the form is filled, so the review step holds no surprises. */}
+          <section aria-labelledby="pay-summary" className="hero-card brand-panel p-5 sm:p-6">
+            <Guilloche
+              color="var(--kit-brand-accent)"
+              accentColor="#c8a25a"
+              className="-top-36 -right-36 size-80 opacity-50"
+            />
+            <h2 id="pay-summary" className="text-base font-semibold">
+              {t('summary')}
+            </h2>
+            <p className="display mt-4 text-[2.25rem] leading-none font-semibold">
+              {amount ? <Amount value={amount} /> : <span className="opacity-60">{fmt(0)}</span>}
             </p>
-            <p className="mt-1 text-sm text-muted">{t('limitLeft')}</p>
-            <div aria-hidden="true" className="mt-4 h-2 overflow-hidden rounded-full bg-line/20">
-              <div
-                className="h-full rounded-full bg-brand"
-                style={{ width: `${Math.min(sentToday / dailyLimit, 1) * 100}%` }}
-              />
+            <dl className="mt-5 grid grid-cols-[max-content_minmax(0,1fr)] gap-x-4 gap-y-2.5 text-sm">
+              <dt className="opacity-80">{t('to')}</dt>
+              <dd className="m-0 truncate text-right font-semibold">{payee?.name ?? '—'}</dd>
+              <dt className="opacity-80">{t('from')}</dt>
+              <dd className="m-0 text-right font-semibold">
+                {t(from.id)} ···· {from.number.slice(-4)}
+              </dd>
+              <dt className="opacity-80">{t('fee')}</dt>
+              <dd className="m-0 text-right font-semibold text-brand-accent">{t('noFee')}</dd>
+              <dt className="opacity-80">{t('arrives')}</dt>
+              <dd className="m-0 text-right font-semibold">{t('instantly', { rail: market.rail })}</dd>
+            </dl>
+            <div className="mt-5 border-t border-white/15 pt-4">
+              <p className="flex justify-between gap-3 text-sm">
+                <span className="opacity-80">{t('limitLeft')}</span>
+                <span className="money font-semibold">
+                  {money(Math.max(dailyLimit - sentToday - (amount ?? 0), 0))}
+                </span>
+              </p>
+              <div aria-hidden="true" className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/15">
+                <div
+                  className="h-full rounded-full bg-brand-accent"
+                  style={{ width: `${Math.min((sentToday + (amount ?? 0)) / dailyLimit, 1) * 100}%` }}
+                />
+              </div>
+              <p className="mt-2 text-xs opacity-80">
+                {t('limitUsed', { used: money(sentToday), limit: money(dailyLimit) })}
+              </p>
             </div>
-            <p className="mt-2 text-xs text-muted">
-              {t('limitUsed', { used: money(sentToday), limit: money(dailyLimit) })}
-            </p>
-          </Panel>
+          </section>
           {recentPayments.length > 0 && (
             <Panel title={t('recentPayments')}>
               <ul className="divide-y divide-line/20">

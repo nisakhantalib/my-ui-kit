@@ -14,6 +14,8 @@
   :root,
   [data-brand='civic'] {
     --kit-font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-display: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --kit-radius: 10px;
     --kit-bg: #ffffff;
     --kit-surface: #f6f7f9;
@@ -27,6 +29,7 @@
     --kit-brand-surface: #0b5cad;
     --kit-brand-surface-end: #0f766e;
     --kit-on-brand-surface: #ffffff;
+    --kit-brand-accent: #eef0f4;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
@@ -85,45 +88,48 @@
 
   /* ---- orchid ---- */
   [data-brand='orchid'] {
-    --kit-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --kit-radius: 10px;
+    --kit-font: 'Hanken Grotesk Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-display: 'Archivo Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --kit-radius: 12px;
     --kit-bg: #ffffff;
-    --kit-surface: #f6f6f7;
-    --kit-text: #131417;
-    --kit-text-muted: #5a5e67;
-    --kit-border: #868a93;
-    --kit-primary: #131417;
-    --kit-primary-hover: #4b4f57;
+    --kit-surface: #eef1ee;
+    --kit-text: #0e1a24;
+    --kit-text-muted: #56616b;
+    --kit-border: #87928d;
+    --kit-primary: #0b3d36;
+    --kit-primary-hover: #10514a;
     --kit-on-primary: #ffffff;
-    --kit-accent: #3a4bd1;
-    --kit-brand-surface: #131417;
-    --kit-brand-surface-end: #252a40;
+    --kit-accent: #087a66;
+    --kit-brand-surface: #0b3d36;
+    --kit-brand-surface-end: #082a2f;
     --kit-on-brand-surface: #ffffff;
+    --kit-brand-accent: #7fd8c1;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
     --kit-warning: #9a6700;
     --kit-focus: #0b5cad;
     --kit-backdrop: rgb(10 14 22 / 0.55);
-    --kit-button-radius: 10px;
+    --kit-button-radius: 12px;
     --kit-control-height: 48px;
-    --kit-card-radius: 16px;
+    --kit-card-radius: 20px;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) [data-brand='orchid'],
     :root:not([data-theme='light'])[data-brand='orchid'] {
-      --kit-bg: #17181b;
-      --kit-surface: #0e0f11;
-      --kit-text: #f1f1f3;
-      --kit-text-muted: #a8abb3;
-      --kit-border: #6b6f78;
-      --kit-primary: #f1f1f3;
-      --kit-primary-hover: #d6d8dd;
-      --kit-on-primary: #131417;
-      --kit-accent: #93a1ff;
-      --kit-brand-surface: #1d1f23;
-      --kit-brand-surface-end: #2b3150;
+      --kit-bg: #131c20;
+      --kit-surface: #0b1215;
+      --kit-text: #eef2f0;
+      --kit-text-muted: #9aa7a3;
+      --kit-border: #5d6a66;
+      --kit-primary: #7fd8c1;
+      --kit-primary-hover: #a9e6d6;
+      --kit-on-primary: #062226;
+      --kit-accent: #5fcdb0;
+      --kit-brand-surface: #0b3d36;
+      --kit-brand-surface-end: #062226;
       --kit-danger: #ff8a7a;
       --kit-on-danger: #2a0905;
       --kit-success: #6fdd8b;
@@ -134,17 +140,17 @@
   }
   :root[data-theme='dark'] [data-brand='orchid'],
   :root[data-theme='dark'][data-brand='orchid'] {
-    --kit-bg: #17181b;
-    --kit-surface: #0e0f11;
-    --kit-text: #f1f1f3;
-    --kit-text-muted: #a8abb3;
-    --kit-border: #6b6f78;
-    --kit-primary: #f1f1f3;
-    --kit-primary-hover: #d6d8dd;
-    --kit-on-primary: #131417;
-    --kit-accent: #93a1ff;
-    --kit-brand-surface: #1d1f23;
-    --kit-brand-surface-end: #2b3150;
+    --kit-bg: #131c20;
+    --kit-surface: #0b1215;
+    --kit-text: #eef2f0;
+    --kit-text-muted: #9aa7a3;
+    --kit-border: #5d6a66;
+    --kit-primary: #7fd8c1;
+    --kit-primary-hover: #a9e6d6;
+    --kit-on-primary: #062226;
+    --kit-accent: #5fcdb0;
+    --kit-brand-surface: #0b3d36;
+    --kit-brand-surface-end: #062226;
     --kit-danger: #ff8a7a;
     --kit-on-danger: #2a0905;
     --kit-success: #6fdd8b;
@@ -156,6 +162,8 @@
   /* ---- private ---- */
   [data-brand='private'] {
     --kit-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-display: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     --kit-radius: 8px;
     --kit-bg: #ffffff;
     --kit-surface: #f5f6f9;
@@ -169,6 +177,7 @@
     --kit-brand-surface: #14254f;
     --kit-brand-surface-end: #2b3f7a;
     --kit-on-brand-surface: #ffffff;
+    --kit-brand-accent: #d9b45c;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;

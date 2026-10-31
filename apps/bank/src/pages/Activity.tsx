@@ -12,17 +12,18 @@ import {
   useKit,
   type Column,
 } from '@nisakhantalib/my-ui-kit';
-import { ArrowDownLeft, ArrowUpRight, Download, LayoutList, Scale, Table2 } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Download, LayoutList, PiggyBank, Scale, Table2 } from 'lucide-react';
 import { useBank } from '../bank';
 import { SPEND_CATEGORIES, type Category, type Txn } from '../data';
 import type { StringKey } from '../strings';
 import { useOpenTxn } from '../TxnSheet';
-import { CategoryIcon, PageHeader, Panel, TxnRow, useDayLabel } from '../ui';
+import { CATEGORY_COLOR, CategoryIcon, PageHeader, Panel, useDayLabel } from '../ui';
 
 type Direction = 'all' | 'in' | 'out';
 
 export function Activity() {
-  const { t, txns, money } = useBank();
+  const { t, txns, money, goals } = useBank();
+  const goal = goals[0];
   const kit = useKit();
   const announce = useAnnounce();
   const dayLabel = useDayLabel();
@@ -237,24 +238,55 @@ export function Activity() {
           />
         </Panel>
       ) : (
+        // Timeline: one rail per day, a dot in each transaction's category colour, and the
+        // automatic events (money set aside on payday) shown where they happened.
         <div className="card overflow-hidden">
           {groups.map(([day, items]) => {
             const net = items.reduce((s, x) => s + x.amount, 0);
             return (
-              <section key={day} className="px-5 pb-1 sm:px-6">
-                <h2 className="-mx-5 flex items-center justify-between bg-surface/70 px-5 py-2.5 text-[0.8125rem] font-semibold text-muted sm:-mx-6 sm:px-6">
+              <section key={day} className="px-5 pb-2 sm:px-6">
+                <h2 className="-mx-5 flex items-center justify-between bg-surface/70 px-5 py-2.5 font-sans text-[0.8125rem] font-semibold text-muted sm:-mx-6 sm:px-6">
                   <span>{dayLabel(day)}</span>
                   <span className="money font-medium">
                     {t('dayTotal', { amount: money(net, { signDisplay: 'exceptZero' }) })}
                   </span>
                 </h2>
-                <ul className="divide-y divide-line/20">
+                <ol className="timeline">
                   {items.map((x) => (
-                    <li key={x.id}>
-                      <TxnRow txn={x} onSelect={openTxn} />
+                    <li key={x.id} className="relative">
+                      <span
+                        aria-hidden="true"
+                        className="timeline__dot"
+                        style={{ ['--dot' as string]: CATEGORY_COLOR[x.category] }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => openTxn(x)}
+                        className="-mx-2 flex w-[calc(100%+1rem)] cursor-pointer items-center gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-surface"
+                      >
+                        <span className="grid min-w-0 flex-1">
+                          <span className="truncate font-semibold">{x.desc}</span>
+                          <span className="flex flex-wrap items-center gap-x-2 text-sm text-muted">
+                            <span className="money">{x.time}</span>·<span>{t(`cat.${x.category}` as StringKey)}</span>
+                            {x.status === 'pending' && <Badge tone="warning">{t('pending')}</Badge>}
+                          </span>
+                        </span>
+                        <span className={`money shrink-0 font-semibold ${x.amount > 0 ? 'text-success' : ''}`}>
+                          {money(x.amount, { signDisplay: 'exceptZero' })}
+                        </span>
+                      </button>
+                      {x.category === 'income' && goal && (
+                        <p className="mb-3 flex items-center gap-2.5 rounded-xl bg-success/10 px-3.5 py-2.5 text-sm">
+                          <PiggyBank aria-hidden="true" size={17} className="shrink-0 text-success" />
+                          {t('autoSaved', {
+                            amount: money(Math.round(x.amount * 0.1)),
+                            goal: t(`goal.${goal.id}` as StringKey),
+                          })}
+                        </p>
+                      )}
                     </li>
                   ))}
-                </ul>
+                </ol>
               </section>
             );
           })}
