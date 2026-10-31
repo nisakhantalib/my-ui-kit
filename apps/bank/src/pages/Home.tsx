@@ -150,7 +150,7 @@ const RANGES = [7, 30, 90, 365] as const;
 type Range = (typeof RANGES)[number];
 
 function BalancePanel({ ready }: { ready: boolean }) {
-  const { t, accounts, history, money } = useBank();
+  const { t, accounts, history, money, hideBalances } = useBank();
   const kit = useKit();
   const [range, setRange] = useState<Range>(30);
   const [asTable, setAsTable] = useState(false);
@@ -199,10 +199,13 @@ function BalancePanel({ ready }: { ready: boolean }) {
             <Skeleton width="16rem" className="mt-2 [&_.kit-skeleton]:h-12" />
           )}
           <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
-            <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-0.5 font-semibold text-ink">
-              <Trend aria-hidden="true" size={14} className={change >= 0 ? 'text-success' : 'text-danger'} />
-              {changeText}
-            </span>
+            {/* Hidden balances hide the trend too: a percentage or a line still gives the figures away. */}
+            {!hideBalances && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-surface px-2 py-0.5 font-semibold text-ink">
+                <Trend aria-hidden="true" size={14} className={change >= 0 ? 'text-success' : 'text-danger'} />
+                {changeText}
+              </span>
+            )}
             {t('acrossAccounts')}
           </p>
         </div>
@@ -223,6 +226,8 @@ function BalancePanel({ ready }: { ready: boolean }) {
       <div className="mt-6">
         {!ready ? (
           <Skeleton shape="block" className="[&_.kit-skeleton]:h-52" />
+        ) : hideBalances ? (
+          <p className="grid h-44 place-items-center rounded-xl bg-surface text-muted sm:h-52">{t('hidden')}</p>
         ) : asTable ? (
           <DataTable
             caption={t('balanceHistory')}

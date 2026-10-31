@@ -229,6 +229,9 @@ test('hide balances: hidden on screen and for screen readers, remembered after r
   await expect(hide).toHaveAttribute('aria-pressed', 'true');
   await expect(page.getByRole('region', { name: 'Total balance' })).toContainText('Hidden');
   await expect(page.getByText('$12,480.55')).toHaveCount(0);
+  // The trend would give the figures away too.
+  await expect(page.getByRole('slider', { name: 'Balance history' })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Total balance' })).not.toContainText('%');
   await page.reload();
   await expect(page.getByRole('button', { name: 'Hide balances' })).toHaveAttribute('aria-pressed', 'true');
 });
