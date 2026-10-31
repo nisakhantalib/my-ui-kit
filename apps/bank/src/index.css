@@ -245,6 +245,17 @@ body {
   margin: 0;
 }
 
+/* Pay: the amount is the one big field (Wise). */
+.amount-hero .kit-amount__currency {
+  padding: 0 1.125rem;
+  font-size: 1.125rem;
+}
+.amount-hero .kit-amount__input {
+  height: 4.5rem;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
 /* Balance chart */
 .area-chart:focus-visible {
   outline-offset: 6px;

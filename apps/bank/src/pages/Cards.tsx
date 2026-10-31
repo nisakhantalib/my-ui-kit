@@ -3,12 +3,14 @@ import { Badge, Button, Dialog, MaskedValue, Switch, useKit, useToast } from '@n
 import { Ban, Lock, Snowflake } from 'lucide-react';
 import { useBank } from '../bank';
 import { Logo } from '../Logo';
+import { useOpenTxn } from '../TxnSheet';
 import { PageHeader, Panel, TxnRow } from '../ui';
 
 export function Cards() {
   const { t, market, accounts, card, cardState, setCardState, money, txns } = useBank();
   const kit = useKit();
   const toast = useToast();
+  const openTxn = useOpenTxn();
   const [online, setOnline] = useState(true);
   const [overseas, setOverseas] = useState(false);
   const [reporting, setReporting] = useState(false);
@@ -75,6 +77,16 @@ export function Cards() {
             </div>
             <p className="mt-2 text-sm text-muted">{t('usedOf', { used: money(owed), limit: money(card.limit) })}</p>
           </Panel>
+
+          <Panel title={t('recentActivity')}>
+            <ul className="divide-y divide-line/20">
+              {cardTxns.map((x) => (
+                <li key={x.id}>
+                  <TxnRow txn={x} onSelect={openTxn} />
+                </li>
+              ))}
+            </ul>
+          </Panel>
         </div>
 
         <div className="grid grid-cols-[minmax(0,1fr)] content-start gap-6">
@@ -93,12 +105,14 @@ export function Cards() {
               />
               <Switch
                 label={t('onlinePayments')}
+                description={t('onlineHint')}
                 checked={online}
                 disabled={cardState !== 'active'}
                 onCheckedChange={setOnline}
               />
               <Switch
                 label={t('overseasUse')}
+                description={t('overseasHint')}
                 checked={overseas}
                 disabled={cardState !== 'active'}
                 onCheckedChange={setOverseas}
@@ -125,16 +139,6 @@ export function Cards() {
                 {t('reportLost')}
               </Button>
             </div>
-          </Panel>
-
-          <Panel title={t('recentActivity')}>
-            <ul className="divide-y divide-line/20">
-              {cardTxns.map((x) => (
-                <li key={x.id}>
-                  <TxnRow txn={x} />
-                </li>
-              ))}
-            </ul>
           </Panel>
         </div>
       </div>
