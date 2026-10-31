@@ -12,7 +12,7 @@ import {
   useKit,
   type Column,
 } from '@nisakhantalib/my-ui-kit';
-import { Download, LayoutList, Table2 } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, Download, LayoutList, Scale, Table2 } from 'lucide-react';
 import { useBank } from '../bank';
 import { SPEND_CATEGORIES, type Category, type Txn } from '../data';
 import type { StringKey } from '../strings';
@@ -52,6 +52,10 @@ export function Activity() {
     );
     return () => clearTimeout(timer);
   }, [results.length, announce, t]);
+  const totals = results.reduce(
+    (sum, x) => (x.amount > 0 ? { ...sum, in: sum.in + x.amount } : { ...sum, out: sum.out - x.amount }),
+    { in: 0, out: 0 },
+  );
 
   const groups = useMemo(() => {
     const byDay = new Map<string, Txn[]>();
@@ -185,6 +189,37 @@ export function Activity() {
           </div>
         </div>
       </Panel>
+
+      {/* Mercury-style totals for whatever the filters show. */}
+      <section aria-labelledby="activity-summary">
+        <h2 id="activity-summary" className="sr-only">
+          {t('activitySummary')}
+        </h2>
+        <dl className="grid grid-cols-[minmax(0,1fr)] gap-3 sm:grid-cols-3">
+          {(
+            [
+              ['moneyIn', totals.in, ArrowDownLeft, 'bg-success/12 text-success'],
+              ['moneyOut', totals.out, ArrowUpRight, 'bg-surface text-muted'],
+              ['net', totals.in - totals.out, Scale, 'bg-brand/8 text-brand'],
+            ] as const
+          ).map(([key, value, Icon, tone]) => (
+            <div key={key} className="card relative py-4 pr-4 pl-[4.25rem]">
+              <dt className="text-sm text-muted">
+                <span
+                  aria-hidden="true"
+                  className={`absolute top-1/2 left-4 grid size-10 -translate-y-1/2 place-items-center rounded-full ${tone}`}
+                >
+                  <Icon size={18} />
+                </span>
+                {t(key)}
+              </dt>
+              <dd className="money text-lg font-semibold">
+                {money(value, key === 'net' ? { signDisplay: 'exceptZero' } : undefined)}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {results.length === 0 ? (
         <Panel>

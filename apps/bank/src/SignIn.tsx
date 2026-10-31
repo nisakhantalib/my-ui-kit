@@ -30,18 +30,21 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
     <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
       <section
         aria-labelledby="pitch"
-        className="signin-hero relative hidden overflow-hidden p-12 lg:flex lg:flex-col xl:p-16"
+        className="signin-hero relative flex flex-col overflow-hidden px-5 pt-8 pb-10 sm:px-10 lg:p-12 xl:p-16"
       >
         <p className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
           <Logo size={36} onBrand />
           {t('brand')}
         </p>
-        <div className="my-auto max-w-lg py-12">
-          <h2 id="pitch" className="text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.03em] xl:text-[3.25rem]">
+        <div className="mt-8 max-w-lg lg:my-auto lg:py-12">
+          <h2
+            id="pitch"
+            className="text-[2rem] leading-[1.08] font-semibold tracking-[-0.03em] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.25rem]"
+          >
             {t('signInTitle')}
           </h2>
-          <p className="mt-5 text-lg opacity-85">{t('signInIntro')}</p>
-          <ul className="mt-10 grid gap-4">
+          <p className="mt-3 opacity-85 lg:mt-5 lg:text-lg">{t('signInIntro')}</p>
+          <ul className="mt-10 hidden gap-4 lg:grid">
             {FEATURES.map(([Icon, key]) => (
               <li key={key} className="flex items-center gap-3.5">
                 <span aria-hidden="true" className="grid size-10 place-items-center rounded-xl bg-white/12">
@@ -53,22 +56,18 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
           </ul>
         </div>
         {/* A glimpse of the app: decorative, so hidden from assistive technology. */}
-        <div aria-hidden="true" className="signin-preview">
+        <div aria-hidden="true" className="signin-preview hidden lg:block">
           <p className="text-sm opacity-75">{t('totalBalance')}</p>
           <p className="mt-1 text-3xl font-semibold tracking-tight">
             <Amount value={total} />
           </p>
           <PreviewLine points={history.slice(-60)} />
         </div>
-        <p className="mt-10 text-sm opacity-70">{t('fictional')}</p>
+        <p className="mt-10 hidden text-sm opacity-70 lg:block">{t('fictional')}</p>
       </section>
 
-      <main id="main" className="flex items-center justify-center px-5 py-12 sm:px-10">
+      <main id="main" className="flex justify-center px-5 py-10 sm:px-10 lg:items-center lg:py-12">
         <div className="w-full max-w-sm">
-          <p className="mb-10 flex items-center gap-2.5 text-lg font-semibold tracking-tight lg:hidden">
-            <Logo size={34} />
-            {t('brand')}
-          </p>
           <h1 className="text-[2rem] leading-tight font-semibold tracking-tight">{t('welcomeBack')}</h1>
           <p className="mt-2 text-muted">{t('signInHint')}</p>
 

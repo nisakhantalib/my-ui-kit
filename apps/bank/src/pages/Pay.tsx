@@ -226,6 +226,7 @@ export function Pay({ params }: { params: URLSearchParams }) {
             </Select>
             <AmountInput
               id="pay-amount"
+              className="amount-hero"
               label={t('amountLabel')}
               hint={t('amountHint', { available: fmt(from.balance), limit: fmt(dailyLimit) })}
               value={amount}
