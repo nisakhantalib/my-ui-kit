@@ -1,6 +1,6 @@
 # @nisakhantalib/my-ui-kit-codemods
 
-[jscodeshift](https://github.com/facebook/jscodeshift) transforms that migrate apps across [`@nisakhantalib/my-ui-kit`](https://www.npmjs.com/package/@nisakhantalib/my-ui-kit) deprecations and breaking changes.
+[jscodeshift](https://github.com/facebook/jscodeshift) transforms that migrate apps across [`@nisakhantalib/my-ui-kit`](https://github.com/nisakhantalib/my-ui-kit/tree/main/packages/ui) deprecations and breaking changes.
 
 ```bash
 # commit first, then

@@ -1,6 +1,6 @@
 # @nisakhantalib/eslint-plugin-my-ui-kit
 
-ESLint 9 (flat config) rules that keep apps on [`@nisakhantalib/my-ui-kit`](https://www.npmjs.com/package/@nisakhantalib/my-ui-kit) tokens, components and current APIs.
+ESLint 9 (flat config) rules that keep apps on [`@nisakhantalib/my-ui-kit`](https://github.com/nisakhantalib/my-ui-kit/tree/main/packages/ui) tokens, components and current APIs.
 
 ```bash
 npm install -D @nisakhantalib/eslint-plugin-my-ui-kit

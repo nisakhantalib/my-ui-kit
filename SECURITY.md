@@ -12,8 +12,8 @@ The latest minor release gets security fixes.
 
 ## How the supply chain is protected
 
-- Releases are published from GitHub Actions with **npm trusted publishing (OIDC)**: no long-lived npm token exists to leak.
-- Every release carries an **npm provenance attestation** linking the tarball to the exact commit and workflow run. Check with `npm audit signatures`.
+- Releases are built and tagged only by GitHub Actions, from `main`, after lint and tests pass. Each GitHub release carries the exact package tarball and a **CycloneDX SBOM**.
+- No registry token is stored in the repository or its secrets.
 - The library has **zero runtime dependencies**; React is a peer dependency.
 - Dependabot opens grouped update PRs weekly, and CI must pass before they merge.
 

@@ -2,9 +2,7 @@
 
 Accessible, composable React components (WCAG 2.2 AA, light and dark) with design tokens and pluggable analytics (Adobe Analytics AppMeasurement, AEP Web SDK, Adobe Client Data Layer).
 
-```bash
-npm install @nisakhantalib/my-ui-kit
-```
+Released on [GitHub Releases](https://github.com/nisakhantalib/my-ui-kit/releases) (install a release tarball by URL), not the public npm registry.
 
 ```tsx
 import { Button, TextField } from '@nisakhantalib/my-ui-kit';
@@ -23,4 +21,4 @@ import '@nisakhantalib/my-ui-kit/styles.css';
 
 Docs, Storybook, accessibility notes and the reference app: <https://github.com/nisakhantalib/my-ui-kit>
 
-MIT licensed. Published with npm provenance.
+MIT licensed.

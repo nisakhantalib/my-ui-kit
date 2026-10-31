@@ -43,7 +43,7 @@ An RFC must show **evidence of need from at least two teams** (a component one p
 ## Versioning and releases
 
 - **Semver, strictly.** The public API is everything exported from `src/index.ts`, every prop, every CSS custom property and BEM class documented in Storybook, and the token files in `tokens/`. The bump table is in [CONTRIBUTING.md](../CONTRIBUTING.md#commits-and-releases).
-- **Changesets.** Every library PR adds a changeset (`npm run changeset`) written for consumers: what changed, and for a minor or major, what they need to do. Merging to `main` opens a *Version Packages* PR; merging that publishes to npm with provenance.
+- **Changesets.** Every library PR adds a changeset (`npm run changeset`) written for consumers: what changed, and for a minor or major, what they need to do. Merging to `main` opens a *Version Packages* PR; merging that tags each version and creates a GitHub release with the package tarball and an SBOM.
 - **Release cadence.** Patches as needed, minors on a regular cadence (fortnightly), majors at most twice a year, announced a release ahead.
 - The governance packages are versioned with the kit: a release that deprecates something ships the matching lint rule entry and codemod in the same release.
 

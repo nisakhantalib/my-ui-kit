@@ -1,6 +1,6 @@
 # @nisakhantalib/my-ui-kit-scanner
 
-`kit-scan`: an adoption report for [`@nisakhantalib/my-ui-kit`](https://www.npmjs.com/package/@nisakhantalib/my-ui-kit), from source code.
+`kit-scan`: an adoption report for [`@nisakhantalib/my-ui-kit`](https://github.com/nisakhantalib/my-ui-kit/tree/main/packages/ui), from source code.
 
 ```bash
 npx kit-scan <dir...> [--json out.json] [--markdown out.md] [--root dir] [--fail-on-deprecated]

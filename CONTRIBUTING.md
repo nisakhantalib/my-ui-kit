@@ -90,7 +90,7 @@ TypeScript 7 (native compiler) does type-checking and emits the `.d.ts` files. t
 | New component, new prop, new token | minor |
 | Removed or renamed prop, changed default, token rename | major (with a migration note in the changeset) |
 
-Merging to `main` opens a *Version Packages* PR; merging that publishes to npm with provenance (see the README).
+Merging to `main` opens a *Version Packages* PR; merging that tags each version and creates a GitHub release with the tarball and SBOM (see the README).
 
 ## Code of conduct
 
