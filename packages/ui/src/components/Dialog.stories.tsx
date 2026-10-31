@@ -55,3 +55,27 @@ const meta = {
 export default meta;
 export const Default: StoryObj<typeof meta> = { render: () => <DialogDemo role="dialog" /> };
 export const AlertDialog: StoryObj<typeof meta> = { render: () => <DialogDemo role="alertdialog" /> };
+
+function SheetDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>View transaction</Button>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Transaction details" placement="sheet" showClose>
+        <dl style={{ display: 'grid', gap: 12, margin: 0 }}>
+          <div>
+            <dt>Merchant</dt>
+            <dd style={{ margin: 0, fontWeight: 600 }}>NTUC FairPrice</dd>
+          </div>
+          <div>
+            <dt>Amount</dt>
+            <dd style={{ margin: 0, fontWeight: 600 }}>-SGD 86.40</dd>
+          </div>
+        </dl>
+      </Dialog>
+    </>
+  );
+}
+
+/** `placement="sheet"`: slides in from the right for details and side tasks; same focus rules as a dialog. */
+export const Sheet: StoryObj<typeof meta> = { render: () => <SheetDemo /> };

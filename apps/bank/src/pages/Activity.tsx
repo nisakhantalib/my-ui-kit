@@ -4,6 +4,8 @@ import {
   Button,
   DataTable,
   IconButton,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
   useAnnounce,
@@ -14,6 +16,7 @@ import { Download, LayoutList, Table2 } from 'lucide-react';
 import { useBank } from '../bank';
 import { SPEND_CATEGORIES, type Category, type Txn } from '../data';
 import type { StringKey } from '../strings';
+import { useOpenTxn } from '../TxnSheet';
 import { CategoryIcon, PageHeader, Panel, TxnRow, useDayLabel } from '../ui';
 
 type Direction = 'all' | 'in' | 'out';
@@ -23,6 +26,7 @@ export function Activity() {
   const kit = useKit();
   const announce = useAnnounce();
   const dayLabel = useDayLabel();
+  const openTxn = useOpenTxn();
   const [query, setQuery] = useState('');
   const [direction, setDirection] = useState<Direction>('all');
   const [category, setCategory] = useState<'' | Category>('');
@@ -149,20 +153,19 @@ export function Activity() {
           </Select>
         </div>
         <div className="mt-1 flex flex-wrap items-center justify-between gap-3">
-          {/* Toggle buttons in a labelled group: aria-pressed tells screen readers which filter is on. */}
-          <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
+          {/* One choice of three: a native radio group, drawn as a segmented control. */}
+          <RadioGroup
+            legend={t('filterLabel')}
+            legendHidden
+            name="direction"
+            variant="segmented"
+            value={direction}
+            onValueChange={(v) => setDirection(v as Direction)}
+          >
             {filters.map(([value, key]) => (
-              <button
-                key={value}
-                type="button"
-                aria-pressed={direction === value}
-                onClick={() => setDirection(value)}
-                className="min-h-10 rounded-full border border-line/50 px-4 text-sm font-medium transition-colors hover:bg-surface aria-pressed:border-brand aria-pressed:bg-brand aria-pressed:text-on-brand"
-              >
-                {t(key)}
-              </button>
+              <Radio key={value} value={value} label={t(key)} />
             ))}
-          </div>
+          </RadioGroup>
           <div className="flex items-center gap-1">
             <p className="mr-2 text-sm text-muted" aria-hidden="true">
               {t('results', { count: results.length })}
@@ -213,7 +216,7 @@ export function Activity() {
                 <ul className="divide-y divide-line/20">
                   {items.map((x) => (
                     <li key={x.id}>
-                      <TxnRow txn={x} />
+                      <TxnRow txn={x} onSelect={openTxn} />
                     </li>
                   ))}
                 </ul>

@@ -125,6 +125,14 @@ export interface Txn {
   amount: number;
   status: 'posted' | 'pending';
   account: 'everyday' | 'card';
+  /** Local time of day, for the detail view. */
+  time: string;
+}
+
+export interface Goal {
+  id: 'travel' | 'home' | 'safety';
+  saved: number;
+  target: number;
 }
 
 export interface Bill {
@@ -237,6 +245,7 @@ export function seed(market: Market, digits: number, now = Date.now()) {
     amount: amt(sgd),
     status,
     account,
+    time: `${String(8 + ((i * 5) % 12)).padStart(2, '0')}:${String((i * 17) % 60).padStart(2, '0')}`,
   }));
   const biller = payees.find((p) => p.kind === 'biller')!;
   const bills: Bill[] = [
@@ -244,14 +253,30 @@ export function seed(market: Market, digits: number, now = Date.now()) {
     { id: 'b-card', payeeId: 'card', dueInDays: 12, amount: amt(1320.4) },
   ];
   const card: CardInfo = { number: accounts[2]!.number, expiry: '08/29', limit: amt(8000), statementDay: 15 };
-  // 30 days of total balance for the trend line, ending at today's total. Deterministic per market.
   const total = accounts[0]!.balance + accounts[1]!.balance;
-  // A gentle climb with small wobbles: reads as a trend, not a step.
-  const history = Array.from({ length: 30 }, (_, i) => {
-    const progress = i / 29;
-    const wobble = Math.sin(i * 1.3) * 0.006 + Math.sin(i / 3) * 0.008;
-    return Math.round(total * (0.925 + 0.075 * progress ** 1.6 + wobble * (1 - progress)));
+  // A year of daily balances ending at today's total: a steady climb, monthly salary steps and
+  // small daily spending, so every chart range (7D to 1Y) looks like a real account. Deterministic.
+  const days = 365;
+  const history = Array.from({ length: days }, (_, i) => {
+    const t = i / (days - 1);
+    const trend = 0.78 + 0.22 * t ** 1.2;
+    const monthly = ((i % 30) / 30) * -0.03; // spending through the month, reset on payday
+    const wobble = Math.sin(i * 1.7) * 0.0015 + Math.sin(i / 11) * 0.008;
+    return Math.round(total * (trend + monthly + wobble));
   });
-  history[29] = total;
-  return { accounts, payees, txns, bills, card, history, dailyLimit: amt(market.dailyLimitSgd) };
+  history[days - 1] = total;
+  const goals: Goal[] = [
+    { id: 'travel', saved: amt(3720), target: amt(6000) },
+    { id: 'home', saved: amt(18400), target: amt(60000) },
+    { id: 'safety', saved: amt(9100), target: amt(10000) },
+  ];
+  // Last month's spending per category, for the month-on-month insight.
+  const lastMonth: Record<(typeof SPEND_CATEGORIES)[number], number> = {
+    shopping: amt(240.5),
+    groceries: amt(198.2),
+    bills: amt(142.8),
+    dining: amt(96.4),
+    transport: amt(61.9),
+  };
+  return { accounts, payees, txns, bills, card, history, goals, lastMonth, dailyLimit: amt(market.dailyLimitSgd) };
 }

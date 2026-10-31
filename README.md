@@ -1,12 +1,16 @@
 # My UI Kit
 
-**An accessible, multi-brand, multi-market React component library for banking, governed like a product.** It has 23 components (including the hard banking ones), design tokens that refuse to build if contrast fails, Web Components for non-React teams, and lint, codemod and adoption tooling. It is proven by **Orchid Bank**, a fictional bank in five markets that runs as a website, an installable PWA and an Android app.
+**An accessible, multi-brand, multi-market React component library for banking, governed like a product.** It has 24 components (including the hard banking ones), design tokens that refuse to build if contrast fails, Web Components for non-React teams, and lint, codemod and adoption tooling. It is proven by **Orchid Bank**, a fictional bank in five markets that runs as a website, an installable PWA and an Android app.
 
 [![CI](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml)
 
 **Live:** [Orchid Bank](https://nisakhantalib.github.io/my-ui-kit/) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · **Start here:** [one-page case study](docs/case-study.md)
 
-![Orchid Bank home: balance card with 30-day trend, quick actions, accounts with masked numbers, spending donut and upcoming bills](docs/screenshots/home-light.png)
+![Orchid Bank home: action chips, total balance with an interactive chart and period switch, money in and out, card credit widget, spending insight, savings goals and bills](docs/screenshots/home-light.png)
+
+| Sign in: pick a market, one button in | Balance chart: hover, drag or arrow keys | Transaction details sheet |
+|---|---|---|
+| ![Sign-in screen with a brand panel and a market picker](docs/screenshots/signin.png) | ![Balance chart with a tooltip showing the date and balance](docs/screenshots/home-chart.png) | ![Side sheet with a transaction's amount, status and details](docs/screenshots/txn-sheet.png) |
 
 | Dark mode | Private client tier (same components, different tokens) |
 |---|---|
@@ -24,7 +28,7 @@
 
 ```
 packages/
-  ui              @nisakhantalib/my-ui-kit: 23 components, KitProvider (locale/currency/i18n), analytics adapters
+  ui              @nisakhantalib/my-ui-kit: 24 components, KitProvider (locale/currency/i18n), analytics adapters
     tokens/       palette → semantic → component tokens; brands civic, orchid, private; contrast.json
   elements        @nisakhantalib/my-ui-kit-elements: the same components as <kit-*> Web Components
   eslint-plugin   lint rules: no hard-coded colours, prefer kit components, no deprecated props (autofix)
@@ -44,13 +48,13 @@ docs/
 
 | Requirement | Evidence |
 |---|---|
-| **Reusable, composable components across platforms** | 23 components with compound APIs (`Tabs`, `RadioGroup`, `Accordion`) and one controlled/uncontrolled contract. Runs on **web, PWA, Android** (Capacitor) and **non-React stacks** (`<kit-*>` Web Components), in **3 brands × 5 markets × 3 languages** |
+| **Reusable, composable components across platforms** | 24 components with compound APIs (`Tabs`, `RadioGroup`, `Accordion`) and one controlled/uncontrolled contract. Runs on **web, PWA, Android** (Capacitor) and **non-React stacks** (`<kit-*>` Web Components), in **3 brands × 5 markets × 3 languages** |
 | **Business and design requirements → specs** | [Transfer spec](docs/specs/transfer-flow.md): stakeholder brief, resolved questions, Given/When/Then criteria **each mapped to its e2e test**, tracking plan. [Component spec template](docs/specs/component-spec-template.md) + [RadioGroup spec](docs/specs/components/radio-group.md) |
 | **Standards, best practices, architecture** | [9 ADRs](docs/adr/), [CONTRIBUTING](CONTRIBUTING.md) (API conventions, definition of done), [governance model](docs/governance.md), **enforced** by ESLint (jsx-a11y strict + our own plugin), Prettier, coverage floors, size budgets, a token contrast gate, a deprecated-API gate |
 | **Communication with business, product, design** | Storybook with usage guidance, brand/market/theme toolbars, a live contrast report and an adoption dashboard; specs written for non-developers; design research with sources ([design/](docs/design/README.md)) |
 | **Web fundamentals, HTML, CSS** | Native elements first ([ADR 0004](docs/adr/0004-native-elements-first.md)); cascade layers, custom properties, `:has()`, `color-mix()`, safe-area insets, forced colours, reduced motion, 320px reflow on every page |
 | **JavaScript / TypeScript** | Strict TS (`noUncheckedIndexedAccess`), generic components (`Combobox<T>`, `DataTable<T>`), TS 7 for types; exact minor-unit money arithmetic |
-| **UI testing** | 82 jsdom + 8 real-Chromium component tests; **48 stories × 3 brands × 2 themes** axe audit; 6 Web Component browser tests; **15 Playwright scenarios × desktop + Pixel 7** (every page under axe and a strict CSP, journeys, offline); visual regression in a pinned container; Lighthouse CI; 49 tooling tests. Each new gate was first shown to fail on a deliberately broken build |
+| **UI testing** | 87 jsdom + 8 real-Chromium component tests; **54 stories × 3 brands × 2 themes** axe audit; 6 Web Component browser tests; **19 Playwright scenarios × desktop + Pixel 7** (every page under axe and a strict CSP, journeys, offline); visual regression in a pinned container; Lighthouse CI; 49 tooling tests. Each new gate was first shown to fail on a deliberately broken build |
 | **React** | React 19, hooks, context, portals, lazy routes, compound components, `'use client'` output for Next.js Server Components |
 | **npm package publishing** | Per-module ESM (`Button` alone **365 B**), `exports` map, publint + attw, size-limit, **Changesets**, **trusted publishing (OIDC) with provenance**, **CycloneDX SBOM** per release; 5 publishable packages |
 | **Native / PWA / hybrid** | Workbox PWA (installable, offline reload tested), Capacitor 8 Android APK built in CI, native share sheet with web fallbacks |
@@ -107,11 +111,11 @@ import '@nisakhantalib/my-ui-kit/styles.css';
 | Group | Components |
 |---|---|
 | Actions | `Button`, `IconButton` |
-| Forms | `TextField`, `Select`, `Checkbox` (incl. mixed state), `RadioGroup` + `Radio` (plain / cards), `Switch` |
-| Banking | `AmountInput`, `OTPInput`, `Combobox`, `DataTable`, `MaskedValue`, `Badge` |
+| Forms | `TextField`, `Select`, `Checkbox` (incl. mixed state), `RadioGroup` + `Radio` (plain / cards / segmented), `Switch` |
+| Banking | `Money`, `AmountInput`, `OTPInput`, `Combobox`, `DataTable`, `MaskedValue`, `Badge` |
 | Navigation | `Tabs` (`TabList`, `Tab`, `TabPanel`), `Accordion` + `AccordionItem`, `SkipLink` |
 | Feedback | `Alert`, `ErrorSummary`, `ToastProvider` + `useToast`, `Skeleton`, `AnnouncerProvider` + `useAnnounce` |
-| Overlays | `Dialog` (`dialog` / `alertdialog`) |
+| Overlays | `Dialog` (`dialog` / `alertdialog`; centred or side `sheet`) |
 | Foundations | `KitProvider` + `useKit`, `AnalyticsProvider` + `useTrack` / `usePageView`, `VisuallyHidden`, `useControllableState`, `tokens` |
 
 ## Release

@@ -122,7 +122,7 @@
     {
       "name": "Styles (all components, 3 brands x 2 modes)",
       "path": "dist/my-ui-kit.css",
-      "limit": "4.5 kB",
+      "limit": "5 kB",
       "rolldown": false
     }
   ]

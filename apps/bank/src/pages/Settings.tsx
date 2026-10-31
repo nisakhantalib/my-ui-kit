@@ -1,4 +1,5 @@
-import { Radio, RadioGroup, Switch } from '@nisakhantalib/my-ui-kit';
+import { Button, Radio, RadioGroup, Switch } from '@nisakhantalib/my-ui-kit';
+import { LogOut } from 'lucide-react';
 import type { Preferences, Theme, Tier } from '../App';
 import { useBank } from '../bank';
 import { MARKETS, type Market } from '../data';
@@ -76,6 +77,13 @@ export function Settings({ prefs }: { prefs: Preferences }) {
               onCheckedChange={setHideBalances}
             />
           </Panel>
+
+          <div>
+            <Button variant="secondary" onClick={prefs.signOut}>
+              <LogOut aria-hidden="true" size={18} />
+              {t('signOut')}
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,0 +1,124 @@
+import { useEffect } from 'react';
+import { Button, Select } from '@nisakhantalib/my-ui-kit';
+import { Accessibility, ArrowRight, ShieldCheck, SlidersHorizontal, Zap, type LucideIcon } from 'lucide-react';
+import type { Preferences } from './App';
+import { useBank } from './bank';
+import { MARKETS, type Market } from './data';
+import { Logo } from './Logo';
+import type { StringKey } from './strings';
+import { Amount } from './ui';
+
+const FEATURES: [LucideIcon, StringKey][] = [
+  [Zap, 'featureInstant'],
+  [SlidersHorizontal, 'featureControl'],
+  [Accessibility, 'featureAccess'],
+];
+
+/**
+ * The landing screen. There is no real authentication in a demo, so it says so and offers one
+ * button; choosing the market first shows off the five-market setup before anything loads.
+ */
+export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => void }) {
+  const { t, market, accounts, history } = useBank();
+  const total = accounts.filter((a) => a.id !== 'card').reduce((s, a) => s + a.balance, 0);
+
+  useEffect(() => {
+    document.title = t('welcomeBack');
+  }, [t]);
+
+  return (
+    <div className="grid min-h-dvh lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+      <section
+        aria-labelledby="pitch"
+        className="signin-hero relative hidden overflow-hidden p-12 lg:flex lg:flex-col xl:p-16"
+      >
+        <p className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
+          <Logo size={36} onBrand />
+          {t('brand')}
+        </p>
+        <div className="my-auto max-w-lg py-12">
+          <h2 id="pitch" className="text-[2.75rem] leading-[1.08] font-semibold tracking-[-0.03em] xl:text-[3.25rem]">
+            {t('signInTitle')}
+          </h2>
+          <p className="mt-5 text-lg opacity-85">{t('signInIntro')}</p>
+          <ul className="mt-10 grid gap-4">
+            {FEATURES.map(([Icon, key]) => (
+              <li key={key} className="flex items-center gap-3.5">
+                <span aria-hidden="true" className="grid size-10 place-items-center rounded-xl bg-white/12">
+                  <Icon size={19} />
+                </span>
+                {t(key)}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* A glimpse of the app: decorative, so hidden from assistive technology. */}
+        <div aria-hidden="true" className="signin-preview">
+          <p className="text-sm opacity-75">{t('totalBalance')}</p>
+          <p className="mt-1 text-3xl font-semibold tracking-tight">
+            <Amount value={total} />
+          </p>
+          <PreviewLine points={history.slice(-60)} />
+        </div>
+        <p className="mt-10 text-sm opacity-70">{t('fictional')}</p>
+      </section>
+
+      <main id="main" className="flex items-center justify-center px-5 py-12 sm:px-10">
+        <div className="w-full max-w-sm">
+          <p className="mb-10 flex items-center gap-2.5 text-lg font-semibold tracking-tight lg:hidden">
+            <Logo size={34} />
+            {t('brand')}
+          </p>
+          <h1 className="text-[2rem] leading-tight font-semibold tracking-tight">{t('welcomeBack')}</h1>
+          <p className="mt-2 text-muted">{t('signInHint')}</p>
+
+          <div className="mt-8 grid gap-5">
+            <Select
+              label={t('chooseMarket')}
+              value={market.code}
+              onChange={(e) => prefs.setMarket(e.target.value as Market['code'])}
+            >
+              {MARKETS.map((m) => (
+                <option key={m.code} value={m.code} lang={m.locale}>
+                  {m.name} · {m.currency}
+                </option>
+              ))}
+            </Select>
+            <Button size="lg" onClick={onEnter} trackId="signin-demo">
+              {t('viewDemo')}
+              <ArrowRight aria-hidden="true" size={18} />
+            </Button>
+          </div>
+
+          <p className="mt-6 flex items-center gap-2 text-sm text-muted">
+            <ShieldCheck aria-hidden="true" size={16} className="shrink-0 text-success" />
+            {t('secured')}
+          </p>
+          <p className="mt-12 flex gap-5 border-t border-line/25 pt-6 text-sm">
+            <a className="font-medium text-brand underline-offset-4 hover:underline" href="storybook/">
+              {t('storybook')}
+            </a>
+            <a
+              className="font-medium text-brand underline-offset-4 hover:underline"
+              href="https://github.com/nisakhantalib/my-ui-kit"
+            >
+              {t('source')}
+            </a>
+          </p>
+          <p className="mt-4 text-xs text-muted lg:hidden">{t('fictional')}</p>
+        </div>
+      </main>
+    </div>
+  );
+}
+
+function PreviewLine({ points }: { points: number[] }) {
+  const min = Math.min(...points);
+  const span = Math.max(...points) - min || 1;
+  const d = points.map((p, i) => `${(i / (points.length - 1)) * 100},${36 - ((p - min) / span) * 32}`).join(' ');
+  return (
+    <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="mt-4 h-20 w-full">
+      <polyline points={d} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
+    </svg>
+  );
+}

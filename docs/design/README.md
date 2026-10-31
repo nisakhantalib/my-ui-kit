@@ -8,13 +8,26 @@ Patterns that the best banking apps share, and how this design answers each:
 
 | Finding | Source | Here |
 |---|---|---|
-| The balance is the largest element; card grouping, generous whitespace, restrained colour | [Lollypop 2026](https://lollypop.design/blog/2026/june/banking-app-ui-design/), [theskinsfactory](https://www.theskinsfactory.com/uiux-design-blog/fintech-ui-ux-design) | 48px balance on a brand-surface card; white cards on a calm surface canvas |
+| The balance is the largest element; card grouping, generous whitespace, restrained colour | [Lollypop 2026](https://lollypop.design/blog/2026/june/banking-app-ui-design/), [theskinsfactory](https://www.theskinsfactory.com/uiux-design-blog/fintech-ui-ux-design) | 52px balance with raised cents; white cards on a calm surface canvas |
 | Trust comes from predictable states: status, fees upfront, clear confirmations | [eleken](https://www.eleken.co/blog-posts/trusted-fintech-ui-examples) | Pending/Posted badges, "Fee: Free" on review, receipt with reference number |
-| Shortcuts on the home screen (DBS Simple Mode shows six; OCBC lets you choose) | [DBS](https://dbs.com.sg/i-bank/deposits/bank-with-ease/simple-mode), [OCBC](https://ocbc.com/personal-banking/digital-banking/app/home) | Six quick actions, each going somewhere real |
+| Shortcuts on the home screen (DBS Simple Mode shows six; OCBC lets you choose) | [DBS](https://dbs.com.sg/i-bank/deposits/bank-with-ease/simple-mode), [OCBC](https://ocbc.com/personal-banking/digital-banking/app/home) | Five action chips, each going somewhere real |
 | Transaction lists built for scanning; category icons say more than merchant logos | [Revolut](https://www.revolut.com/en-US/blog/post/you-can-now-search-for-your-transactions/), [Monzo community](https://community.monzo.com/t/abandon-merchant-logos/49842) | Category icon + merchant + category + amount, grouped by day, searchable |
 | Card management: visual card, instant freeze, limits | [Gummble 2026](https://gummble.com/blog/best-finance-app-designs-2026) | Cards page: freeze is a Switch (applies instantly), usage bar, report-lost alert dialog |
 | Calm, precise web banking (Mercury), Stripe-grade tables | [AdminLTE 2026](https://adminlte.io/blog/fintech-dashboard-design-examples/) | Sidebar layout, tabular figures, sortable DataTable view |
 | Premium tiers get their own look (priority / private banking) | common practice | **Private** brand: navy and champagne gold, same components |
+
+### Five reference products, and what was taken from each
+
+Patterns only: no branding, copy or assets were reused.
+
+| Product | Pattern | Here |
+|---|---|---|
+| [Mercury](https://mercury.com) | ⌘K search; action chips under the greeting; a balance with small raised cents; an interactive balance chart with a period switch and money in/out; a credit widget with one stacked bar | `CommandPalette` (APG combobox), chips, kit `Money`, `AreaChart` (an ARIA slider over the days, plus a table view), `RadioGroup variant="segmented"`, credit widget |
+| [Revolut](https://revolut.com) | The balance as the hero; glass cards on a saturated brand panel | 52px balance; frosted preview on the sign-in brand panel |
+| [Wise](https://wise.com) | Transfer review as a timeline: you send, fee, they receive, arrives | `.review-steps` on the review step, total debit stated |
+| [Monzo](https://monzo.com) | Savings pots with progress; tap a transaction for a details sheet | Savings goals; `Dialog placement="sheet"` from any transaction row or search result |
+| [Ramp](https://ramp.com) | Hairline borders, quiet canvas, dense tabular figures | Hairline chips and cards, tabular numerals everywhere |
+| All five | A polished sign-in landing | Split brand panel + market picker + one "View demo account" button |
 
 ## Design principles
 
@@ -41,8 +54,8 @@ Low fidelity, to agree flow and hierarchy before visual design. Generated from [
 
 | Wireframe decision | Implemented as |
 |---|---|
-| Balance card with trend | `.hero-card` on `--kit-brand-surface` tokens + decorative `Sparkline`; the change is stated in text |
-| Quick actions | links (not buttons): each goes to a page, a deep link (`#/pay?to=…&amount=…`) or a filter |
+| Balance with trend | white card, kit `Money`, `AreaChart` with a period switch and a table toggle; the change is stated in text |
+| Quick actions | chips in a labelled `nav`; links (not buttons), each to a page or a deep link (`#/pay?to=…&amount=…`) |
 | Masked account numbers | `MaskedValue` |
 | Payee search | `Combobox` (APG), plus one-tap recent payees (`aria-pressed`) |
 | Amount | `AmountInput`, integer minor units, locale-aware |

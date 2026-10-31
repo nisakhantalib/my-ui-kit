@@ -11,6 +11,7 @@ import { createContext, useContext, useMemo, type ReactNode } from 'react';
 
 const en = {
   'toast.region': 'Notifications',
+  'dialog.close': 'Close',
   'toast.dismiss': 'Dismiss: {title}',
   'errorSummary.title': 'There is a problem',
   'errorSummary.count': '{count, plural, one {# error} other {# errors}}',
@@ -40,6 +41,7 @@ export type Messages = Record<MessageKey, string>;
 
 const zhHant: Messages = {
   'toast.region': '通知',
+  'dialog.close': '關閉',
   'toast.dismiss': '關閉：{title}',
   'errorSummary.title': '請修正以下問題',
   'errorSummary.count': '{count} 個錯誤',
@@ -66,6 +68,7 @@ const zhHant: Messages = {
 
 const id: Messages = {
   'toast.region': 'Notifikasi',
+  'dialog.close': 'Tutup',
   'toast.dismiss': 'Tutup: {title}',
   'errorSummary.title': 'Ada masalah',
   'errorSummary.count': '{count} kesalahan',

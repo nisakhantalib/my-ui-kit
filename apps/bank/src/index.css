@@ -116,6 +116,218 @@ body {
   background: rgb(255 255 255 / 0.15);
 }
 
+/* Action chips (Mercury): hairline pills; the first, primary action is filled. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0 1.125rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--kit-text);
+  background: var(--kit-bg);
+  border: 1px solid color-mix(in srgb, var(--kit-border) 35%, transparent);
+  border-radius: 999px;
+  box-shadow: 0 1px 2px rgb(16 12 30 / 0.05);
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+.chip svg {
+  color: var(--kit-primary);
+}
+.chip:hover {
+  border-color: color-mix(in srgb, var(--kit-border) 70%, transparent);
+}
+.chip--primary {
+  color: var(--kit-on-primary);
+  background: var(--kit-primary);
+  border-color: var(--kit-primary);
+}
+.chip--primary svg {
+  color: currentColor;
+}
+.chip--primary:hover {
+  background: color-mix(in srgb, var(--kit-primary) 88%, black);
+}
+
+/* Top-bar search: an icon button on phones, a search-box look with its shortcut on wide screens. */
+.search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  color: var(--kit-text-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.search-trigger:hover {
+  color: var(--kit-text);
+  background: var(--kit-surface);
+}
+.search-trigger__label,
+.search-trigger kbd {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (min-width: 64rem) {
+  .search-trigger {
+    justify-content: flex-start;
+    width: 20rem;
+    height: 2.5rem;
+    padding: 0 0.5rem 0 0.875rem;
+    font-size: 0.9375rem;
+    background: var(--kit-surface);
+    border: 1px solid color-mix(in srgb, var(--kit-border) 30%, transparent);
+    border-radius: 0.75rem;
+  }
+  .search-trigger:hover {
+    border-color: color-mix(in srgb, var(--kit-border) 60%, transparent);
+    background: var(--kit-surface);
+  }
+  .search-trigger__label,
+  .search-trigger kbd {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+  }
+  .search-trigger kbd {
+    margin-left: auto;
+    padding: 0.125rem 0.4rem;
+    font: 600 0.75rem/1.2 var(--kit-font);
+    color: var(--kit-text-muted);
+    background: var(--kit-bg);
+    border: 1px solid color-mix(in srgb, var(--kit-border) 35%, transparent);
+    border-radius: 0.375rem;
+  }
+}
+
+/* Transfer review: a short timeline of what happens to the money (Wise). */
+.review-steps {
+  display: grid;
+  gap: 1.125rem;
+  padding-left: 1.5rem;
+  border-left: 2px solid color-mix(in srgb, var(--kit-border) 30%, transparent);
+}
+.review-steps > div {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+}
+.review-steps > div::before {
+  content: '';
+  position: absolute;
+  left: calc(-1.5rem - 6px);
+  top: 0.4em;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--kit-bg);
+  border: 2px solid var(--kit-primary);
+}
+.review-steps dt {
+  color: var(--kit-text-muted);
+}
+.review-steps dd {
+  margin: 0;
+}
+
+/* Balance chart */
+.area-chart:focus-visible {
+  outline-offset: 6px;
+}
+.area-chart__grid {
+  stroke: color-mix(in srgb, var(--kit-border) 30%, transparent);
+  stroke-dasharray: 3 4;
+}
+.area-chart__cursor {
+  stroke: color-mix(in srgb, var(--kit-text-muted) 60%, transparent);
+}
+.area-chart__dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: var(--kit-primary);
+  box-shadow:
+    0 0 0 3px var(--kit-bg),
+    0 0 0 4px color-mix(in srgb, var(--kit-primary) 35%, transparent);
+  pointer-events: none;
+}
+.area-chart__tip {
+  position: absolute;
+  top: -0.5rem;
+  padding: 0.375rem 0.625rem;
+  white-space: nowrap;
+  background: var(--kit-bg);
+  border: 1px solid color-mix(in srgb, var(--kit-border) 30%, transparent);
+  border-radius: 0.625rem;
+  box-shadow: 0 8px 24px -10px rgb(16 12 30 / 0.3);
+  pointer-events: none;
+}
+
+/* A thumbnail of the payment card, for the credit widget. */
+.mini-card {
+  display: block;
+  flex-shrink: 0;
+  width: 3.5rem;
+  height: 2.25rem;
+  border-radius: 0.375rem;
+}
+.mini-card::after {
+  content: '';
+  position: absolute;
+  left: 0.4rem;
+  top: 0.55rem;
+  width: 0.75rem;
+  height: 0.55rem;
+  border-radius: 2px;
+  background: linear-gradient(135deg, #e9d29a, #b9954a);
+}
+
+/* Sign-in preview: a frosted card floating on the brand panel (Revolut-style glass). */
+.signin-preview {
+  max-width: 22rem;
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: rgb(255 255 255 / 0.1);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 30px 60px -30px rgb(0 0 0 / 0.5);
+}
+
+/* Sign-in: a brand panel beside the form on wide screens. */
+.signin-hero {
+  color: var(--kit-on-brand-surface);
+  background:
+    radial-gradient(
+      90% 70% at 100% 0%,
+      color-mix(in srgb, var(--kit-brand-surface-end) 80%, transparent),
+      transparent 60%
+    ),
+    radial-gradient(
+      70% 60% at 0% 100%,
+      color-mix(in srgb, var(--kit-brand-surface-end) 45%, transparent),
+      transparent 70%
+    ),
+    var(--kit-brand-surface);
+  --kit-focus: var(--kit-on-brand-surface);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .fade-in {
     animation: fade-in 0.35s ease-out both;
