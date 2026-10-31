@@ -1,14 +1,14 @@
 name: Release
 
-# Changesets flow:
-# 1. Each PR that changes the library adds a changeset (`npm run changeset`).
-# 2. On main, this job opens/updates a "Version Packages" PR (bumps version + CHANGELOG.md).
-# 3. Merging that PR publishes to npm.
+# Changesets flow, released on GitHub (not the public npm registry):
+# 1. Each PR that changes a package adds a changeset (`npm run changeset`).
+# 2. On main, this job opens/updates a "Version Packages" PR (bumps versions + CHANGELOG.md).
+# 3. Merging that PR tags each new version and creates a GitHub release for it, with the
+#    package tarball attached (installable with `npm install <tarball URL>`) and, for the
+#    component library, a CycloneDX SBOM.
 #
-# Publishing uses npm trusted publishing (OIDC): no NPM_TOKEN secret to store or rotate,
-# and provenance attestations are added automatically. One-time setup on npmjs.com:
-# package → Settings → Trusted publishing → GitHub Actions, repo nisakhantalib/my-ui-kit,
-# workflow release.yml. Needs npm CLI 11.5.1+, which ships with Node 24.
+# Moving to a registry later (an internal Artifactory/Nexus, or npm) is a change to the `release`
+# script: `changeset publish` instead of `changeset tag`, plus the registry's auth.
 
 on:
   push:
@@ -17,9 +17,8 @@ on:
 concurrency: release-${{ github.ref }}
 
 permissions:
-  contents: write # commit the version bump
+  contents: write # tags, releases and the version bump
   pull-requests: write # open the Version Packages PR
-  id-token: write # OIDC token for npm trusted publishing
 
 jobs:
   release:
@@ -29,7 +28,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -44,13 +42,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Software bill of materials for each release (CycloneDX), for supply-chain and vendor reviews.
-      - name: Attach SBOM to the GitHub release
+      # The installable tarball for every released package, plus a software bill of materials.
+      - name: Attach package tarballs and SBOM to the GitHub releases
         if: steps.changesets.outputs.published == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISHED: ${{ steps.changesets.outputs.publishedPackages }}
         run: |
-          npm sbom --sbom-format cyclonedx --omit dev -w @nisakhantalib/my-ui-kit > sbom.cdx.json
-          version=$(node -p "JSON.parse(process.env.PUBLISHED).find(p => p.name === '@nisakhantalib/my-ui-kit')?.version ?? ''")
-          if [ -n "$version" ]; then gh release upload "@nisakhantalib/my-ui-kit@$version" sbom.cdx.json --clobber; fi
+          mkdir -p release
+          node -e 'for (const p of JSON.parse(process.env.PUBLISHED)) console.log(`${p.name} ${p.version}`)' |
+            while read -r name version; do
+              file=$(npm pack -w "$name" --pack-destination release --silent | tail -n 1)
+              gh release upload "$name@$version" "release/$file" --clobber
+              if [ "$name" = "@nisakhantalib/my-ui-kit" ]; then
+                npm sbom --sbom-format cyclonedx --omit dev -w "$name" > release/sbom.cdx.json
+                gh release upload "$name@$version" release/sbom.cdx.json --clobber
+              fi
+            done

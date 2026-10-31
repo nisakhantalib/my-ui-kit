@@ -249,6 +249,12 @@ test('sign-in: market chosen first, one button in, focus lands on the greeting; 
   await expect(page.getByRole('button', { name: '查看示範帳戶' })).toBeVisible();
 });
 
+test('a ?demo link skips sign-in and leaves a clean URL', async ({ page }) => {
+  await page.goto('/?demo#/cards');
+  await expect(page.getByRole('heading', { level: 1, name: 'Cards' })).toBeVisible();
+  expect(new URL(page.url()).search).toBe('');
+});
+
 test('balance chart: range switch, keyboard exploration announces date and balance, table alternative', async ({
   page,
 }) => {

@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml)
 
-**Live:** [Orchid Bank](https://nisakhantalib.github.io/my-ui-kit/) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · **Start here:** [one-page case study](docs/case-study.md)
+**Live:** [Orchid Bank](https://nisakhantalib.github.io/my-ui-kit/) ([straight into the demo account](https://nisakhantalib.github.io/my-ui-kit/?demo)) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · **Start here:** [one-page case study](docs/case-study.md)
 
 ![Orchid Bank home: action chips, total balance with an interactive chart and period switch, money in and out, card credit widget, spending insight, savings goals and bills](docs/screenshots/home-light.png)
 
@@ -56,7 +56,7 @@ docs/
 | **JavaScript / TypeScript** | Strict TS (`noUncheckedIndexedAccess`), generic components (`Combobox<T>`, `DataTable<T>`), TS 7 for types; exact minor-unit money arithmetic |
 | **UI testing** | 87 jsdom + 8 real-Chromium component tests; **54 stories × 3 brands × 2 themes** axe audit; 6 Web Component browser tests; **19 Playwright scenarios × desktop + Pixel 7** (every page under axe and a strict CSP, journeys, offline); visual regression in a pinned container; Lighthouse CI; 49 tooling tests. Each new gate was first shown to fail on a deliberately broken build |
 | **React** | React 19, hooks, context, portals, lazy routes, compound components, `'use client'` output for Next.js Server Components |
-| **npm package publishing** | Per-module ESM (`Button` alone **365 B**), `exports` map, publint + attw, size-limit, **Changesets**, **trusted publishing (OIDC) with provenance**, **CycloneDX SBOM** per release; 5 publishable packages |
+| **npm package publishing** | 5 packages built to publish: per-module ESM (`Button` alone **365 B**), `exports` map, publint + attw, size-limit. **Changesets** versioning and changelogs; each release is tagged on GitHub with its installable tarball and a **CycloneDX SBOM**. Pointing it at a registry (internal or npm) is a one-line change |
 | **Native / PWA / hybrid** | Workbox PWA (installable, offline reload tested), Capacitor 8 Android APK built in CI, native share sheet with web fallbacks |
 | **Accessible UI for screen readers** | APG patterns; live regions that exist before content; focus moves to each new page and step; single-input OTP; spoken currency; masked values read as "ending 6789"; WCAG 2.5.3 label-in-name enforced. [ACCESSIBILITY.md](ACCESSIBILITY.md) has the WCAG criterion per component and NVDA/VoiceOver/TalkBack scripts |
 | **Visual design** | A research-led banking UI ([design/](docs/design/README.md)); three complete brands from one component set; dark mode designed (not inverted) with a dedicated `brand-surface` role |
@@ -82,8 +82,10 @@ Android: `npm run android:apk -w bank` (needs JDK 21 and the Android SDK; CI bui
 
 ## Using the package
 
+The packages are released on [GitHub Releases](https://github.com/nisakhantalib/my-ui-kit/releases), not the public npm registry. Install a release tarball directly, or work in this repo, where the workspaces link it:
+
 ```bash
-npm install @nisakhantalib/my-ui-kit
+npm install https://github.com/nisakhantalib/my-ui-kit/releases/download/%40nisakhantalib%2Fmy-ui-kit%400.2.0/nisakhantalib-my-ui-kit-0.2.0.tgz
 ```
 
 ```tsx
@@ -122,9 +124,9 @@ import '@nisakhantalib/my-ui-kit/styles.css';
 
 1. In your PR, run `npm run changeset` and describe the change (patch / minor / major; see the [deprecation policy](docs/governance.md#deprecation-policy)).
 2. On merge to `main`, `release.yml` opens a **Version Packages** PR that bumps versions and writes the CHANGELOGs.
-3. Merging that PR publishes to npm with **trusted publishing (OIDC)**: no `NPM_TOKEN`, provenance attached, SBOM uploaded to the GitHub release.
+3. Merging that PR tags each new version and creates a GitHub release with the package tarball and, for the component library, a CycloneDX SBOM.
 
-One-time setup: publish each package once by hand (`npm publish` in its folder). Then, on npmjs.com, go to package → Settings → Trusted publishing → GitHub Actions and enter repo `nisakhantalib/my-ui-kit` and workflow `release.yml`.
+To release to a registry instead (a bank's internal Artifactory or Nexus, or npm), change the root `release` script from `changeset tag` to `changeset publish` and give the workflow that registry's credentials; for npm, trusted publishing (OIDC) avoids storing a token.
 
 ## License
 
