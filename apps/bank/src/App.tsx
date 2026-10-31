@@ -319,11 +319,11 @@ function Shell({ prefs }: { prefs: Preferences }) {
           <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-line/20 pt-6 text-sm text-muted">
             <p>{t('fictional')}</p>
             <p className="flex gap-4">
-              <a className="font-medium text-brand underline-offset-4 hover:underline" href="storybook/">
+              <a className="font-medium text-link underline-offset-4 hover:underline" href="storybook/">
                 {t('storybook')}
               </a>
               <a
-                className="font-medium text-brand underline-offset-4 hover:underline"
+                className="font-medium text-link underline-offset-4 hover:underline"
                 href="https://github.com/nisakhantalib/my-ui-kit"
               >
                 {t('source')}

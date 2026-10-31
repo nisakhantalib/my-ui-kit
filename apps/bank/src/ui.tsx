@@ -25,15 +25,15 @@ export const CATEGORY_ICON: Record<Category, LucideIcon> = {
   transfer: ArrowLeftRight,
 };
 
-/** Chart colours per category, all from tokens so they re-theme per brand and mode. Never the only cue: always labelled. */
+/** One fixed hue per category (chart slots 1–5, colour-blind-safe in this order). Never the only cue: always labelled. */
 export const CATEGORY_COLOR: Record<Category, string> = {
-  shopping: 'var(--kit-accent)',
-  groceries: 'var(--kit-primary)',
-  bills: 'color-mix(in srgb, var(--kit-primary) 55%, var(--kit-bg))',
-  dining: 'color-mix(in srgb, var(--kit-accent) 55%, var(--kit-bg))',
-  transport: 'var(--kit-text-muted)',
+  shopping: 'var(--chart-1)',
+  groceries: 'var(--chart-2)',
+  bills: 'var(--chart-3)',
+  dining: 'var(--chart-4)',
+  transport: 'var(--chart-5)',
   income: 'var(--kit-success)',
-  transfer: 'var(--kit-border)',
+  transfer: 'var(--kit-text-muted)',
 };
 
 export function CategoryIcon({ category, size = 40 }: { category: Category; size?: number }) {
@@ -41,8 +41,14 @@ export function CategoryIcon({ category, size = 40 }: { category: Category; size
   return (
     <span
       aria-hidden="true"
-      className={`grid shrink-0 place-items-center rounded-full ${category === 'income' ? 'bg-success/12 text-success' : 'bg-brand/10 text-brand'}`}
-      style={{ width: size, height: size }}
+      className="grid shrink-0 place-items-center rounded-full"
+      style={{
+        width: size,
+        height: size,
+        // A tint of the category's chart colour, with the icon darkened towards the text colour for contrast.
+        background: `color-mix(in srgb, ${CATEGORY_COLOR[category]} 14%, transparent)`,
+        color: `color-mix(in srgb, ${CATEGORY_COLOR[category]} 70%, var(--kit-text))`,
+      }}
     >
       <Icon size={size * 0.45} strokeWidth={2} />
     </span>
