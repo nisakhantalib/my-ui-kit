@@ -26,6 +26,8 @@ const RadioGroupContext = createContext<RadioGroupContextValue | null>(null);
 
 export interface RadioGroupProps {
   legend: string;
+  /** Keep the legend for screen readers but hide it visually, when the context already labels the group. */
+  legendHidden?: boolean;
   /** Shared `name` for the native radios; also what form submission uses. */
   name: string;
   value?: string;
@@ -35,8 +37,11 @@ export interface RadioGroupProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
-  /** `cards` gives each option a bordered, full-width target (good on touch screens). */
-  variant?: 'plain' | 'cards';
+  /**
+   * `cards`: each option a bordered, full-width target (good on touch screens).
+   * `segmented`: a compact one-line control (2 to 5 short options), e.g. a chart range or a filter.
+   */
+  variant?: 'plain' | 'cards' | 'segmented';
   id?: string;
   className?: string;
   children: ReactNode;
@@ -44,6 +49,7 @@ export interface RadioGroupProps {
 
 export function RadioGroup({
   legend,
+  legendHidden = false,
   name,
   value,
   defaultValue = '',
@@ -73,7 +79,7 @@ export function RadioGroup({
         disabled={disabled}
         className={cx('kit-radio-group', `kit-radio-group--${variant}`, error && 'kit-radio-group--error', className)}
       >
-        <legend className="kit-field__label">
+        <legend className={legendHidden ? 'kit-sr-only' : 'kit-field__label'}>
           {legend}
           <RequiredMark show={required} />
         </legend>

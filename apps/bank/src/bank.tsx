@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 import { useKit } from '@nisakhantalib/my-ui-kit';
-import { seed, type Account, type Bill, type CardInfo, type Market, type Payee, type Txn } from './data';
+import { seed, type Account, type Bill, type CardInfo, type Goal, type Market, type Payee, type Txn } from './data';
 import { translator, type T } from './strings';
 
 export type CardState = 'active' | 'frozen' | 'blocked';
@@ -22,6 +22,8 @@ interface BankState {
   cardState: CardState;
   setCardState: (state: CardState) => void;
   history: number[];
+  goals: Goal[];
+  lastMonth: Record<string, number>;
   dailyLimit: number;
   hideBalances: boolean;
   setHideBalances: (hide: boolean) => void;
@@ -72,6 +74,7 @@ export function BankProvider({ market, hideBalances, setHideBalances, tier, chil
       amount: -amount,
       status: 'posted',
       account: 'everyday',
+      time: new Date().toTimeString().slice(0, 5),
     };
     setAccounts((all) => all.map((a) => (a.id === fromId ? { ...a, balance: a.balance - amount } : a)));
     setTxns((all) => [txn, ...all]);
@@ -91,6 +94,8 @@ export function BankProvider({ market, hideBalances, setHideBalances, tier, chil
     cardState,
     setCardState,
     history: initial.history,
+    goals: initial.goals,
+    lastMonth: initial.lastMonth,
     dailyLimit: initial.dailyLimit,
     hideBalances,
     setHideBalances,

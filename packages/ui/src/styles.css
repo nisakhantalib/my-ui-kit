@@ -1062,6 +1062,116 @@
     box-shadow: 0 0 0 2px var(--kit-bg);
   }
 
+  /* ---------- Money ---------- */
+  .kit-money {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .kit-money__minor {
+    font-size: 0.6em;
+    vertical-align: 0.55em;
+    letter-spacing: 0;
+    opacity: 0.85;
+  }
+
+  /* ---------- Dialog header, close, sheet ---------- */
+  .kit-dialog__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--kit-space-3);
+  }
+  .kit-dialog__close {
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    margin: -8px -8px 0 0;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--kit-text-muted);
+    background: none;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .kit-dialog__close:hover {
+    background: var(--kit-surface);
+    color: var(--kit-text);
+  }
+  .kit-dialog__backdrop--sheet {
+    place-items: stretch end;
+    padding: 0;
+  }
+  .kit-dialog--sheet {
+    width: min(460px, 100vw);
+    height: 100%;
+    max-height: none;
+    border-radius: calc(var(--kit-radius) * 1.6) 0 0 calc(var(--kit-radius) * 1.6);
+    padding: var(--kit-space-6) var(--kit-space-6) calc(var(--kit-space-6) + env(safe-area-inset-bottom));
+    animation: kit-sheet-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes kit-sheet-in {
+    from {
+      transform: translateX(24px);
+      opacity: 0;
+    }
+  }
+
+  /* ---------- RadioGroup: segmented ---------- */
+  .kit-radio-group--segmented .kit-radio-group__options {
+    display: inline-flex;
+    gap: 2px;
+    width: fit-content;
+    max-width: 100%;
+    padding: 3px;
+    background: var(--kit-surface);
+    border: 1px solid color-mix(in srgb, var(--kit-border) 45%, transparent);
+    border-radius: 999px;
+  }
+  .kit-radio-group--segmented .kit-radio {
+    position: relative;
+    gap: 0;
+  }
+  /* The native radio stays (keyboard, screen readers) but is visually replaced by the segment. */
+  .kit-radio-group--segmented .kit-radio__input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    z-index: 1;
+    margin: 0;
+  }
+  .kit-radio-group--segmented .kit-radio__label {
+    display: grid;
+    place-items: center;
+    min-height: 32px;
+    padding: 0 var(--kit-space-4);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--kit-text-muted);
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .kit-radio-group--segmented .kit-radio:has(:checked) .kit-radio__label {
+    color: var(--kit-text);
+    background: var(--kit-bg);
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+  }
+  .kit-radio-group--segmented .kit-radio:has(:focus-visible) .kit-radio__label {
+    outline: 3px solid var(--kit-focus);
+    outline-offset: 1px;
+  }
+  .kit-radio-group--segmented .kit-radio__desc {
+    display: none;
+  }
+  .kit-radio-group--segmented > legend {
+    margin-bottom: var(--kit-space-2);
+  }
+
   /* WCAG 2.3.3: no movement for people who ask for less. */
   @media (prefers-reduced-motion: reduce) {
     [class^='kit-'],

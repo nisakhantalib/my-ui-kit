@@ -51,3 +51,23 @@ export const Plain: Story = {
     ),
   },
 };
+
+/** A compact one-line choice, e.g. a chart range. The legend can be visually hidden when the context labels it. */
+export const Segmented: Story = {
+  args: {
+    legend: 'Chart period',
+    legendHidden: true,
+    name: 'period',
+    variant: 'segmented',
+    defaultValue: '30',
+    hint: undefined,
+    children: (
+      <>
+        <Radio value="7" label="1W" />
+        <Radio value="30" label="1M" />
+        <Radio value="90" label="3M" />
+        <Radio value="365" label="1Y" />
+      </>
+    ),
+  },
+};

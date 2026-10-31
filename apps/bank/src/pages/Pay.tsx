@@ -18,7 +18,7 @@ import { useBank, type Receipt } from '../bank';
 import type { Account, Payee } from '../data';
 import { shareText } from '../native';
 import { href } from '../router';
-import { Avatar, PageHeader } from '../ui';
+import { Amount, Avatar, PageHeader } from '../ui';
 
 type Step = 'details' | 'review' | 'done';
 type Errors = Partial<Record<'payee' | 'amount', string>>;
@@ -253,13 +253,33 @@ export function Pay({ params }: { params: URLSearchParams }) {
 
         {step === 'review' && payee && amount !== null && (
           <div className="grid gap-6">
+            {/* Wise-style breakdown: what leaves, what it costs, what arrives and when, in reading order. */}
+            <div className="rounded-2xl border border-line/30 p-5 sm:p-6">
+              <p className="text-sm text-muted">{t('youSend')}</p>
+              <p className="money mt-1 text-[2.5rem] leading-none font-semibold tracking-[-0.03em] sm:text-5xl">
+                <Amount value={amount} />
+              </p>
+              <dl className="review-steps mt-6">
+                <div>
+                  <dt>{t('fee')}</dt>
+                  <dd className="font-medium text-success">{t('noFee')}</dd>
+                </div>
+                <div>
+                  <dt>{t('theyReceive', { name: payee.name })}</dt>
+                  <dd className="money font-semibold">{fmt(amount)}</dd>
+                </div>
+                <div>
+                  <dt>{t('arrives')}</dt>
+                  <dd className="font-medium">{t('instantly', { rail: market.rail })}</dd>
+                </div>
+              </dl>
+            </div>
             <div className="flex items-center gap-4 rounded-2xl bg-surface p-4">
               <Avatar name={payee.name} size={48} />
               <div className="min-w-0">
                 <p className="font-semibold">{payee.name}</p>
                 <p className="truncate text-sm text-muted">{payee.detail}</p>
               </div>
-              <p className="money ml-auto text-2xl font-semibold sm:text-3xl">{fmt(amount)}</p>
             </div>
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-6 gap-y-3 text-[0.9375rem]">
               <dt className="text-muted">{t('from')}</dt>
@@ -272,10 +292,8 @@ export function Pay({ params }: { params: URLSearchParams }) {
                   <dd className="m-0 text-right">{reference.trim()}</dd>
                 </>
               )}
-              <dt className="text-muted">{t('arrives')}</dt>
-              <dd className="m-0 text-right">{t('instantly', { rail: market.rail })}</dd>
-              <dt className="text-muted">{t('fee')}</dt>
-              <dd className="m-0 text-right font-medium text-success">{t('noFee')}</dd>
+              <dt className="text-muted">{t('totalDebit', { account: t(from.id) })}</dt>
+              <dd className="money m-0 text-right font-semibold">{fmt(amount)}</dd>
             </dl>
             <div className="flex flex-wrap gap-3">
               <Button variant="secondary" onClick={() => goTo('details')}>
@@ -295,7 +313,9 @@ export function Pay({ params }: { params: URLSearchParams }) {
               <span aria-hidden="true" className="grid size-16 place-items-center rounded-full bg-success text-bg">
                 <Check size={32} strokeWidth={3} />
               </span>
-              <p className="money text-4xl font-semibold tracking-tight">{fmt(amount)}</p>
+              <p className="money text-[2.75rem] leading-none font-semibold tracking-[-0.03em]">
+                <Amount value={amount} />
+              </p>
               <p className="text-muted">{t('doneTo', { name: payee.name })}</p>
             </div>
             <dl className="grid grid-cols-[max-content_minmax(0,1fr)] gap-x-6 gap-y-3 rounded-2xl bg-surface p-5 text-[0.9375rem]">

@@ -32,7 +32,7 @@ A regional bank has many product teams in several markets (here: Singapore, Hong
 
 | Claim | Proof |
 |---|---|
-| Accessible | 82 jsdom + 8 real-browser component tests; **48 stories × 3 brands × 2 themes** pass axe; every page passes axe in light and dark on desktop and phone; Lighthouse accessibility **100** on every page |
+| Accessible | 87 jsdom + 8 real-browser component tests; **54 stories × 3 brands × 2 themes** pass axe; every page passes axe in light and dark on desktop and phone; Lighthouse accessibility **100** on every page |
 | Correct money handling | Unit tests for exact parsing ("19.99" → 1999), IDR, INR lakh grouping, and the select-all-and-retype regression |
 | Secure | Bank app passes e2e with **zero CSP violations** under `script-src 'self'; style-src 'self'`; zero runtime dependencies; npm provenance; CycloneDX SBOM per release |
 | Fast and small | `Button` alone is **365 B** brotli (tree-shaking proven in CI); whole library 10.9 kB; less-visited pages load lazily; Lighthouse performance 95–100 |

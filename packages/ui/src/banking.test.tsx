@@ -5,12 +5,16 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { expectNoA11yViolations } from './test-setup.js';
 import {
   AmountInput,
+  Dialog,
+  Radio,
+  RadioGroup,
   Badge,
   Combobox,
   DataTable,
   ErrorSummary,
   KitProvider,
   MaskedValue,
+  Money,
   OTPInput,
   Skeleton,
   ToastProvider,
@@ -429,5 +433,70 @@ describe('deprecations', () => {
     expect(warn.mock.calls[0]![0]).toContain('use `focusOnShow`'.replace('use', 'Use'));
     expect(screen.getByRole('heading').parentElement).not.toHaveFocus(); // autoFocus={false} honoured
     warn.mockRestore();
+  });
+});
+
+describe('Money', () => {
+  it('formats for the market and de-emphasises the cents without splitting the spoken amount', () => {
+    const { container } = render(
+      <KitProvider locale="en-SG" currency="SGD">
+        <Money value={123450} />
+      </KitProvider>,
+    );
+    expect(container).toHaveTextContent('$1,234.50');
+    expect(container.querySelector('.kit-money__minor')?.textContent).toBe('.');
+  });
+
+  it('has no minor part for zero-decimal currencies', () => {
+    const { container } = render(
+      <KitProvider locale="id-ID" currency="IDR">
+        <Money value={1500000} />
+      </KitProvider>,
+    );
+    expect(container.textContent?.replace(/\s/g, ' ')).toMatch(/Rp\s?1\.500\.000/);
+    expect(container.querySelector('.kit-money__minor')).toBeNull();
+  });
+});
+
+describe('Dialog sheet and segmented RadioGroup', () => {
+  it('sheet placement keeps dialog semantics and adds a translated close button', async () => {
+    const onClose = vi.fn();
+    render(
+      <KitProvider locale="zh-HK" currency="HKD">
+        <Dialog open onClose={onClose} title="交易詳情" placement="sheet" showClose>
+          <p>內容</p>
+        </Dialog>
+      </KitProvider>,
+    );
+    expect(screen.getByRole('dialog', { name: '交易詳情' })).toHaveClass('kit-dialog--sheet');
+    await userEvent.click(screen.getByRole('button', { name: '關閉' }));
+    expect(onClose).toHaveBeenCalled();
+  });
+
+  it('segmented variant is still a native radio group', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <RadioGroup legend="Range" name="range" variant="segmented" defaultValue="30">
+        <Radio value="7" label="7D" />
+        <Radio value="30" label="30D" />
+        <Radio value="90" label="90D" />
+      </RadioGroup>,
+    );
+    await user.click(screen.getByRole('radio', { name: '90D' }));
+    expect(screen.getByRole('radio', { name: '90D' })).toBeChecked();
+    await user.keyboard('{ArrowLeft}');
+    expect(screen.getByRole('radio', { name: '30D' })).toBeChecked();
+    await expectNoA11yViolations(container);
+  });
+
+  it('legendHidden keeps the group name for screen readers', () => {
+    render(
+      <RadioGroup legend="Chart period" legendHidden name="p" variant="segmented" defaultValue="a">
+        <Radio value="a" label="1W" />
+        <Radio value="b" label="1M" />
+      </RadioGroup>,
+    );
+    expect(screen.getByRole('radiogroup', { name: 'Chart period' })).toBeInTheDocument();
+    expect(screen.getByText('Chart period')).toHaveClass('kit-sr-only');
   });
 });

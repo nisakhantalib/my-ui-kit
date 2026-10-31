@@ -21,7 +21,9 @@ import {
   Eye,
   EyeOff,
   House,
+  LogOut,
   ReceiptText,
+  Search,
   Settings as SettingsIcon,
   ShieldCheck,
 } from 'lucide-react';
@@ -29,9 +31,12 @@ import { MARKETS, type Market } from './data';
 import { BankProvider, useBank } from './bank';
 import { href, useRoute, type Page } from './router';
 import { Avatar, requestHeadingFocus } from './ui';
+import { CommandPalette } from './CommandPalette';
 import { Logo } from './Logo';
 import { Home } from './pages/Home';
+import { SignIn } from './SignIn';
 import type { StringKey } from './strings';
+import { TxnSheetProvider } from './TxnSheet';
 
 // Less-visited pages load on demand, so Home's first paint ships less JavaScript.
 const Activity = lazy(() => import('./pages/Activity').then((m) => ({ default: m.Activity })));
@@ -69,6 +74,7 @@ export interface Preferences {
   setTheme: (theme: Theme) => void;
   tier: Tier;
   setTier: (tier: Tier) => void;
+  signOut: () => void;
 }
 
 export function App() {
@@ -76,6 +82,7 @@ export function App() {
   const [theme, setTheme] = usePersisted<Theme>('theme', 'system');
   const [tier, setTier] = usePersisted<Tier>('tier', 'personal');
   const [hideBalances, setHideBalances] = usePersisted<boolean>('hide-balances', false);
+  const [signedIn, setSignedIn] = usePersisted<boolean>('signed-in', false);
   const market = MARKETS.find((m) => m.code === marketCode) ?? MARKETS[0]!;
   const adapters = useMemo(() => [consoleAdapter, adobeDataLayerAdapter()], []);
 
@@ -88,7 +95,7 @@ export function App() {
     root.lang = market.locale;
   }, [theme, tier, market.locale]);
 
-  const prefs: Preferences = { market, setMarket, theme, setTheme, tier, setTier };
+  const prefs: Preferences = { market, setMarket, theme, setTheme, tier, setTier, signOut: () => setSignedIn(false) };
 
   return (
     <KitProvider locale={market.locale} currency={market.currency}>
@@ -102,7 +109,20 @@ export function App() {
               setHideBalances={setHideBalances}
               tier={tier}
             >
-              <Shell prefs={prefs} />
+              {signedIn ? (
+                <TxnSheetProvider>
+                  <Shell prefs={prefs} />
+                </TxnSheetProvider>
+              ) : (
+                <SignIn
+                  prefs={prefs}
+                  onEnter={() => {
+                    // The button disappears with the screen: start the user at Home's heading.
+                    requestHeadingFocus();
+                    setSignedIn(true);
+                  }}
+                />
+              )}
             </BankProvider>
           </ToastProvider>
         </AnnouncerProvider>
@@ -137,6 +157,20 @@ function Shell({ prefs }: { prefs: Preferences }) {
   const firstRender = useRef(true);
   const [notifOpen, setNotifOpen] = useState(false);
   const [unread, setUnread] = useState(3);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+
+  // Ctrl+K / ⌘K opens search from anywhere.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
   // Fixed for the session: an hour before the app opened (a real app gets this from the auth server).
   const [signedInAt] = useState(() => new Date(Date.now() - 3_600_000));
 
@@ -224,10 +258,11 @@ function Shell({ prefs }: { prefs: Preferences }) {
         </nav>
         <div className="m-3 flex items-center gap-3 rounded-2xl bg-surface p-3">
           <Avatar name={market.customerFull} size={38} />
-          <div className="min-w-0 text-sm">
+          <div className="min-w-0 flex-1 text-sm">
             <p className="truncate font-semibold">{market.customerFull}</p>
             <p className="truncate text-muted">{market.name}</p>
           </div>
+          <IconButton label={t('signOut')} icon={<LogOut />} size="sm" onClick={prefs.signOut} />
         </div>
       </aside>
 
@@ -238,7 +273,17 @@ function Shell({ prefs }: { prefs: Preferences }) {
               <Logo size={30} />
               {t('brand')}
             </a>
-            <p className="hidden items-center gap-1.5 text-sm text-muted lg:flex">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="search-trigger ml-auto lg:ml-0"
+              aria-keyshortcuts={isMac ? 'Meta+K' : 'Control+K'}
+            >
+              <Search aria-hidden="true" size={17} />
+              <span className="search-trigger__label">{t('searchOpen')}</span>
+              <kbd aria-hidden="true">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
+            </button>
+            <p className="hidden items-center gap-1.5 text-sm text-muted lg:ml-auto lg:flex">
               <ShieldCheck aria-hidden="true" size={16} className="text-success" />
               {t('lastLogin', {
                 time: signedInAt.toLocaleTimeString(kit.locale, {
@@ -247,7 +292,7 @@ function Shell({ prefs }: { prefs: Preferences }) {
                 }),
               })}
             </p>
-            <div className="ml-auto flex items-center gap-1">
+            <div className="flex items-center gap-1 lg:ml-4">
               {balanceToggle}
               {bell}
               {/* Decorative: Settings is in the main navigation (a link named "Settings" showing "TW" would fail WCAG 2.5.3). */}
@@ -316,6 +361,8 @@ function Shell({ prefs }: { prefs: Preferences }) {
           ))}
         </ul>
       </nav>
+
+      {searchOpen && <CommandPalette prefs={prefs} onClose={() => setSearchOpen(false)} />}
 
       <Dialog open={notifOpen} onClose={() => setNotifOpen(false)} title={t('notifications')}>
         <ul className="mb-4 grid gap-3">

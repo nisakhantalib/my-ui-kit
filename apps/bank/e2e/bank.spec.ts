@@ -19,20 +19,24 @@ async function expectNoAxeViolations(page: Page) {
   expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(', ')}`)).toEqual([]);
 }
 
-async function openBank(page: Page, { market = 'SG', hash = '', theme = 'light', tier = 'personal' } = {}) {
+async function openBank(
+  page: Page,
+  { market = 'SG', hash = '', theme = 'light', tier = 'personal', signedIn = true } = {},
+) {
   await page.clock.setFixedTime(new Date('2026-10-29T10:00:00')); // stable greeting and dates
   await page.addInitScript(
-    ([m, th, ti]) => {
+    ([m, th, ti, s]) => {
+      localStorage.setItem('signed-in', JSON.stringify(s));
       localStorage.setItem('market', JSON.stringify(m));
       localStorage.setItem('theme', JSON.stringify(th));
       localStorage.setItem('tier', JSON.stringify(ti));
     },
-    [market, theme, tier],
+    [market, theme, tier, signedIn] as const,
   );
   await page.goto(`/${hash}`);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
   // Home simulates loading: wait until the accounts panel is no longer busy.
-  if (!hash)
+  if (!hash && signedIn)
     await expect(page.getByRole('region', { name: /^(Accounts|帳戶|Rekening)$/ })).not.toHaveAttribute(
       'aria-busy',
       'true',
@@ -163,8 +167,8 @@ test('activity: search, money in/out filter, live count, CSV export', async ({ p
   await expect(page.getByRole('main')).not.toContainText('NTUC FairPrice');
 
   await page.getByRole('searchbox', { name: /Search transactions/ }).fill('');
-  await page.getByRole('button', { name: 'Money in' }).click();
-  await expect(page.getByRole('button', { name: 'Money in' })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('radio', { name: 'Money in' }).check();
+  await expect(page.getByRole('radiogroup', { name: 'Show' })).toBeVisible();
   await expect(page.getByRole('main')).toContainText('Salary · Acme Pte Ltd');
   await expect(page.getByRole('main')).not.toContainText('Grab');
 
@@ -227,6 +231,68 @@ test('hide balances: hidden on screen and for screen readers, remembered after r
   await expect(page.getByText('$12,480.55')).toHaveCount(0);
   await page.reload();
   await expect(page.getByRole('button', { name: 'Hide balances' })).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('sign-in: market chosen first, one button in, focus lands on the greeting; sign out returns', async ({ page }) => {
+  await openBank(page, { signedIn: false });
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Orchid Bank');
+  await expectNoAxeViolations(page);
+  await page.getByRole('combobox', { name: 'Market' }).selectOption('HK');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('歡迎使用 Orchid Bank');
+  await page.getByRole('button', { name: '查看示範帳戶' }).click();
+  await expect(page.getByRole('heading', { level: 1, name: '早安，嘉欣' })).toBeFocused();
+  await page.goto('/#/settings');
+  await page.getByRole('button', { name: '登出' }).filter({ visible: true }).first().click();
+  await expect(page.getByRole('button', { name: '查看示範帳戶' })).toBeVisible();
+});
+
+test('balance chart: range switch, keyboard exploration announces date and balance, table alternative', async ({
+  page,
+}) => {
+  await openBank(page);
+  const chart = page.getByRole('slider', { name: 'Balance history' });
+  await chart.focus();
+  await expect(chart).toHaveAttribute('aria-valuetext', /^Thu, 29 Oct 2026: \$60,690\.55$/);
+  await page.keyboard.press('ArrowLeft');
+  await expect(chart).toHaveAttribute('aria-valuetext', /^Wed, 28 Oct 2026: /);
+  await page.keyboard.press('Home');
+  await expect(chart).toHaveAttribute('aria-valuetext', /^Wed, 30 Sept? 2026: /);
+  await page.getByRole('radio', { name: '1W' }).check();
+  await expect(chart).toHaveAttribute('aria-valuemax', '6');
+  await page.getByRole('region', { name: 'Total balance' }).getByRole('button', { name: 'Show as table' }).click();
+  await expect(page.getByRole('table', { name: 'Balance history' })).toBeVisible();
+});
+
+test('search: type, arrow, Enter opens the transaction in a side sheet; focus returns', async ({ page }) => {
+  await openBank(page);
+  await page.getByRole('button', { name: /^Search/ }).click();
+  const box = page.getByRole('combobox', { name: 'Search Orchid Bank' });
+  await expect(box).toBeFocused();
+  await box.fill('fairprice');
+  await expect(page.getByRole('option').first()).toHaveAttribute('aria-selected', 'true');
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Enter');
+  const sheet = page.getByRole('dialog', { name: 'Transaction details' });
+  await expect(sheet).toContainText('NTUC FairPrice');
+  await expect(sheet).toContainText('Groceries');
+  await expectNoAxeViolations(page);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('button', { name: /^Search/ })).toBeFocused();
+
+  // Pages and actions work from the same box.
+  await page.keyboard.press('Control+k');
+  await box.fill('cards');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { level: 1, name: 'Cards' })).toBeVisible();
+});
+
+test('a recent transaction opens its details sheet from Home', async ({ page }) => {
+  await openBank(page);
+  await page.getByRole('region', { name: 'Recent activity' }).getByRole('button', { name: /Grab/ }).click();
+  const sheet = page.getByRole('dialog', { name: 'Transaction details' });
+  await expect(sheet).toContainText('Pending transactions usually post');
+  await sheet.getByRole('button', { name: 'Close' }).click();
+  await expect(sheet).toBeHidden();
 });
 
 test('account numbers are masked until asked for', async ({ page }) => {

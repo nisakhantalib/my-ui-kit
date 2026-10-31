@@ -17,6 +17,7 @@ export { Alert, ErrorSummary, type AlertProps, type ErrorSummaryProps } from './
 export { ToastProvider, useToast, type ToastOptions } from './components/Toast.js';
 export { DataTable, type DataTableProps, type Column } from './components/DataTable.js';
 export { MaskedValue, type MaskedValueProps } from './components/MaskedValue.js';
+export { Money, type MoneyProps } from './components/Money.js';
 export { Badge, Skeleton, type BadgeProps, type SkeletonProps } from './components/Badge.js';
 export { AnnouncerProvider, useAnnounce } from './components/Announcer.js';
 export { VisuallyHidden, SkipLink } from './components/VisuallyHidden.js';

@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { Badge, useKit } from '@nisakhantalib/my-ui-kit';
+import { Badge, Money, useKit } from '@nisakhantalib/my-ui-kit';
 import {
   ArrowDownLeft,
   ArrowLeftRight,
@@ -147,23 +147,54 @@ export function useDayLabel() {
   };
 }
 
-/** One transaction: what, which category, status, how much. Credits get "+" and colour, never colour alone. */
-export function TxnRow({ txn }: { txn: Txn }) {
+/**
+ * A headline amount with the cents de-emphasised (kit Money), or "Hidden" while balances are
+ * hidden. For lists, the plain `money()` string reads better at small sizes.
+ */
+export function Amount({
+  value,
+  signDisplay,
+  className,
+}: {
+  value: number;
+  signDisplay?: Intl.NumberFormatOptions['signDisplay'];
+  className?: string;
+}) {
+  const { t, hideBalances, market } = useBank();
+  if (hideBalances) return <span className={className}>{t('hidden')}</span>;
+  return <Money value={value} currency={market.currency} signDisplay={signDisplay} className={className} />;
+}
+
+/**
+ * One transaction: what, which category, status, how much. Credits get "+" and colour, never
+ * colour alone. With `onSelect` the whole row is one button that opens the details.
+ */
+export function TxnRow({ txn, onSelect }: { txn: Txn; onSelect?: (txn: Txn) => void }) {
   const { t, money } = useBank();
-  return (
-    <div className="flex items-center gap-3 py-3">
+  const content = (
+    <>
       <CategoryIcon category={txn.category} />
-      <div className="min-w-0 flex-1">
-        <p className="truncate font-medium">{txn.desc}</p>
-        <p className="flex items-center gap-2 text-sm text-muted">
+      <span className="grid min-w-0 flex-1">
+        <span className="truncate font-medium">{txn.desc}</span>
+        <span className="flex items-center gap-2 text-sm text-muted">
           {t(`cat.${txn.category}` as StringKey)}
           {txn.status === 'pending' && <Badge tone="warning">{t('pending')}</Badge>}
-        </p>
-      </div>
-      <p className={`money shrink-0 font-semibold ${txn.amount > 0 ? 'text-success' : ''}`}>
+        </span>
+      </span>
+      <span className={`money shrink-0 font-semibold ${txn.amount > 0 ? 'text-success' : ''}`}>
         {money(txn.amount, { signDisplay: 'exceptZero' })}
-      </p>
-    </div>
+      </span>
+    </>
+  );
+  if (!onSelect) return <div className="flex items-center gap-3 py-3">{content}</div>;
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(txn)}
+      className="-mx-2 flex w-[calc(100%+1rem)] cursor-pointer items-center gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-surface"
+    >
+      {content}
+    </button>
   );
 }
 

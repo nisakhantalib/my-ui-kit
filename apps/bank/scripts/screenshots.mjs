@@ -11,15 +11,23 @@ mkdirSync(out, { recursive: true });
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const DESKTOP = { viewport: { width: 1440, height: 1000 } };
 
-async function open({ hash = '', theme = 'light', market = 'SG', tier = 'personal', device = DESKTOP } = {}) {
+async function open({
+  hash = '',
+  theme = 'light',
+  market = 'SG',
+  tier = 'personal',
+  device = DESKTOP,
+  signedIn = true,
+} = {}) {
   const context = await browser.newContext({ ...device, deviceScaleFactor: 2, colorScheme: theme });
   await context.addInitScript(
-    ([t, m, ti]) => {
+    ([t, m, ti, s]) => {
       localStorage.setItem('theme', JSON.stringify(t));
       localStorage.setItem('market', JSON.stringify(m));
       localStorage.setItem('tier', JSON.stringify(ti));
+      localStorage.setItem('signed-in', JSON.stringify(s));
     },
-    [theme, market, tier],
+    [theme, market, tier, signedIn],
   );
   const page = await context.newPage();
   await page.goto(base + hash);
@@ -33,14 +41,31 @@ const shot = async (page, name, opts = {}) => {
   await page.context().close();
 };
 
+await shot(await open({ signedIn: false }), 'signin.png');
 await shot(await open(), 'home-light.png');
+
+// Hovering the balance chart, then a transaction's details sheet.
+let page = await open();
+const chart = page.getByRole('slider', { name: 'Balance history' });
+const box = await chart.boundingBox();
+await page.mouse.move(box.x + box.width * 0.62, box.y + box.height / 2);
+await page.waitForTimeout(200);
+await page.screenshot({
+  path: `${out}/home-chart.png`,
+  animations: 'disabled',
+  clip: { x: box.x - 32, y: box.y - 190, width: box.width + 64, height: box.height + 300 },
+});
+await page.getByRole('region', { name: 'Recent activity' }).getByRole('button').nth(2).click();
+await page.waitForTimeout(400);
+await shot(page, 'txn-sheet.png');
+
 await shot(await open({ theme: 'dark' }), 'home-dark.png');
 await shot(await open({ tier: 'private' }), 'home-private.png');
 await shot(await open({ hash: '#/activity' }), 'activity.png');
 await shot(await open({ hash: '#/cards', theme: 'dark' }), 'cards-dark.png');
 
 // Transfer: approve dialog with a partly typed code.
-let page = await open({ hash: '#/pay' });
+page = await open({ hash: '#/pay' });
 await page.getByRole('button', { name: 'Tan Wei Ling', exact: true }).click();
 await page.getByRole('textbox', { name: /Amount/ }).fill('250');
 await page.getByRole('button', { name: 'Continue' }).click();

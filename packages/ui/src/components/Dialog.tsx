@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, type KeyboardEvent, type ReactNode, type RefObject } from 'react';
 import { createPortal } from 'react-dom';
-import { getFocusable } from '../utils.js';
+import { cx, getFocusable } from '../utils.js';
+import { useKit } from '../i18n.js';
 
 export interface DialogProps {
   open: boolean;
@@ -12,6 +13,10 @@ export interface DialogProps {
   initialFocusRef?: RefObject<HTMLElement | null>;
   /** 'alertdialog' for confirmations that interrupt the user (e.g. destructive actions). */
   role?: 'dialog' | 'alertdialog';
+  /** 'center' (default) or 'sheet': a panel that slides in from the right, for details and side tasks. */
+  placement?: 'center' | 'sheet';
+  /** Show a close (×) button in the corner. Escape and the backdrop always close it too. */
+  showClose?: boolean;
 }
 
 /**
@@ -21,7 +26,18 @@ export interface DialogProps {
  * - Escape and backdrop click close it
  * - page scroll is locked while open
  */
-export function Dialog({ open, onClose, title, description, children, initialFocusRef, role = 'dialog' }: DialogProps) {
+export function Dialog({
+  open,
+  onClose,
+  title,
+  description,
+  children,
+  initialFocusRef,
+  role = 'dialog',
+  placement = 'center',
+  showClose = false,
+}: DialogProps) {
+  const { t } = useKit();
   const panelRef = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descId = useId();
@@ -79,7 +95,10 @@ export function Dialog({ open, onClose, title, description, children, initialFoc
   return createPortal(
     // Backdrop click is a mouse convenience; Escape is the keyboard equivalent (handled on the panel).
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-    <div className="kit-dialog__backdrop" onMouseDown={(e) => e.target === e.currentTarget && onClose()}>
+    <div
+      className={cx('kit-dialog__backdrop', placement === 'sheet' && 'kit-dialog__backdrop--sheet')}
+      onMouseDown={(e) => e.target === e.currentTarget && onClose()}
+    >
       {/* role is dialog | alertdialog (a prop), which the lint rule can't see statically. */}
       {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions */}
       <div
@@ -89,12 +108,19 @@ export function Dialog({ open, onClose, title, description, children, initialFoc
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className="kit-dialog"
+        className={cx('kit-dialog', placement === 'sheet' && 'kit-dialog--sheet')}
         onKeyDown={onKeyDown}
       >
-        <h2 id={titleId} className="kit-dialog__title">
-          {title}
-        </h2>
+        <div className="kit-dialog__header">
+          <h2 id={titleId} className="kit-dialog__title">
+            {title}
+          </h2>
+          {showClose && (
+            <button type="button" className="kit-dialog__close" aria-label={t('dialog.close')} onClick={onClose}>
+              <span aria-hidden="true">×</span>
+            </button>
+          )}
+        </div>
         {description && (
           <p id={descId} className="kit-dialog__desc">
             {description}
