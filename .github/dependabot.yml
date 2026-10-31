@@ -4,6 +4,11 @@ updates:
     directory: /
     schedule: { interval: weekly }
     open-pull-requests-limit: 5
+    ignore:
+      # The repo root pins TypeScript 6 for typescript-eslint (needs TS < 6.1); workspaces use TS 7.
+      # See CONTRIBUTING.md > Code style. Lift this when typescript-eslint supports TS 7.
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
     groups:
       # One PR per family instead of one per package.
       storybook: { patterns: ['storybook', '@storybook/*'] }
