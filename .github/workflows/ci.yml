@@ -4,6 +4,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # Manual runs, e.g. after the "Update visual baselines" workflow commits (its token cannot trigger CI).
+  workflow_dispatch:
 
 permissions:
   contents: read
