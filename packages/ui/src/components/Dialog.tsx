@@ -13,8 +13,11 @@ export interface DialogProps {
   initialFocusRef?: RefObject<HTMLElement | null>;
   /** 'alertdialog' for confirmations that interrupt the user (e.g. destructive actions). */
   role?: 'dialog' | 'alertdialog';
-  /** 'center' (default) or 'sheet': a panel that slides in from the right, for details and side tasks. */
-  placement?: 'center' | 'sheet';
+  /**
+   * 'center' (default); 'sheet': a panel that slides in from the right, for details and side tasks;
+   * 'bottom': an action sheet that rises from the bottom edge, for phone menus.
+   */
+  placement?: 'center' | 'sheet' | 'bottom';
   /** Show a close (×) button in the corner. Escape and the backdrop always close it too. */
   showClose?: boolean;
 }
@@ -96,7 +99,7 @@ export function Dialog({
     // Backdrop click is a mouse convenience; Escape is the keyboard equivalent (handled on the panel).
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      className={cx('kit-dialog__backdrop', placement === 'sheet' && 'kit-dialog__backdrop--sheet')}
+      className={cx('kit-dialog__backdrop', placement !== 'center' && `kit-dialog__backdrop--${placement}`)}
       onMouseDown={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* role is dialog | alertdialog (a prop), which the lint rule can't see statically. */}
@@ -108,7 +111,7 @@ export function Dialog({
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className={cx('kit-dialog', placement === 'sheet' && 'kit-dialog--sheet')}
+        className={cx('kit-dialog', placement !== 'center' && `kit-dialog--${placement}`)}
         onKeyDown={onKeyDown}
       >
         <div className="kit-dialog__header">

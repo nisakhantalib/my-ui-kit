@@ -64,7 +64,10 @@
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.5",
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
     "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
     "@size-limit/preset-small-lib": "^14.3.0",
     "@storybook/addon-a11y": "^10.6.5",
     "@storybook/addon-docs": "^10.6.5",
@@ -114,10 +117,10 @@
       "limit": "6 kB"
     },
     {
-      "name": "Whole library (23 components, 3 languages)",
+      "name": "Whole library (24 components, 3 languages)",
       "path": "dist/index.js",
       "import": "*",
-      "limit": "12 kB"
+      "limit": "12.5 kB"
     },
     {
       "name": "Styles (all components, 3 brands x 2 modes)",

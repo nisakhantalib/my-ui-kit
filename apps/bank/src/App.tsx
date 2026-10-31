@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import {
   AnalyticsProvider,
   AnnouncerProvider,
@@ -20,12 +20,18 @@ import {
   CreditCard,
   Eye,
   EyeOff,
+  FileText,
   House,
+  Lightbulb,
   LogOut,
+  Plus,
+  QrCode,
   ReceiptText,
   Search,
+  Send,
   Settings as SettingsIcon,
   ShieldCheck,
+  type LucideIcon,
 } from 'lucide-react';
 import { MARKETS, type Market } from './data';
 import { BankProvider, useBank } from './bank';
@@ -131,13 +137,15 @@ export function App() {
   );
 }
 
-const NAV: { page: Page; icon: typeof House; label: StringKey; short?: StringKey }[] = [
-  { page: 'home', icon: House, label: 'nav.home' },
-  { page: 'activity', icon: ReceiptText, label: 'nav.activity' },
-  { page: 'pay', icon: ArrowLeftRight, label: 'nav.pay', short: 'nav.payShort' },
-  { page: 'cards', icon: CreditCard, label: 'nav.cards' },
-  { page: 'settings', icon: SettingsIcon, label: 'nav.settings' },
+const NAV: { page: Page; icon: typeof House; label: StringKey; group: 'banking' | 'you' }[] = [
+  { page: 'home', icon: House, label: 'nav.home', group: 'banking' },
+  { page: 'activity', icon: ReceiptText, label: 'nav.activity', group: 'banking' },
+  { page: 'pay', icon: ArrowLeftRight, label: 'nav.pay', group: 'banking' },
+  { page: 'cards', icon: CreditCard, label: 'nav.cards', group: 'banking' },
+  { page: 'settings', icon: SettingsIcon, label: 'nav.settings', group: 'you' },
 ];
+/** Phones: four tabs around a central "Move money" button that opens the action sheet. */
+const TABS = NAV.filter((n) => n.page !== 'pay');
 
 const TITLES: Record<Page, StringKey> = {
   home: 'nav.home',
@@ -158,6 +166,7 @@ function Shell({ prefs }: { prefs: Preferences }) {
   const [notifOpen, setNotifOpen] = useState(false);
   const [unread, setUnread] = useState(3);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [moveOpen, setMoveOpen] = useState(false);
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
 
   // Ctrl+K / ⌘K opens search from anywhere.
@@ -228,35 +237,42 @@ function Shell({ prefs }: { prefs: Preferences }) {
     <>
       <SkipLink>{t('skip')}</SkipLink>
 
-      {/* Desktop: fixed sidebar. Below 1024px it gives way to the bottom tab bar. */}
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-line/25 bg-bg lg:flex">
-        <a
-          href={href('home')}
-          className="flex items-center gap-2.5 px-6 pt-6 pb-8 text-[1.0625rem] font-semibold tracking-tight"
-        >
+      {/* Desktop: fixed sidebar on the page colour, grouped; the current page is a raised tile. */}
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-64 flex-col border-r border-line/20 bg-surface lg:flex">
+        <a href={href('home')} className="flex items-center gap-2.5 px-6 pt-6 pb-7">
           <Logo size={34} />
           <span className="grid leading-tight">
-            {t('brand')}
+            <span className="display text-[1.0625rem] font-bold">{t('brand')}</span>
             <span className="text-xs font-medium text-muted">{tierLabel}</span>
           </span>
         </a>
         <nav aria-label={t('mainNav')} className="flex-1 px-3">
-          <ul className="grid gap-1">
-            {NAV.map(({ page, icon: Icon, label }) => (
-              <li key={page}>
-                <a
-                  href={href(page)}
-                  aria-current={route.page === page ? 'page' : undefined}
-                  className="flex min-h-11 items-center gap-3 rounded-xl px-3 font-medium text-muted transition-colors hover:bg-surface hover:text-ink aria-[current=page]:bg-brand/10 aria-[current=page]:text-brand"
-                >
-                  <Icon aria-hidden="true" size={20} strokeWidth={2} />
-                  {t(label)}
-                </a>
-              </li>
-            ))}
-          </ul>
+          {(['banking', 'you'] as const).map((group) => (
+            <div key={group} className="mb-6">
+              <p
+                aria-hidden="true"
+                className="px-3 pb-2 text-[0.6875rem] font-semibold tracking-[0.08em] text-muted uppercase"
+              >
+                {t(group === 'banking' ? 'navGroupBanking' : 'navGroupYou')}
+              </p>
+              <ul className="grid gap-0.5">
+                {NAV.filter((n) => n.group === group).map(({ page, icon: Icon, label }) => (
+                  <li key={page}>
+                    <a
+                      href={href(page)}
+                      aria-current={route.page === page ? 'page' : undefined}
+                      className="nav-item flex min-h-11 items-center gap-3 rounded-xl px-3 font-medium text-muted transition-colors hover:text-ink"
+                    >
+                      <Icon aria-hidden="true" size={19} strokeWidth={1.9} />
+                      {t(label)}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </nav>
-        <div className="m-3 flex items-center gap-3 rounded-2xl bg-surface p-3">
+        <div className="m-3 flex items-center gap-3 rounded-2xl border border-line/20 bg-bg p-3">
           <Avatar name={market.customerFull} size={38} />
           <div className="min-w-0 flex-1 text-sm">
             <p className="truncate font-semibold">{market.customerFull}</p>
@@ -267,11 +283,11 @@ function Shell({ prefs }: { prefs: Preferences }) {
       </aside>
 
       <div className="lg:pl-64">
-        <header className="sticky top-0 z-20 border-b border-line/20 bg-bg/85 backdrop-blur-md">
+        <header className="sticky top-0 z-20 border-b border-line/15 bg-surface/85 backdrop-blur-md">
           <div className="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 sm:px-6 lg:px-10">
             <a href={href('home')} className="flex items-center gap-2 font-semibold tracking-tight lg:hidden">
               <Logo size={30} />
-              {t('brand')}
+              <span className="display">{t('brand')}</span>
             </a>
             <button
               type="button"
@@ -336,31 +352,44 @@ function Shell({ prefs }: { prefs: Preferences }) {
       {/* Phones and tablets: a native-style tab bar, clear of the home indicator. */}
       <nav
         aria-label={t('mainNav')}
-        className="fixed inset-x-0 bottom-0 z-30 border-t border-line/25 bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-line/20 bg-bg/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
       >
         <ul className="mx-auto grid max-w-lg grid-cols-5">
-          {NAV.map(({ page, icon: Icon, label, short }) => (
-            <li key={page}>
-              <a
-                href={href(page)}
-                aria-current={route.page === page ? 'page' : undefined}
-                className="group flex min-h-16 flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium text-muted aria-[current=page]:text-brand"
-              >
-                {page === 'pay' ? (
-                  <span className="grid size-11 place-items-center rounded-full bg-brand text-on-brand shadow-lg shadow-brand/30">
-                    <Icon aria-hidden="true" size={22} />
-                  </span>
-                ) : (
-                  <span className="grid h-7 w-14 place-items-center rounded-full group-aria-[current=page]:bg-brand/12">
+          {TABS.map(({ page, icon: Icon, label }, i) => (
+            <Fragment key={page}>
+              {i === 2 && (
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => setMoveOpen(true)}
+                    aria-haspopup="dialog"
+                    className="flex min-h-16 w-full flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium text-muted"
+                  >
+                    <span className="-mt-5 grid size-12 place-items-center rounded-full bg-brand text-on-brand shadow-lg shadow-brand/30">
+                      <Plus aria-hidden="true" size={24} />
+                    </span>
+                    <span>{t('moveMoney')}</span>
+                  </button>
+                </li>
+              )}
+              <li>
+                <a
+                  href={href(page)}
+                  aria-current={route.page === page ? 'page' : undefined}
+                  className="group flex min-h-16 flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium text-muted aria-[current=page]:text-ink"
+                >
+                  <span className="grid h-7 w-14 place-items-center rounded-full group-aria-[current=page]:bg-brand/10">
                     <Icon aria-hidden="true" size={21} />
                   </span>
-                )}
-                <span>{t(short ?? label)}</span>
-              </a>
-            </li>
+                  <span>{t(label)}</span>
+                </a>
+              </li>
+            </Fragment>
           ))}
         </ul>
       </nav>
+
+      <MoveMoneySheet open={moveOpen} onClose={() => setMoveOpen(false)} />
 
       {searchOpen && <CommandPalette prefs={prefs} onClose={() => setSearchOpen(false)} />}
 
@@ -379,5 +408,40 @@ function Shell({ prefs }: { prefs: Preferences }) {
         </div>
       </Dialog>
     </>
+  );
+}
+
+/** The phone's money actions, one tap from any tab: each tile says what it does and for what. */
+function MoveMoneySheet({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { t, market, bills, payees } = useBank();
+  const utility = bills.find((b) => b.payeeId !== 'card');
+  const utilityName = utility ? (payees.find((p) => p.id === utility.payeeId)?.name ?? '') : '';
+  const tiles: { icon: LucideIcon; label: string; hint: string; to: string }[] = [
+    { icon: Send, label: t('paySomeone'), hint: t('paySomeoneHint', { rail: market.rail }), to: href('pay') },
+    { icon: ArrowLeftRight, label: t('betweenAccounts'), hint: t('betweenHint'), to: href('pay') },
+    { icon: QrCode, label: t('qa.rail', { rail: market.rail }), hint: t('scanHint'), to: href('pay') },
+    {
+      icon: Lightbulb,
+      label: t('qa.bills'),
+      hint: utility ? `${utilityName} · ${t('dueIn', { days: utility.dueInDays })}` : t('noBills'),
+      to: utility ? href('pay', { to: utility.payeeId, amount: utility.amount }) : href('pay'),
+    },
+    { icon: CreditCard, label: t('qa.cards'), hint: t('cardControlsHint'), to: href('cards') },
+    { icon: FileText, label: t('qa.statements'), hint: t('statementsHint'), to: href('activity') },
+  ];
+  return (
+    <Dialog open={open} onClose={onClose} title={t('moveMoney')} placement="bottom" showClose>
+      <ul className="grid grid-cols-2 gap-2.5">
+        {tiles.map(({ icon: Icon, label, hint, to }) => (
+          <li key={label}>
+            <a href={to} onClick={onClose} className="action-tile h-full">
+              <Icon aria-hidden="true" size={22} />
+              {label}
+              <small>{hint}</small>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </Dialog>
   );
 }

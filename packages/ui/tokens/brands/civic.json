@@ -4,6 +4,16 @@
     "$type": "fontFamily",
     "$value": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
   },
+  "font-display": {
+    "$type": "fontFamily",
+    "$description": "Headings and headline amounts",
+    "$value": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  "font-mono": {
+    "$type": "fontFamily",
+    "$description": "Account numbers, card numbers and reference IDs",
+    "$value": ["ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"]
+  },
   "radius": {
     "$type": "dimension",
     "$value": "10px"
@@ -108,6 +118,10 @@
     "on-brand-surface": {
       "$value": "{palette.white}",
       "$description": "Text on brand-surface"
+    },
+    "brand-accent": {
+      "$value": "{palette.ink.25}",
+      "$description": "Highlights on brand-surface: gains, chart lines, engraving"
     },
     "danger": {
       "$value": "{palette.red.700}",

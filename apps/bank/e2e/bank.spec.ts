@@ -35,9 +35,9 @@ async function openBank(
   );
   await page.goto(`/${hash}`);
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  // Home simulates loading: wait until the accounts panel is no longer busy.
+  // Home simulates loading: wait until the balance panel is no longer busy.
   if (!hash && signedIn)
-    await expect(page.getByRole('region', { name: /^(Accounts|帳戶|Rekening)$/ })).not.toHaveAttribute(
+    await expect(page.getByRole('region', { name: /^(Total balance|總結餘|Total saldo)$/ })).not.toHaveAttribute(
       'aria-busy',
       'true',
     );
@@ -231,7 +231,7 @@ test('hide balances: hidden on screen and for screen readers, remembered after r
   await expect(page.getByText('$12,480.55')).toHaveCount(0);
   // The trend would give the figures away too.
   await expect(page.getByRole('slider', { name: 'Balance history' })).toHaveCount(0);
-  await expect(page.getByRole('region', { name: 'Total balance' })).not.toContainText('%');
+  await expect(page.getByRole('region', { name: 'Total balance' })).not.toContainText(/\$\s?\d/);
   await page.reload();
   await expect(page.getByRole('button', { name: 'Hide balances' })).toHaveAttribute('aria-pressed', 'true');
 });
@@ -265,10 +265,10 @@ test('balance chart: range switch, keyboard exploration announces date and balan
   await page.keyboard.press('ArrowLeft');
   await expect(chart).toHaveAttribute('aria-valuetext', /^Wed, 28 Oct 2026: /);
   await page.keyboard.press('Home');
-  await expect(chart).toHaveAttribute('aria-valuetext', /^Wed, 30 Sept? 2026: /);
-  await page.getByRole('radio', { name: '1W' }).check();
-  await expect(chart).toHaveAttribute('aria-valuemax', '6');
-  await page.getByRole('region', { name: 'Total balance' }).getByRole('button', { name: 'Show as table' }).click();
+  await expect(chart).toHaveAttribute('aria-valuetext', /^Sat, 1 Aug 2026: /);
+  await page.getByRole('radio', { name: '1M' }).check();
+  await expect(chart).toHaveAttribute('aria-valuemax', '29');
+  await page.getByRole('region', { name: 'Balance over time' }).getByRole('button', { name: 'Show as table' }).click();
   await expect(page.getByRole('table', { name: 'Balance history' })).toBeVisible();
 });
 
@@ -306,7 +306,8 @@ test('a recent transaction opens its details sheet from Home', async ({ page }) 
 
 test('account numbers are masked until asked for', async ({ page }) => {
   await openBank(page);
-  const row = page.getByRole('listitem').filter({ hasText: 'Everyday Account' });
+  // The front card of the account stack.
+  const row = page.getByRole('group', { name: 'Everyday Account' });
   await expect(row.getByText('account number ending 6789')).toBeAttached();
   const toggle = row.getByRole('button', { name: 'Show account number' });
   await toggle.click();

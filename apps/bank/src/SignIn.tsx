@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Button, Select } from '@nisakhantalib/my-ui-kit';
+import { Button, Guilloche, Select } from '@nisakhantalib/my-ui-kit';
 import { Accessibility, ArrowRight, ShieldCheck, SlidersHorizontal, Zap, type LucideIcon } from 'lucide-react';
 import type { Preferences } from './App';
 import { useBank } from './bank';
@@ -32,14 +32,20 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
         aria-labelledby="pitch"
         className="signin-hero relative flex flex-col overflow-hidden px-5 pt-8 pb-10 sm:px-10 lg:p-12 xl:p-16"
       >
-        <p className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
+        <Guilloche
+          color="var(--kit-brand-accent)"
+          accentColor="#c8a25a"
+          animate
+          className="pointer-events-none absolute -right-48 -bottom-48 size-[44rem] opacity-70 lg:-right-32 lg:-bottom-32"
+        />
+        <p className="display relative flex items-center gap-2.5 text-lg font-bold">
           <Logo size={36} onBrand />
           {t('brand')}
         </p>
-        <div className="mt-8 max-w-lg lg:my-auto lg:py-12">
+        <div className="relative mt-8 max-w-lg lg:my-auto lg:py-12">
           <h2
             id="pitch"
-            className="text-[2rem] leading-[1.08] font-semibold tracking-[-0.03em] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.25rem]"
+            className="text-[2rem] leading-[1.05] font-semibold tracking-[-0.03em] sm:text-[2.5rem] lg:text-[2.75rem] xl:text-[3.25rem]"
           >
             {t('signInTitle')}
           </h2>
@@ -56,14 +62,14 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
           </ul>
         </div>
         {/* A glimpse of the app: decorative, so hidden from assistive technology. */}
-        <div aria-hidden="true" className="signin-preview hidden lg:block">
+        <div aria-hidden="true" className="signin-preview relative hidden lg:block">
           <p className="text-sm opacity-75">{t('totalBalance')}</p>
-          <p className="mt-1 text-3xl font-semibold tracking-tight">
+          <p className="display mt-1 text-3xl font-semibold">
             <Amount value={total} />
           </p>
           <PreviewLine points={history.slice(-60)} />
         </div>
-        <p className="mt-10 hidden text-sm opacity-70 lg:block">{t('fictional')}</p>
+        <p className="relative mt-10 hidden text-sm opacity-70 lg:block">{t('fictional')}</p>
       </section>
 
       <main id="main" className="flex justify-center px-5 py-10 sm:px-10 lg:items-center lg:py-12">

@@ -79,3 +79,22 @@ function SheetDemo() {
 
 /** `placement="sheet"`: slides in from the right for details and side tasks; same focus rules as a dialog. */
 export const Sheet: StoryObj<typeof meta> = { render: () => <SheetDemo /> };
+
+function BottomDemo() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Move money</Button>
+      <Dialog open={open} onClose={() => setOpen(false)} title="Move money" placement="bottom" showClose>
+        <div style={{ display: 'grid', gap: 8 }}>
+          <Button variant="secondary">Pay someone</Button>
+          <Button variant="secondary">Between accounts</Button>
+          <Button variant="secondary">Pay a bill</Button>
+        </div>
+      </Dialog>
+    </>
+  );
+}
+
+/** `placement="bottom"`: an action sheet that rises from the bottom edge, for menus on phones. */
+export const BottomSheet: StoryObj<typeof meta> = { render: () => <BottomDemo /> };

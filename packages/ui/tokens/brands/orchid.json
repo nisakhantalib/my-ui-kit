@@ -1,12 +1,22 @@
 {
-  "$description": "Orchid: retail-banking brand (Orchid Bank, the fictional bank in the reference app). Neutral graphite UI with one cobalt accent, so money and status carry the colour.",
+  "$description": "Orchid: retail-banking brand (Orchid Bank, the fictional bank in the reference app). \"Intaglio\": treasury green and paper, with banknote-style engraving as the signature; ink for text, jade for links and gains, mint on the dark brand surface.",
   "font": {
     "$type": "fontFamily",
-    "$value": ["Inter Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+    "$value": ["Hanken Grotesk Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  "font-display": {
+    "$type": "fontFamily",
+    "$description": "Headings and headline amounts",
+    "$value": ["Archivo Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  "font-mono": {
+    "$type": "fontFamily",
+    "$description": "Account numbers, card numbers and reference IDs",
+    "$value": ["IBM Plex Mono", "ui-monospace", "SFMono-Regular", "Menlo", "Consolas", "monospace"]
   },
   "radius": {
     "$type": "dimension",
-    "$value": "10px"
+    "$value": "12px"
   },
   "color": {
     "$type": "color",
@@ -14,55 +24,55 @@
       "$value": "{palette.white}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.870}"
+          "dark": "{palette.ledger.850}"
         }
       }
     },
     "surface": {
-      "$value": "{palette.graphite.50}",
+      "$value": "{palette.paper.100}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.950}"
+          "dark": "{palette.ledger.950}"
         }
       }
     },
     "text": {
-      "$value": "{palette.graphite.900}",
+      "$value": "{palette.ledger.900}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.25}"
+          "dark": "{palette.ledger.25}"
         }
       }
     },
     "text-muted": {
-      "$value": "{palette.graphite.600}",
+      "$value": "{palette.ledger.600}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.300}"
+          "dark": "{palette.ledger.300}"
         }
       }
     },
     "border": {
-      "$value": "{palette.graphite.400}",
+      "$value": "{palette.ledger.400}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.500}"
+          "dark": "{palette.ledger.500}"
         }
       }
     },
     "primary": {
-      "$value": "{palette.graphite.900}",
+      "$value": "{palette.treasury.700}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.25}"
+          "dark": "{palette.mint.300}"
         }
       }
     },
     "primary-hover": {
-      "$value": "{palette.graphite.700}",
+      "$value": "{palette.treasury.600}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.200}"
+          "dark": "{palette.mint.200}"
         }
       }
     },
@@ -70,36 +80,40 @@
       "$value": "{palette.white}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.900}"
+          "dark": "{palette.treasury.900}"
         }
       }
     },
     "accent": {
-      "$value": "{palette.cobalt.700}",
+      "$value": "{palette.jade.700}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.cobalt.300}"
+          "dark": "{palette.mint.400}"
         }
       }
     },
     "brand-surface": {
-      "$value": "{palette.graphite.900}",
+      "$value": "{palette.treasury.700}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.graphite.800}"
+          "dark": "{palette.treasury.700}"
         }
       }
     },
     "brand-surface-end": {
-      "$value": "{palette.midnight.700}",
+      "$value": "{palette.treasury.800}",
       "$extensions": {
         "mode": {
-          "dark": "{palette.midnight.800}"
+          "dark": "{palette.treasury.900}"
         }
       }
     },
     "on-brand-surface": {
       "$value": "{palette.white}"
+    },
+    "brand-accent": {
+      "$value": "{palette.mint.300}",
+      "$description": "Highlights on brand-surface: gains, chart lines, engraving"
     },
     "danger": {
       "$value": "{palette.red.700}",
@@ -149,7 +163,7 @@
     "button": {
       "radius": {
         "$type": "dimension",
-        "$value": "10px",
+        "$value": "12px",
         "$description": "Squared-off buttons: calmer and more formal than pills"
       }
     },
@@ -162,7 +176,7 @@
     "card": {
       "radius": {
         "$type": "dimension",
-        "$value": "16px"
+        "$value": "20px"
       }
     }
   }

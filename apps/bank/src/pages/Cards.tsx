@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Badge, Button, Dialog, MaskedValue, Switch, useKit, useToast } from '@nisakhantalib/my-ui-kit';
+import { Badge, Button, Dialog, Guilloche, MaskedValue, Switch, useKit, useToast } from '@nisakhantalib/my-ui-kit';
 import { Ban, Lock, Snowflake } from 'lucide-react';
 import { useBank } from '../bank';
 import { Logo } from '../Logo';
@@ -31,17 +31,23 @@ export function Cards() {
           <div
             className={`credit-card relative aspect-[1.586] w-full max-w-[26rem] overflow-hidden rounded-[1.25rem] p-6 sm:p-7 ${cardState !== 'active' ? 'credit-card--off' : ''}`}
           >
+            <Guilloche
+              variant="waves"
+              color="var(--kit-brand-accent)"
+              accentColor="#c8a25a"
+              className="inset-0 size-full"
+            />
             <div className="relative z-10 flex h-full flex-col justify-between">
               <div className="flex items-start justify-between">
-                <span className="flex items-center gap-2 font-semibold tracking-tight">
+                <span className="display flex items-center gap-2 text-lg font-bold tracking-[0.02em] uppercase">
                   <Logo size={28} />
-                  {t('brand')}
+                  Orchid
                 </span>
-                <span className="text-sm font-semibold tracking-[0.2em] opacity-90">SIGNATURE</span>
+                <span className="text-xs font-semibold tracking-[0.14em] uppercase opacity-75">{t('credit')}</span>
               </div>
               <span aria-hidden="true" className="credit-card__chip" />
               <div className="grid gap-3">
-                <div className="money text-lg tracking-[0.12em]">
+                <div className="serial text-lg tracking-[0.14em]">
                   <MaskedValue value={card.number} label={t('cardNumber')} />
                 </div>
                 <div className="flex items-end justify-between text-sm">
@@ -53,9 +59,6 @@ export function Cards() {
                     <p className="text-[0.6875rem] tracking-wider uppercase opacity-75">{t('expires')}</p>
                     <p className="money font-medium">{card.expiry}</p>
                   </div>
-                  <span className="text-xl font-bold tracking-tight italic" aria-hidden="true">
-                    VISA
-                  </span>
                 </div>
               </div>
             </div>

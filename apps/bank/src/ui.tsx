@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { Badge, Money, useKit } from '@nisakhantalib/my-ui-kit';
 import {
   ArrowDownLeft,
@@ -64,16 +64,49 @@ export function initials(name: string) {
     .join('');
 }
 
-export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
+/** Merchant or payee initials, with an optional category dot. Decorative: the name is always beside it. */
+export function Monogram({ name, dot, size = 40 }: { name: string; dot?: string; size?: number }) {
   return (
     <span
       aria-hidden="true"
-      className="grid shrink-0 place-items-center rounded-full bg-brand/10 font-semibold text-brand"
-      style={{ width: size, height: size, fontSize: size * 0.36 }}
+      className="monogram"
+      data-dot={dot ? '' : undefined}
+      style={{ width: size, height: size, fontSize: size * 0.32, ['--dot' as string]: dot }}
     >
       {initials(name)}
     </span>
   );
+}
+
+const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/**
+ * Counts up to `value` once, the first time `run` is true (the one entrance moment). Integers in,
+ * integers out (minor units). Reduced motion, or a later change of value, shows the value at once.
+ */
+export function useCountUp(value: number, run: boolean, ms = 900) {
+  const [shown, setShown] = useState(value);
+  const done = useRef(false);
+  useEffect(() => {
+    if (!run) return;
+    if (done.current || reducedMotion()) {
+      setShown(value);
+      return;
+    }
+    done.current = true;
+    const start = performance.now();
+    let frame = requestAnimationFrame(function step(now) {
+      const p = Math.min((now - start) / ms, 1);
+      setShown(Math.round(value * (1 - (1 - p) ** 3)));
+      if (p < 1) frame = requestAnimationFrame(step);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [value, run, ms]);
+  return shown;
+}
+
+export function Avatar({ name, size = 40 }: { name: string; size?: number }) {
+  return <Monogram name={name} size={size} />;
 }
 
 let headingFocusPending = false;
@@ -176,14 +209,16 @@ export function Amount({
  * colour alone. With `onSelect` the whole row is one button that opens the details.
  */
 export function TxnRow({ txn, onSelect }: { txn: Txn; onSelect?: (txn: Txn) => void }) {
-  const { t, money } = useBank();
+  const { t, money, card } = useBank();
+  const lastFour = card.number.slice(-4);
   const content = (
     <>
-      <CategoryIcon category={txn.category} />
+      <Monogram name={txn.desc} dot={CATEGORY_COLOR[txn.category]} />
       <span className="grid min-w-0 flex-1">
         <span className="truncate font-medium">{txn.desc}</span>
         <span className="flex items-center gap-2 text-sm text-muted">
           {t(`cat.${txn.category}` as StringKey)}
+          {txn.account === 'card' && <span className="serial text-xs">··{lastFour}</span>}
           {txn.status === 'pending' && <Badge tone="warning">{t('pending')}</Badge>}
         </span>
       </span>

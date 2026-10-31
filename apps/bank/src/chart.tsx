@@ -11,6 +11,8 @@ interface AreaChartProps {
   formatDate: (date: Date) => string;
   /** Short axis label for a date. */
   formatTick: (date: Date) => string;
+  /** 'brand' draws the line in the brand accent, for use on a brand-surface panel. */
+  tone?: 'default' | 'brand';
 }
 
 const clamp = (i: number, n: number) => Math.min(n - 1, Math.max(0, i));
@@ -21,7 +23,17 @@ const clamp = (i: number, n: number) => Math.min(n - 1, Math.max(0, i));
  * Page Up/Down a week, Home/End jump to the ends, and each step announces "date: balance".
  * The full figures are also available as a table next to it (the caller's toggle).
  */
-export function AreaChart({ values, dates, label, hint, formatValue, formatDate, formatTick }: AreaChartProps) {
+export function AreaChart({
+  values,
+  dates,
+  label,
+  hint,
+  formatValue,
+  formatDate,
+  formatTick,
+  tone = 'default',
+}: AreaChartProps) {
+  const color = tone === 'brand' ? 'var(--kit-brand-accent)' : 'var(--kit-accent)';
   const [active, setActive] = useState<number | null>(null);
   const gradientId = useId();
   const hintId = useId();
@@ -86,8 +98,8 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
         >
           <defs>
             <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stopColor="var(--kit-accent)" stopOpacity="0.22" />
-              <stop offset="1" stopColor="var(--kit-accent)" stopOpacity="0" />
+              <stop offset="0" stopColor={color} stopOpacity={tone === 'brand' ? 0.35 : 0.22} />
+              <stop offset="1" stopColor={color} stopOpacity="0" />
             </linearGradient>
           </defs>
           {[25, 50, 75].map((g) => (
@@ -105,7 +117,7 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
           <polyline
             points={line}
             fill="none"
-            stroke="var(--kit-accent)"
+            stroke={color}
             strokeWidth="2"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"
@@ -145,7 +157,10 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
       <p id={hintId} className="sr-only">
         {hint}
       </p>
-      <div aria-hidden="true" className="mt-2 flex justify-between text-xs text-muted">
+      <div
+        aria-hidden="true"
+        className={`mt-2 flex justify-between text-xs ${tone === 'brand' ? 'opacity-75' : 'text-muted'}`}
+      >
         {ticks.map((i) => (
           <span key={i}>{formatTick(dates[i]!)}</span>
         ))}

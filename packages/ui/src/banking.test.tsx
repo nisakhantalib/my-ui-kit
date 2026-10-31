@@ -12,6 +12,7 @@ import {
   Combobox,
   DataTable,
   ErrorSummary,
+  Guilloche,
   KitProvider,
   MaskedValue,
   Money,
@@ -455,6 +456,28 @@ describe('Money', () => {
     );
     expect(container.textContent?.replace(/\s/g, ' ')).toMatch(/Rp\s?1\.500\.000/);
     expect(container.querySelector('.kit-money__minor')).toBeNull();
+  });
+});
+
+describe('Guilloche', () => {
+  it('is decorative and draws the same pattern every time', () => {
+    const { container } = render(
+      <>
+        <Guilloche />
+        <Guilloche />
+        <Guilloche variant="waves" />
+      </>,
+    );
+    const [a, b, waves] = container.querySelectorAll('svg');
+    expect(a).toHaveAttribute('aria-hidden', 'true');
+    expect(a!.querySelectorAll('path')).toHaveLength(6);
+    expect(a!.innerHTML).toBe(b!.innerHTML);
+    expect(waves!.querySelectorAll('path')).toHaveLength(26);
+  });
+
+  it('only animates when asked', () => {
+    const { container } = render(<Guilloche animate />);
+    expect(container.querySelector('svg')).toHaveClass('kit-guilloche--draw');
   });
 });
 

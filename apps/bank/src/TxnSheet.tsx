@@ -4,7 +4,7 @@ import { Clock, Flag } from 'lucide-react';
 import { useBank } from './bank';
 import type { Txn } from './data';
 import type { StringKey } from './strings';
-import { Amount, CategoryIcon } from './ui';
+import { Amount, CATEGORY_COLOR, Monogram } from './ui';
 
 const OpenTxnContext = createContext<(txn: Txn) => void>(() => {});
 
@@ -48,7 +48,7 @@ function TxnSheet({ txn, onClose }: { txn: Txn | null; onClose: () => void }) {
     <Dialog open onClose={onClose} title={t('txnDetails')} placement="sheet" showClose>
       <div className="grid gap-6">
         <div className="grid justify-items-center gap-3 rounded-2xl bg-surface px-4 py-7 text-center">
-          <CategoryIcon category={txn.category} size={60} />
+          <Monogram name={txn.desc} dot={CATEGORY_COLOR[txn.category]} size={60} />
           <p className="text-lg font-semibold">{txn.desc}</p>
           <p
             className={`money text-[2.5rem] leading-none font-semibold tracking-tight ${txn.amount > 0 ? 'text-success' : ''}`}

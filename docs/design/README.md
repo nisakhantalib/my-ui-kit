@@ -68,17 +68,18 @@ Low fidelity, to agree flow and hierarchy before visual design. Generated from [
 
 | Foundation | Orchid (personal) | Private | Rationale |
 |---|---|---|---|
-| **Primary** | graphite `#131417` (near-white in dark) | navy `#1b2f6b` (gold in dark) | A neutral UI (Mercury, Revolut) keeps money and status the loudest things; ≥ 4.5:1 on white and surface |
-| **Accent** | cobalt `#3a4bd1` | champagne gold `#8c6a20` | The one colour: balance chart, savings progress, logo |
-| **Brand surface** | graphite → midnight | navy → indigo | A metal-card dark panel for the sign-in screen and the card visual; its own token, so it stays dark in dark mode |
-| **Canvas / cards** | `#f6f6f7` / white | `#f5f6f9` / white | Neutral grey canvas, white cards, hairline borders |
+| **Direction** | "Intaglio": what banks print. Banknote and cheque engraving (guilloché) is the one signature | private banking | Chosen from three directions (Intaglio, Harbour, Daylight), each mocked up before building |
+| **Primary** | treasury green `#0b3d36` (mint in dark) | navy `#1b2f6b` (gold in dark) | Primary buttons and the brand surface share one deep green; ≥ 4.5:1 on white and paper |
+| **Accent** | jade `#087a66` for links and gains; mint `#7fd8c1` on the brand surface (`brand-accent`) | champagne gold `#8c6a20` | Links stay recognisable; gains read green without a second hue |
+| **Brand surface** | treasury `#0b3d36` → `#082a2f`, with the `Guilloche` rosette | navy → indigo | Account cards, the balance-over-time panel, the payment summary and sign-in; stays dark in dark mode |
+| **Canvas / cards** | paper `#eef1ee` / white (dark: `#0b1215` / `#131c20`) | `#f5f6f9` / white | A cool, slightly green paper canvas; white cards with a two-layer shadow |
 | **Data colour** | 5 validated categorical hues (blue, orange, aqua, yellow, magenta), each category always the same hue | same | Distinct for colour-blind readers on adjacent segments; never the only cue (legend text, table view) |
-| **Type** | Inter Variable, tabular figures for money | same | Clear digits; `cv11` / `ss01` for an open, friendly feel |
-| **Shape** | 10px radius and buttons, 16px cards, pill chips | 8px radius, 6px buttons | Calm and precise; Private a step more formal |
+| **Type** | Archivo (display, set at 112–122% width), Hanken Grotesk (text), IBM Plex Mono (account numbers) | Inter Variable | Wide display figures look minted; numbers set like banknote serials. Tokens: `--kit-font-display`, `--kit-font`, `--kit-font-mono` |
+| **Shape** | 12px radius and buttons, 20px cards, pill chips, card-shaped accounts | 8px radius, 6px buttons | Accounts are drawn as a stack of cards (wallet-style); Private a step more formal |
 | **Targets** | 48px controls, 44px icon buttons | same | Above WCAG 2.5.8's 24px; matches platform guidance |
-| **Motion** | 150–350ms fades and shimmer | same | Removed under `prefers-reduced-motion` |
+| **Motion** | One entrance (the engraving draws in, the total counts up, panels rise in sequence), one celebration (payment sent), 150–350ms elsewhere | same | Removed under `prefers-reduced-motion` |
 
-Every text pair is ≥ 4.5:1 and every UI and focus pair ≥ 3:1, in every brand and mode. That is 126 checks, all enforced by `npm run tokens`.
+Every text pair is ≥ 4.5:1 and every UI and focus pair ≥ 3:1, in every brand and mode. That is 138 checks, all enforced by `npm run tokens`.
 
 ## Layout
 
