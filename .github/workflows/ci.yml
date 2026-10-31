@@ -69,7 +69,7 @@ jobs:
         run: npx -y @lhci/cli@0.15.1 autorun
         working-directory: apps/bank
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: reports
@@ -77,12 +77,12 @@ jobs:
             packages/ui/coverage/lcov.info
             apps/bank/lighthouse
           if-no-files-found: ignore
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-reports
           path: apps/*/playwright-report
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: storybook
           path: packages/ui/storybook-static
@@ -109,7 +109,7 @@ jobs:
             echo "::warning::No visual baselines yet. Run the 'Update visual baselines' workflow to create them."
             npx playwright test --grep "visual regression" --update-snapshots
           fi
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: visual-diffs
@@ -140,7 +140,7 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
         working-directory: apps/bank/android
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: orchid-bank-debug-apk
           path: apps/bank/android/app/build/outputs/apk/debug/*.apk
