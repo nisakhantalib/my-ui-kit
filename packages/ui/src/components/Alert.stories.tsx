@@ -5,7 +5,7 @@ const meta = {
   title: 'Feedback/Alert',
   component: Alert,
   tags: ['autodocs'],
-  args: { tone: 'info', title: 'Clinic hours changed', children: 'Open 8 am to 9 pm from 1 November.' },
+  args: { tone: 'info', title: 'Scheduled maintenance', children: 'Transfers pause from 2 am to 3 am on Sunday.' },
   parameters: {
     docs: {
       description: {
@@ -26,9 +26,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Info: Story = {};
-export const Success: Story = { args: { tone: 'success', title: 'Booking confirmed', children: undefined } };
+export const Success: Story = { args: { tone: 'success', title: 'Transfer sent', children: undefined } };
 export const Warning: Story = {
-  args: { tone: 'warning', title: 'Bring your NRIC', children: 'You will be asked for it at the counter.' },
+  args: {
+    tone: 'warning',
+    title: 'Unusual sign-in',
+    children: 'We noticed a sign-in from a new device. If it was not you, freeze your card.',
+  },
 };
 export const Danger: Story = {
   args: { tone: 'danger', title: 'Payment failed', children: 'Your card was not charged.' },

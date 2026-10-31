@@ -114,13 +114,13 @@
       "limit": "6 kB"
     },
     {
-      "name": "Whole library (22 components, 3 languages)",
+      "name": "Whole library (23 components, 3 languages)",
       "path": "dist/index.js",
       "import": "*",
       "limit": "12 kB"
     },
     {
-      "name": "Styles (all components, 2 brands x 2 modes)",
+      "name": "Styles (all components, 3 brands x 2 modes)",
       "path": "dist/my-ui-kit.css",
       "limit": "4.5 kB",
       "rolldown": false

@@ -7,16 +7,16 @@ const meta = {
   subcomponents: { Radio },
   tags: ['autodocs'],
   args: {
-    legend: 'Clinic',
-    name: 'clinic',
+    legend: 'Pay from',
+    name: 'account',
     variant: 'cards',
-    defaultValue: 'tampines',
-    hint: 'Pick the one nearest you',
+    defaultValue: 'everyday',
+    hint: 'The money leaves this account straight away',
     children: (
       <>
-        <Radio value="tampines" label="Tampines Family Clinic" description="East region" />
-        <Radio value="jurong" label="Jurong West Medical Centre" description="West region" />
-        <Radio value="toapayoh" label="Toa Payoh Health Hub" description="Fully booked" disabled />
+        <Radio value="everyday" label="Everyday Account" description="···· 6789 · SGD 12,480.55" />
+        <Radio value="savings" label="Savings Account" description="···· 8877 · SGD 48,210.00" />
+        <Radio value="fixed" label="Fixed Deposit" description="Locked until 12 Mar 2027" disabled />
       </>
     ),
   },

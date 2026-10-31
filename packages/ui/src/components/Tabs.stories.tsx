@@ -11,17 +11,17 @@ const meta = {
     activation: 'automatic',
     children: (
       <>
-        <TabList label="Booking steps">
-          <Tab value="details">1. Your details</Tab>
-          <Tab value="clinic">2. Clinic &amp; date</Tab>
-          <Tab value="review">3. Review</Tab>
+        <TabList label="Statements">
+          <Tab value="details">Transactions</Tab>
+          <Tab value="statements">Statements</Tab>
+          <Tab value="review">Tax documents</Tab>
           <Tab value="paid" disabled>
-            4. Payment
+            Archived
           </Tab>
         </TabList>
-        <TabPanel value="details">Name, NRIC and email.</TabPanel>
-        <TabPanel value="clinic">Which clinic and when.</TabPanel>
-        <TabPanel value="review">Check everything before confirming.</TabPanel>
+        <TabPanel value="details">Everything in the last 90 days.</TabPanel>
+        <TabPanel value="statements">Monthly PDF statements.</TabPanel>
+        <TabPanel value="review">Interest and tax certificates.</TabPanel>
         <TabPanel value="paid">Not available.</TabPanel>
       </>
     ),

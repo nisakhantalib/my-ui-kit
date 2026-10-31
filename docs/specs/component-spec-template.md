@@ -48,7 +48,7 @@ Check it against the API conventions in CONTRIBUTING.md (native props extended, 
 
 ## 7. Content guidelines
 
-Label and error message patterns, for example "Choose a clinic", not "Clinic is required".
+Label and error message patterns, for example "Choose who to pay", not "Payee is required".
 
 ## 8. Analytics
 

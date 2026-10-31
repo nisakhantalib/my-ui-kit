@@ -22,4 +22,4 @@ Agencies commonly run Adobe Analytics. Some properties still use **AppMeasuremen
 ## Consequences
 
 - The library has no analytics dependency. Apps choose vendors, and can use several at once during a migration.
-- The tracking plan ([docs/specs/booking-flow.md](../specs/booking-flow.md#analytics-tracking-plan)) maps every event to Adobe variables, so analysts and developers share one reference.
+- The tracking plan ([docs/specs/transfer-flow.md](../specs/transfer-flow.md#4-analytics)) maps every event to Adobe variables, so analysts and developers share one reference.

@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 980" width="1060" height="980" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<title id="t">Orchid Bank wireframe, phone</title>
+<desc id="d">Three phone screens: Home with balance card, quick actions and accounts; Pay review with OTP approval dialog; Cards with visual card, controls and report-lost action. Eight numbered annotations.</desc>
+<rect width="1060" height="980" fill="#fafafa"/>
+<text x="40" y="34" font-size="16" font-weight="700" fill="#2b2f38" text-anchor="start">Orchid Bank: phone (320 to 414px), low fidelity. Designed first; bottom tab bar like a native app.</text>
+<clipPath id="clip-40"><rect x="40" y="70" width="300" height="640" rx="28"/></clipPath>
+<rect x="40" y="70" width="300" height="640" rx="28" fill="#f1f2f5" stroke="#2b2f38" stroke-width="2"/>
+<text x="190.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Home</text>
+<g clip-path="url(#clip-40)">
+<rect x="40" y="70" width="300" height="52" fill="#fff"/>
+<line x1="40" y1="122" x2="340" y2="122" stroke="#c5c9d2"/>
+<rect x="58" y="86" width="22" height="22" rx="7" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="88" y="102" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">Orchid Bank</text>
+<circle cx="282" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="312" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="319" cy="89" r="3.5" fill="#b45309" stroke="none" stroke-width="1.5"/>
+<text x="58" y="154" font-size="16" font-weight="700" fill="#2b2f38" text-anchor="start">Good morning, Wei Ling</text>
+<text x="58" y="172" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Saturday, 31 October</text>
+<rect x="54" y="186" width="272" height="132" rx="18" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="70" y="210" font-size="11" font-weight="500" fill="#fff" text-anchor="start">Total balance</text>
+<text x="70" y="246" font-size="26" font-weight="700" fill="#fff" text-anchor="start">$60,690.55</text>
+<polyline points="54,306 120,300 190,292 260,280 326,266" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+<rect x="70" y="262" width="96" height="32" rx="16" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<text x="118" y="283" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="middle">Transfer</text>
+<rect x="54" y="332" width="272" height="112" rx="16" fill="#fff" stroke="#c5c9d2" stroke-width="1.5"/>
+<rect x="74" y="348" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="90" y="388" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">Transfer</text>
+<rect x="174" y="348" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="190" y="388" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">PayNow</text>
+<rect x="274" y="348" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="290" y="388" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">Bills</text>
+<rect x="74" y="398" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="90" y="438" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">Card</text>
+<rect x="174" y="398" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="190" y="438" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">Statements</text>
+<rect x="274" y="398" width="32" height="28" rx="9" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<text x="290" y="438" font-size="9" font-weight="500" fill="#2b2f38" text-anchor="middle">Settings</text>
+<rect x="54" y="458" width="272" height="150" rx="16" fill="#fff" stroke="#c5c9d2" stroke-width="1.5"/>
+<text x="70" y="480" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Accounts</text>
+<circle cx="84" cy="510" r="18" fill="#f1f2f5" stroke="none" stroke-width="1.5"/>
+<text x="112" y="507" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Everyday Account</text>
+<text x="112" y="523" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">•••• 6789</text>
+<text x="314" y="514" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="end">$12,480.55</text>
+<circle cx="84" cy="548" r="18" fill="#f1f2f5" stroke="none" stroke-width="1.5"/>
+<text x="112" y="545" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Savings Account</text>
+<text x="112" y="561" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">•••• 6789</text>
+<text x="314" y="552" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="end">$48,210.00</text>
+<circle cx="84" cy="586" r="18" fill="#f1f2f5" stroke="none" stroke-width="1.5"/>
+<text x="112" y="583" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Orchid Visa</text>
+<text x="112" y="599" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">•••• 6789</text>
+<text x="314" y="590" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="end">$1,320.40</text>
+<circle cx="332" cy="190" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="332" y="194.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<circle cx="332" cy="336" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="332" y="340.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<circle cx="332" cy="462" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="332" y="466.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<rect x="40" y="648" width="300" height="62" fill="#fff"/>
+<line x1="40" y1="648" x2="340" y2="648" stroke="#c5c9d2"/>
+<rect x="50" y="656" width="40" height="22" rx="11" fill="#f1f2f5" stroke="#fff" stroke-width="1.5"/>
+<circle cx="70" cy="667" r="6" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="70" y="696" font-size="9" font-weight="700" fill="#2b2f38" text-anchor="middle">Home</text>
+<rect x="110" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="130" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="130" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Activity</text>
+<circle cx="190" cy="668" r="17" fill="#2b2f38" stroke="none" stroke-width="1.5"/>
+<text x="190" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Pay</text>
+<rect x="230" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="250" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="250" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Cards</text>
+<rect x="290" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="310" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="310" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Settings</text>
+</g>
+<clipPath id="clip-380"><rect x="380" y="70" width="300" height="640" rx="28"/></clipPath>
+<rect x="380" y="70" width="300" height="640" rx="28" fill="#f1f2f5" stroke="#2b2f38" stroke-width="2"/>
+<text x="530.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Pay: review, then approve</text>
+<g clip-path="url(#clip-380)">
+<rect x="380" y="70" width="300" height="52" fill="#fff"/>
+<line x1="380" y1="122" x2="680" y2="122" stroke="#c5c9d2"/>
+<rect x="398" y="86" width="22" height="22" rx="7" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="428" y="102" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">Orchid Bank</text>
+<circle cx="622" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="652" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="659" cy="89" r="3.5" fill="#b45309" stroke="none" stroke-width="1.5"/>
+<text x="398" y="154" font-size="16" font-weight="700" fill="#2b2f38" text-anchor="start">Pay & transfer</text>
+<text x="398" y="172" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Send money instantly with PayNow.</text>
+<circle cx="410" cy="196" r="10" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<line x1="422" y1="196" x2="508" y2="196" stroke="#2b2f38" stroke-width="2"/>
+<circle cx="520" cy="196" r="10" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<line x1="532" y1="196" x2="618" y2="196" stroke="#c5c9d2" stroke-width="2"/>
+<circle cx="630" cy="196" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<rect x="394" y="218" width="272" height="300" rx="16" fill="#fff" stroke="#c5c9d2" stroke-width="1.5"/>
+<text x="410" y="244" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">Check before you send</text>
+<rect x="410" y="258" width="240" height="60" rx="12" fill="#f1f2f5" stroke="#f1f2f5" stroke-width="1.5"/>
+<circle cx="434" cy="288" r="16" fill="#fff" stroke="none" stroke-width="1.5"/>
+<text x="458" y="284" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Tan Wei Ling</text>
+<text x="458" y="300" font-size="10" font-weight="400" fill="#8a90a0" text-anchor="start">Orchid ···· 4821</text>
+<text x="642" y="293" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="end">$250.00</text>
+<text x="410" y="346" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">From</text>
+<text x="650" y="346" font-size="11" font-weight="500" fill="#2b2f38" text-anchor="end">Everyday ···· 6789</text>
+<text x="410" y="370" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Arrives</text>
+<text x="650" y="370" font-size="11" font-weight="500" fill="#2b2f38" text-anchor="end">Instantly, via PayNow</text>
+<text x="410" y="394" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Fee</text>
+<text x="650" y="394" font-size="11" font-weight="500" fill="#2b2f38" text-anchor="end">Free</text>
+<rect x="380" y="123" width="300" height="525" fill="#2b2f38" opacity="0.45"/>
+<rect x="400" y="290" width="260" height="190" rx="16" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<text x="418" y="320" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="start">Approve this transfer</text>
+<rect x="418" y="332" width="200" height="7" rx="3.5" fill="#dcdfe5"/>
+<rect x="418" y="345" width="150" height="7" rx="3.5" fill="#dcdfe5"/>
+<rect x="418" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="434" y="392" font-size="15" font-weight="700" fill="#2b2f38" text-anchor="middle">1</text>
+<rect x="456" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="472" y="392" font-size="15" font-weight="700" fill="#2b2f38" text-anchor="middle">2</text>
+<rect x="494" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="510" y="392" font-size="15" font-weight="700" fill="#2b2f38" text-anchor="middle">3</text>
+<rect x="532" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#2b2f38" stroke-width="3"/>
+<rect x="570" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<rect x="608" y="366" width="32" height="40" rx="8" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="418" y="426" font-size="10" font-weight="400" fill="#8a90a0" text-anchor="start">Resend code in 27s</text>
+<text x="556" y="463" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="middle">Cancel</text>
+<rect x="580" y="442" width="64" height="32" rx="16" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/><text x="612.0" y="463.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Approve</text>
+<circle cx="672" cy="190" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="672" y="194.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<circle cx="672" cy="370" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="672" y="374.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<rect x="380" y="648" width="300" height="62" fill="#fff"/>
+<line x1="380" y1="648" x2="680" y2="648" stroke="#c5c9d2"/>
+<rect x="390" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="410" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="410" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Home</text>
+<rect x="450" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="470" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="470" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Activity</text>
+<circle cx="530" cy="668" r="17" fill="#2b2f38" stroke="none" stroke-width="1.5"/>
+<text x="530" y="696" font-size="9" font-weight="700" fill="#2b2f38" text-anchor="middle">Pay</text>
+<rect x="570" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="590" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="590" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Cards</text>
+<rect x="630" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="650" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="650" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Settings</text>
+</g>
+<clipPath id="clip-720"><rect x="720" y="70" width="300" height="640" rx="28"/></clipPath>
+<rect x="720" y="70" width="300" height="640" rx="28" fill="#f1f2f5" stroke="#2b2f38" stroke-width="2"/>
+<text x="870.0" y="56" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="middle">Cards</text>
+<g clip-path="url(#clip-720)">
+<rect x="720" y="70" width="300" height="52" fill="#fff"/>
+<line x1="720" y1="122" x2="1020" y2="122" stroke="#c5c9d2"/>
+<rect x="738" y="86" width="22" height="22" rx="7" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="768" y="102" font-size="13" font-weight="700" fill="#2b2f38" text-anchor="start">Orchid Bank</text>
+<circle cx="962" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="992" cy="97" r="10" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="999" cy="89" r="3.5" fill="#b45309" stroke="none" stroke-width="1.5"/>
+<text x="738" y="154" font-size="16" font-weight="700" fill="#2b2f38" text-anchor="start">Cards</text>
+<text x="738" y="172" font-size="11" font-weight="400" fill="#8a90a0" text-anchor="start">Freeze, limit or replace instantly.</text>
+<rect x="734" y="186" width="272" height="170" rx="18" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<rect x="752" y="238" width="36" height="28" rx="6" fill="#d9c187" stroke="#d9c187" stroke-width="1.5"/>
+<text x="752" y="212" font-size="12" font-weight="700" fill="#fff" text-anchor="start">Orchid Bank</text>
+<text x="988" y="212" font-size="9" font-weight="700" fill="#fff" text-anchor="end">SIGNATURE</text>
+<text x="752" y="296" font-size="15" font-weight="600" fill="#fff" text-anchor="start">•••• 5566</text>
+<text x="752" y="334" font-size="11" font-weight="500" fill="#fff" text-anchor="start">Tan Wei Ling</text>
+<text x="988" y="336" font-size="15" font-weight="800" fill="#fff" text-anchor="end">VISA</text>
+<rect x="734" y="370" width="272" height="150" rx="16" fill="#fff" stroke="#c5c9d2" stroke-width="1.5"/>
+<text x="750" y="394" font-size="12" font-weight="700" fill="#2b2f38" text-anchor="start">Card controls</text>
+<rect x="750" y="410" width="38" height="22" rx="11" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="761" cy="421" r="7" fill="#8a90a0" stroke="none" stroke-width="1.5"/>
+<text x="798" y="426" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Freeze card</text>
+<rect x="750" y="444" width="38" height="22" rx="11" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="777" cy="455" r="7" fill="#fff" stroke="none" stroke-width="1.5"/>
+<text x="798" y="460" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Online payments</text>
+<rect x="750" y="478" width="38" height="22" rx="11" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<circle cx="761" cy="489" r="7" fill="#8a90a0" stroke="none" stroke-width="1.5"/>
+<text x="798" y="494" font-size="12" font-weight="600" fill="#2b2f38" text-anchor="start">Overseas use</text>
+<rect x="734" y="534" width="272" height="60" rx="16" fill="#fff" stroke="#c5c9d2" stroke-width="1.5"/>
+<rect x="750" y="546" width="160" height="34" rx="17" fill="#2b2f38" stroke="#2b2f38" stroke-width="1.5"/><text x="830.0" y="568.0" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Report lost or stolen</text>
+<circle cx="1012" cy="190" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="1012" y="194.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+<circle cx="1012" cy="410" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="1012" y="414.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+<circle cx="1012" cy="548" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="1012" y="552.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+<rect x="720" y="648" width="300" height="62" fill="#fff"/>
+<line x1="720" y1="648" x2="1020" y2="648" stroke="#c5c9d2"/>
+<rect x="730" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="750" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="750" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Home</text>
+<rect x="790" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="810" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="810" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Activity</text>
+<circle cx="870" cy="668" r="17" fill="#2b2f38" stroke="none" stroke-width="1.5"/>
+<text x="870" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Pay</text>
+<rect x="910" y="656" width="40" height="22" rx="11" fill="#f1f2f5" stroke="#fff" stroke-width="1.5"/>
+<circle cx="930" cy="667" r="6" fill="#fff" stroke="#2b2f38" stroke-width="1.5"/>
+<text x="930" y="696" font-size="9" font-weight="700" fill="#2b2f38" text-anchor="middle">Cards</text>
+<rect x="970" y="656" width="40" height="22" rx="11" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+<circle cx="990" cy="667" r="6" fill="#fff" stroke="#8a90a0" stroke-width="1.5"/>
+<text x="990" y="696" font-size="9" font-weight="500" fill="#8a90a0" text-anchor="middle">Settings</text>
+</g>
+<text x="40" y="760" font-size="14" font-weight="700" fill="#2b2f38" text-anchor="start">Annotations</text>
+<circle cx="52" cy="782" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="786.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+<text x="72" y="786" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Balance is the largest element on screen; trend line is decorative, the change is stated in text.</text>
+<circle cx="52" cy="806" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="810.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+<text x="72" y="810" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Six quick actions, each lands somewhere real (DBS Simple Mode / OCBC shortcuts pattern).</text>
+<circle cx="52" cy="830" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="834.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+<text x="72" y="834" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Account numbers masked by default; screen readers hear “account number ending 6789”.</text>
+<circle cx="52" cy="854" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="858.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">4</text>
+<text x="72" y="858" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Three-step progress shown as dots and as text (“Step 2 of 3”); review repeats payee, rail and fee.</text>
+<circle cx="52" cy="878" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="882.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">5</text>
+<text x="72" y="882" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">OTP: one real input drawn as boxes, so SMS autofill and paste work; resend unlocks after 30s.</text>
+<circle cx="52" cy="902" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="906.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">6</text>
+<text x="72" y="906" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Card art is a brand-surface gradient; frozen state adds a frosted overlay and a “Frozen” badge.</text>
+<circle cx="52" cy="926" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="930.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">7</text>
+<text x="72" y="930" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Freeze is a Switch: it applies instantly, unlike a checkbox that waits for Save.</text>
+<circle cx="52" cy="950" r="11" fill="#b45309" stroke="none" stroke-width="1.5"/><text x="52" y="954.5" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">8</text>
+<text x="72" y="954" font-size="12.5" font-weight="400" fill="#2b2f38" text-anchor="start">Destructive action opens an alert dialog with focus on Cancel, the safe default.</text>
+</svg>

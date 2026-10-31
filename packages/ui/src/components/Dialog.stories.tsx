@@ -10,14 +10,18 @@ function DialogDemo({ role }: { role: 'dialog' | 'alertdialog' }) {
   return (
     <>
       <Button variant={destructive ? 'danger' : 'secondary'} onClick={() => setOpen(true)}>
-        {destructive ? 'Delete booking' : 'View details'}
+        {destructive ? 'Cancel transfer' : 'View details'}
       </Button>
       <Dialog
         open={open}
         onClose={() => setOpen(false)}
         role={role}
-        title={destructive ? 'Delete this booking?' : 'Booking details'}
-        description={destructive ? 'This cannot be undone.' : 'Toa Payoh Health Hub, 30 Oct 2026, 2:00 pm.'}
+        title={destructive ? 'Cancel this scheduled transfer?' : 'Transfer details'}
+        description={
+          destructive
+            ? 'The money stays in your account. This cannot be undone.'
+            : 'SGD 250.00 to Tan Wei Ling, scheduled for 1 Nov 2026.'
+        }
         initialFocusRef={destructive ? confirm : undefined}
       >
         <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
@@ -25,7 +29,7 @@ function DialogDemo({ role }: { role: 'dialog' | 'alertdialog' }) {
             Cancel
           </Button>
           <Button ref={confirm} variant={destructive ? 'danger' : 'primary'} onClick={() => setOpen(false)}>
-            {destructive ? 'Delete' : 'OK'}
+            {destructive ? 'Cancel transfer' : 'OK'}
           </Button>
         </div>
       </Dialog>
@@ -37,7 +41,7 @@ const meta = {
   title: 'Overlays/Dialog',
   component: Dialog,
   tags: ['autodocs'],
-  args: { open: false, title: 'Booking details', onClose: () => {} },
+  args: { open: false, title: 'Transfer details', onClose: () => {} },
   parameters: {
     docs: {
       description: {

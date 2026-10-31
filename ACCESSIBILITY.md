@@ -12,7 +12,7 @@ This covers Singapore's Digital Service Standards (DSS), which require WCAG Leve
 | Every Storybook story | built Storybook + axe-core, **every brand × light and dark** (45 stories × 4) | every push | every documented state of every component; new stories and new brands are covered automatically |
 | Design tokens | `npm run tokens` contrast gate (80 pairs: every brand × mode) | every build | a brand or palette change that drops any text, UI or focus pair below WCAG minimums cannot ship |
 | Lint | eslint-plugin-jsx-a11y (strict) | every push, and in the editor | static mistakes: missing alt, invalid ARIA, non-interactive handlers |
-| Whole apps | Playwright + @axe-core/playwright, desktop + Pixel 7 | every push | ClinicBook and Orchid Bank: light and dark, two markets and languages, 320px reflow, full journeys, OTP dialog, offline PWA |
+| Whole apps | Playwright + @axe-core/playwright, desktop + Pixel 7 | every push | Orchid Bank: every page in light and dark, the Private brand, two markets and languages, 320px reflow, transfer / card / activity journeys, OTP and alert dialogs, strict CSP, offline PWA |
 | Lighthouse | @lhci/cli on Orchid Bank | every push | accessibility score must be 100 |
 | Before release | [Oobee](https://github.com/GovTechSG/oobee) (GovTech Singapore) | manual | site-wide crawl report, DSS-mapped findings |
 | Before release | NVDA + Chrome, VoiceOver + Safari (iOS), TalkBack | manual | what automated tools cannot judge: reading order, announcements, sense |
@@ -43,28 +43,21 @@ Automated tools find roughly a third of WCAG issues. The manual screen-reader pa
 | `AnnouncerProvider` | 4.1.3 Status Messages (polite + assertive live regions) |
 | `SkipLink` | 2.4.1 Bypass Blocks |
 | Styles | 1.4.3 Contrast (≥ 4.5:1 text, light and dark) · 1.4.11 Non-text Contrast (borders, switch, **focus ring ≥ 3:1**) · 2.3.3 Animation from Interactions (`prefers-reduced-motion`) · forced-colours (Windows High Contrast) |
-| Demo app | 1.4.10 Reflow (no sideways scroll at 320px, tested) · 2.4.11 Focus Not Obscured (scroll padding under the consent banner) · 3.3.1 errors summarised and announced, focus moved to first error |
+| Orchid Bank | 1.4.10 Reflow (no sideways scroll at 320px on every page, tested) · 2.4.11 Focus Not Obscured (scroll padding under the sticky top bar and bottom tab bar) · 2.4.3 focus moves to each new page's heading · 2.5.3 Label in Name (visible text is always part of the accessible name) · 3.3.1 error summary + field errors |
 
 ## Manual screen-reader checklist
-
-1. **NVDA + Chrome (Windows).** Tab through the booking form. Each field reads its label, "required", and the hint.
-2. **Submit step 1 empty.** You hear "3 errors on this step. Enter your full name." Focus lands on Full name.
-3. **Arrow through the step tabs.** You hear "tab, 2 of 3", selected or not selected.
-4. **Open the Confirm dialog.** You hear the title and description. Tab cannot leave the dialog, and the virtual cursor cannot reach the page behind it. Escape returns focus to "Confirm booking".
-5. **Step 2, choose nothing, Continue.** You hear "3 errors on this step. Choose a clinic." Focus is on the first clinic, which reads "Tampines Family Clinic, radio button, not checked, 1 of 3, East region".
-6. **Confirm a booking.** The toast is read once: "Booking confirmed. Toa Payoh Health Hub on … at 2:00 pm." Focus stays where it was; Tab reaches the Share button.
-7. **FAQ.** Jump by heading (H in NVDA browse mode) to "What should I bring?". Enter expands it and you hear "expanded".
-8. **VoiceOver + Safari (iOS), installed as a PWA, airplane mode on.** A booking still saves and the offline banner is read.
-9. **TalkBack, Android app (Capacitor build).** Same flow; Share opens the system share sheet.
-
-## Orchid Bank manual checks
 
 1. **NVDA + Chrome, Pay & transfer.** Type "ta" in *Pay to*: you hear "2 results available". ↓ reads "Tan Wei Ling, Orchid Bank ···· 4821". Enter selects it.
 2. **Amount field.** You hear "Amount, required, edit, Currency: Singapore Dollar, Available …". Type 99999 and continue: focus goes to the error summary, which reads "There is a problem (1 error)".
 3. **Approve dialog.** It opens with focus in the code field; iOS offers the SMS code above the keyboard. A wrong code is read as an error, and the page behind is unreachable.
 4. **Receipt.** Focus lands on "Transfer sent", then the amount and payee.
-5. **Overview with Hide balances on.** Every balance reads "Hidden", including the chart.
+5. **Home with Hide balances on.** Every balance reads "Hidden", including the chart.
 6. **Market switch to 香港.** VoiceOver switches to its Cantonese voice because `lang="zh-HK"` is set on the page.
+7. **Cards › Freeze card.** You hear "Freeze card, switch, off", then "on" and the toast "Card frozen". **Report lost or stolen** opens an alert dialog with focus on Cancel.
+8. **Activity.** Type "grab": after a pause you hear "2 transactions". The filter chips read "Money in, toggle button, not pressed".
+9. **Phone, bottom tab bar.** Swipe through: five links, the current one announced as "current page".
+10. **VoiceOver + Safari (iOS), installed as a PWA, airplane mode on.** The app opens and Home renders.
+11. **TalkBack, Android app (Capacitor build).** Same transfer journey; Share opens the system share sheet.
 
 ## Known limitations
 

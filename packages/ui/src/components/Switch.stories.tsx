@@ -5,7 +5,7 @@ const meta = {
   title: 'Forms/Switch',
   component: Switch,
   tags: ['autodocs'],
-  args: { label: 'Appointment reminders', description: 'Applies straight away', defaultChecked: true },
+  args: { label: 'Transaction alerts', description: 'A notification for every card payment', defaultChecked: true },
   parameters: {
     docs: {
       description: {
@@ -20,5 +20,5 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const On: Story = {};
-export const Off: Story = { args: { label: 'Share data with my GP', description: undefined, defaultChecked: false } };
+export const Off: Story = { args: { label: 'Marketing messages', description: undefined, defaultChecked: false } };
 export const Disabled: Story = { args: { label: 'Locked setting', description: undefined, disabled: true } };

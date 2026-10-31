@@ -10,11 +10,11 @@ A regional bank has many product teams in several markets (here: Singapore, Hong
 
 | | |
 |---|---|
-| **The library** (`packages/ui`) | 22 accessible React components, including the hard banking ones: APG **Combobox** (payee search), **AmountInput** (integer minor units, locale parsing), **OTPInput** (one field, SMS autofill), sortable **DataTable**, **MaskedValue** |
-| **Tokens and brands** (`packages/ui/tokens`) | Three-tier tokens (palette → semantic → component), two brands, light/dark. **The build fails if any of 80 WCAG contrast pairs drops below its minimum** |
+| **The library** (`packages/ui`) | 23 accessible React components, including the hard banking ones: APG **Combobox** (payee search), **AmountInput** (integer minor units, locale parsing), **OTPInput** (one field, SMS autofill), sortable **DataTable**, **MaskedValue** |
+| **Tokens and brands** (`packages/ui/tokens`) | Three-tier tokens (palette → semantic → component), three brands (Civic, Orchid, Private), light/dark. **The build fails if any of 120 WCAG contrast pairs drops below its minimum** |
 | **Markets** (`KitProvider`) | Locale, currency and the library's own words in English, Traditional Chinese and Bahasa Indonesia |
-| **Reference bank** (`apps/bank`) | Orchid Bank, a fictional bank: dashboard plus an instant transfer (payee → amount → review → OTP → receipt) in 5 markets, under a strict CSP |
-| **Second brand** (`apps/demo`) | ClinicBook SG: the same library in a public-service brand, as an offline PWA and a Capacitor Android app |
+| **Reference bank** (`apps/bank`) | Orchid Bank, a fictional bank built on research into leading banking apps: Home, Activity, Pay & transfer (payee → amount → review → OTP → receipt), Cards, Settings. 5 markets, 3 languages, strict CSP, installable PWA and Android app |
+| **Three brands** | Civic (default), Orchid and Orchid Private: one component set, re-skinned only by tokens; the bank previews the Private tier live |
 | **Other frameworks** (`packages/elements`) | The same components as `<kit-*>` Web Components for Angular, Vue and plain-HTML teams |
 | **Governance** (`packages/eslint-plugin`, `codemods`, `scanner`) | Lint rules, a codemod for each deprecation, and an adoption scanner whose report drives deprecation decisions |
 
@@ -32,14 +32,14 @@ A regional bank has many product teams in several markets (here: Singapore, Hong
 
 | Claim | Proof |
 |---|---|
-| Accessible | 80 jsdom + 8 real-browser component tests; **45 stories × 2 brands × 2 themes** pass axe; 34 Playwright runs across two apps; Lighthouse accessibility **100** |
+| Accessible | 82 jsdom + 8 real-browser component tests; **48 stories × 3 brands × 2 themes** pass axe; every page passes axe in light and dark on desktop and phone; Lighthouse accessibility **100** on every page |
 | Correct money handling | Unit tests for exact parsing ("19.99" → 1999), IDR, INR lakh grouping, and the select-all-and-retype regression |
 | Secure | Bank app passes e2e with **zero CSP violations** under `script-src 'self'; style-src 'self'`; zero runtime dependencies; npm provenance; CycloneDX SBOM per release |
-| Fast and small | `Button` alone is **365 B** brotli (tree-shaking proven in CI); whole library 10.6 kB; Lighthouse performance 92–100 |
-| Requirements to code | [Transfer spec](specs/transfer-flow.md) and [booking spec](specs/booking-flow.md): every acceptance criterion names the test that proves it |
-| Maintainable | 49 governance-tool tests; [adoption report](governance/adoption-report.md): 127 usages, 0 deprecated, 0 raw controls |
+| Fast and small | `Button` alone is **365 B** brotli (tree-shaking proven in CI); whole library 10.9 kB; less-visited pages load lazily; Lighthouse performance 95–100 |
+| Requirements to code | [Transfer spec](specs/transfer-flow.md): every acceptance criterion names the test that proves it |
+| Maintainable | 49 governance-tool tests; [adoption report](governance/adoption-report.md): 62 usages of 21 exports, 0 deprecated, and 2 raw controls flagged (see below) |
 
-## Found and fixed by building the reference apps
+## Found and fixed by building the reference app
 
 These bugs would have reached consumer teams; dogfooding caught them first:
 
@@ -50,9 +50,18 @@ These bugs would have reached consumer teams; dogfooding caught them first:
 - Tailwind's preflight flattened Dialog headings; the kit now sets its own weights.
 - A sticky header hid focused content on phones (WCAG 2.4.11).
 - Nested CSS grids made the transactions table push the page past 320px (WCAG 1.4.10).
+- Button didn't lay out icon children (Tailwind makes `svg` a block), so icons stacked above labels.
+- Two logos on one page shared a gradient `id`; with the first hidden, the visible one painted blank.
+- Icon-only and avatar links had names that didn't contain their visible text (WCAG 2.5.3 Label in Name).
+- Focus didn't reach lazily loaded pages' headings after navigation; headings now take focus on mount.
+- A warmer gold for the Private brand dropped white-on-accent to 4.29:1; the token build refused it.
+
+## What the governance tooling found in our own app
+
+The adoption scanner flags two raw `<button>`s in files that already import the kit: the Activity filter chips and the recent-payee picker. Both are toggle-button groups. That's the signal working as intended: a pattern teams need that the library doesn't have yet. It goes on the backlog as a `ToggleGroup` spec, rather than every team re-implementing `aria-pressed` chips.
 
 ## Where to look first
 
-1. **The bank:** the overview, then *Pay & transfer*. Switch the market to 香港 or Indonesia, then toggle dark mode.
-2. **Storybook:** *Foundations › Brands* (two brands on one page, live contrast report), then *Banking › Combobox*.
+1. **The bank:** Home, then *Pay & transfer* (try *Pay* on the SP Group bill). Open *Settings*: switch the market to 香港 or Indonesia, dark mode, and the Private tier. Freeze the card on *Cards*.
+2. **Storybook:** *Foundations › Brands* (three brands on one page, live contrast report), then *Banking › Combobox* and *Governance › Adoption report*.
 3. **The code:** `packages/ui/src/components/AmountInput.tsx`, `Combobox.tsx`, `packages/ui/scripts/build-tokens.mjs`.

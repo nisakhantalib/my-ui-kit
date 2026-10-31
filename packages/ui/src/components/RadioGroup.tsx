@@ -5,9 +5,9 @@ import { FieldError, FieldHint, RequiredMark } from './Field.js';
 /**
  * Composable radio group built on native radios in a `<fieldset>`:
  *
- *   <RadioGroup legend="Clinic" name="clinic" value={clinic} onValueChange={setClinic} error={err}>
- *     <Radio value="tampines" label="Tampines Family Clinic" description="East" />
- *     <Radio value="jurong" label="Jurong West Medical Centre" description="West" />
+ *   <RadioGroup legend="Pay from" name="account" value={account} onValueChange={setAccount} error={err}>
+ *     <Radio value="everyday" label="Everyday Account" description="···· 6789" />
+ *     <Radio value="savings" label="Savings Account" description="···· 8877" />
  *   </RadioGroup>
  *
  * Native radios give the APG keyboard model for free: Tab enters the group once,

@@ -9,9 +9,9 @@ import { contrastReport } from '../src/tokens';
 The same components, re-skinned only by tokens. `data-brand` works on any element, so a page can host two brands at once — the panels below are siblings on one page. Nothing in the components knows which brand it's in.
 
 <div
-  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16, marginBottom: 40 }}
+  style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginBottom: 40 }}
 >
-  {['civic', 'orchid'].map((brand) => (
+  {['civic', 'orchid', 'private'].map((brand) => (
     <div
       key={brand}
       data-brand={brand}
@@ -27,7 +27,15 @@ The same components, re-skinned only by tokens. `data-brand` works on any elemen
         gap: 16,
       }}
     >
-      <strong style={{ fontSize: 18 }}>{brand === 'civic' ? 'Civic — ClinicBook SG' : 'Orchid — Orchid Bank'}</strong>
+      <strong style={{ fontSize: 18 }}>
+        {
+          {
+            civic: 'Civic — public sector (library default)',
+            orchid: 'Orchid — Orchid Bank, personal',
+            private: 'Private — Orchid Bank, private clients',
+          }[brand]
+        }
+      </strong>
       <TextField label="Email" hint="We send the receipt here" />
       <Switch label="Notifications" defaultChecked />
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -44,13 +52,13 @@ The same components, re-skinned only by tokens. `data-brand` works on any elemen
 
 ## What a brand can change
 
-| Tier            | Example                | Civic          | Orchid       |
-| --------------- | ---------------------- | -------------- | ------------ |
-| Semantic colour | `--kit-primary`        | blue           | violet       |
-| Shape           | `--kit-radius`         | 10px           | 14px         |
-| Component       | `--kit-button-radius`  | follows radius | 999px (pill) |
-| Component       | `--kit-control-height` | 44px           | 48px         |
-| Type            | `--kit-font`           | system UI      | Inter        |
+| Tier            | Example                | Civic          | Orchid       | Private             |
+| --------------- | ---------------------- | -------------- | ------------ | ------------------- |
+| Semantic colour | `--kit-primary`        | blue           | violet       | navy (gold in dark) |
+| Shape           | `--kit-radius`         | 10px           | 14px         | 8px                 |
+| Component       | `--kit-button-radius`  | follows radius | 999px (pill) | 6px                 |
+| Component       | `--kit-control-height` | 44px           | 48px         | 48px                |
+| Type            | `--kit-font`           | system UI      | Inter        | Inter               |
 
 ## Enforced, not hoped for
 

@@ -9,7 +9,6 @@ npm install
 npx playwright install chromium   # once, for browser and e2e tests
 npm run storybook                 # component workshop at http://localhost:6006
 npm run dev                       # Orchid Bank at http://localhost:5174
-npm run dev:clinic                # ClinicBook PWA at http://localhost:5173
 ```
 
 Node 22+ for development (the package itself supports Node 20.19+).

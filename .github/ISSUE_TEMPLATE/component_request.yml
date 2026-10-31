@@ -12,7 +12,7 @@ body:
     attributes:
       label: User need
       description: Who is trying to do what, and why? Which service or journey?
-      placeholder: As a patient booking on my phone, I need to pick a time slot so that…
+      placeholder: As a customer paying a bill on my phone, I need to see when it is due so that…
     validations: { required: true }
   - type: textarea
     id: evidence

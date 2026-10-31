@@ -4,11 +4,11 @@ import { useKit } from '../i18n.js';
 import { VisuallyHidden } from './VisuallyHidden.js';
 
 /**
- * Short, non-blocking confirmations ("Booking saved"). Put <ToastProvider> once near the root:
+ * Short, non-blocking confirmations ("Transfer sent"). Put <ToastProvider> once near the root:
  *
  *   const toast = useToast();
- *   toast({ title: 'Booking saved', tone: 'success' });
- *   toast({ title: 'Booking cancelled', action: { label: 'Undo', onClick: restore } });
+ *   toast({ title: 'Transfer sent', tone: 'success' });
+ *   toast({ title: 'Payee deleted', action: { label: 'Undo', onClick: restore } });
  *
  * Accessibility decisions:
  * - Text is announced through a live region that exists before any toast, because a freshly

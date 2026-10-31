@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 
 // `vite build`: one self-contained ES module (React bundled) + one stylesheet, for any page.
-// `vite build --mode demo`: the plain-HTML demo page, deployed beside the bank app at /elements/.
+// `vite build --mode demo`: a plain-HTML demo page (dist-demo/) for trying the elements without React.
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
   // React is bundled, so its dev/prod switch must be fixed at build time (tests keep Vitest's own).

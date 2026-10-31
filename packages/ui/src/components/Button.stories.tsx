@@ -5,7 +5,7 @@ const meta = {
   title: 'Actions/Button',
   component: Button,
   tags: ['autodocs'],
-  args: { children: 'Book appointment', variant: 'primary', size: 'md', loading: false, disabled: false },
+  args: { children: 'Transfer money', variant: 'primary', size: 'md', loading: false, disabled: false },
   parameters: {
     docs: {
       description: {
@@ -32,7 +32,7 @@ export const Variants: Story = {
         Secondary
       </Button>
       <Button {...args} variant="danger">
-        Delete booking
+        Cancel transfer
       </Button>
       <Button {...args} variant="ghost">
         Ghost
