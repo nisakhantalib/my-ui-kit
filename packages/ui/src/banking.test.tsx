@@ -15,6 +15,7 @@ import {
   Skeleton,
   ToastProvider,
   brandTokens,
+  brands,
   contrastReport,
   useKit,
   type Column,
@@ -83,11 +84,12 @@ describe('design tokens', () => {
     const keys = (o: object) => Object.keys(o).sort();
     expect(keys(brandTokens.orchid.color)).toEqual(keys(brandTokens.civic.color));
     expect(keys(brandTokens.orchid.component)).toEqual(keys(brandTokens.civic.component));
+    expect(keys(brandTokens.private.color)).toEqual(keys(brandTokens.civic.color));
   });
 
   it('every required colour pair passes WCAG in every brand and mode', () => {
     expect(contrastReport.filter((r) => !r.pass)).toEqual([]);
-    expect(new Set(contrastReport.map((r) => `${r.brand}/${r.mode}`)).size).toBe(4);
+    expect(new Set(contrastReport.map((r) => `${r.brand}/${r.mode}`)).size).toBe(brands.length * 2);
   });
 });
 

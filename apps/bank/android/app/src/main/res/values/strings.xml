@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Orchid Bank</string>
+    <string name="title_activity_main">Orchid Bank</string>
+    <string name="package_name">sg.orchidbank.demo</string>
+    <string name="custom_url_scheme">sg.orchidbank.demo</string>
+</resources>

@@ -60,9 +60,8 @@ jobs:
       - name: Accessibility audit of every story (2 brands × light/dark)
         run: npm run test:storybook -w @nisakhantalib/my-ui-kit
 
-      # Desktop + Pixel 7: journeys, axe in both themes and two markets, strict CSP, 320px reflow, offline PWA.
-      - name: End-to-end tests (ClinicBook)
-        run: npm run test:e2e -w demo
+      # Desktop + Pixel 7: every page in both themes, Private tier, two markets, strict CSP,
+      # 320px reflow, transfer/cards/activity journeys, offline PWA.
       - name: End-to-end tests (Orchid Bank)
         run: npm run test:e2e -w bank -- --grep-invert "visual regression"
 
@@ -134,17 +133,17 @@ jobs:
           java-version: 21 # Capacitor 8 needs JDK 21
           cache: gradle
       - run: npm ci
-      - run: npm run build -w @nisakhantalib/my-ui-kit && npm run build -w demo
+      - run: npm run build -w @nisakhantalib/my-ui-kit && npm run build -w bank
       - name: Copy web build into the native project
         run: npx cap sync android
-        working-directory: apps/demo
+        working-directory: apps/bank
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
-        working-directory: apps/demo/android
+        working-directory: apps/bank/android
       - uses: actions/upload-artifact@v4
         with:
-          name: clinicbook-debug-apk
-          path: apps/demo/android/app/build/outputs/apk/debug/*.apk
+          name: orchid-bank-debug-apk
+          path: apps/bank/android/app/build/outputs/apk/debug/*.apk
 
   deploy-pages:
     name: Deploy site to GitHub Pages
@@ -165,22 +164,16 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build -w @nisakhantalib/my-ui-kit
-      # One site: Orchid Bank at the root, then ClinicBook, Storybook and the Web Components demo beside it.
+      # One site: Orchid Bank at the root, the component library's Storybook at /storybook/.
       - run: npm run build -w bank
         env:
           BASE_PATH: /my-ui-kit/
-      - run: npm run build -w demo
-        env:
-          BASE_PATH: /my-ui-kit/clinic/
       - run: npm run build:storybook
-      - run: npm run build:demo -w @nisakhantalib/my-ui-kit-elements
       - name: Assemble site
         run: |
           mkdir -p site
           cp -r apps/bank/dist/. site/
-          cp -r apps/demo/dist site/clinic
           cp -r packages/ui/storybook-static site/storybook
-          cp -r packages/elements/dist-demo site/elements
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

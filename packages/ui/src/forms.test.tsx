@@ -3,7 +3,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import { expectNoA11yViolations } from './test-setup.js';
-import { AnalyticsProvider, Checkbox, Radio, RadioGroup, Select, Switch, type AnalyticsAdapter } from './index.js';
+import {
+  AnalyticsProvider,
+  Checkbox,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Select,
+  Switch,
+  type AnalyticsAdapter,
+} from './index.js';
 
 // ---------------- Select ----------------
 describe('Select', () => {
@@ -191,5 +200,32 @@ describe('Switch', () => {
   it('has no axe violations', async () => {
     const { container } = render(<Switch label="Email reminders" description="Sent the day before" defaultChecked />);
     await expectNoA11yViolations(container);
+  });
+});
+
+// ---------------- IconButton ----------------
+describe('IconButton', () => {
+  it('is named by its label, hides the icon and badge, and tracks clicks', async () => {
+    const adapter: AnalyticsAdapter = { track: vi.fn() };
+    const onClick = vi.fn();
+    const { container } = render(
+      <AnalyticsProvider adapters={[adapter]}>
+        <IconButton label="Notifications, 2 unread" icon={<svg />} badge trackId="bell" onClick={onClick} />
+      </AnalyticsProvider>,
+    );
+    const btn = screen.getByRole('button', { name: 'Notifications, 2 unread' });
+    await userEvent.click(btn);
+    expect(onClick).toHaveBeenCalledTimes(1);
+    expect(adapter.track).toHaveBeenCalledWith({
+      name: 'button_click',
+      properties: { component: 'IconButton', id: 'bell' },
+    });
+    expect(container.querySelectorAll('[aria-hidden="true"]')).toHaveLength(2);
+    await expectNoA11yViolations(container);
+  });
+
+  it('works as a toggle with aria-pressed', () => {
+    render(<IconButton label="Hide balances" icon={<svg />} aria-pressed />);
+    expect(screen.getByRole('button', { name: 'Hide balances' })).toHaveAttribute('aria-pressed', 'true');
   });
 });
