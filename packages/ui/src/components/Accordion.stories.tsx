@@ -8,18 +8,18 @@ const meta = {
   tags: ['autodocs'],
   args: {
     type: 'single',
-    defaultValue: ['bring'],
+    defaultValue: ['speed'],
     headingLevel: 3,
     children: (
       <>
-        <AccordionItem value="bring" title="What should I bring?">
-          Your NRIC or FIN card, and any referral letter.
+        <AccordionItem value="speed" title="How long does a transfer take?">
+          Instant transfers arrive in seconds, any time of day.
         </AccordionItem>
-        <AccordionItem value="cancel" title="Can I change or cancel?">
-          Yes, up to 24 hours before your appointment.
+        <AccordionItem value="cancel" title="Can I cancel a scheduled transfer?">
+          Yes, until 11:59 pm the day before it is due.
         </AccordionItem>
-        <AccordionItem value="pay" title="How do I pay?" disabled>
-          At the clinic counter.
+        <AccordionItem value="fees" title="Are there fees?" disabled>
+          Local transfers are free.
         </AccordionItem>
       </>
     ),
@@ -38,4 +38,4 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Single: Story = {};
-export const Multiple: Story = { args: { type: 'multiple', defaultValue: ['bring', 'cancel'] } };
+export const Multiple: Story = { args: { type: 'multiple', defaultValue: ['speed', 'cancel'] } };

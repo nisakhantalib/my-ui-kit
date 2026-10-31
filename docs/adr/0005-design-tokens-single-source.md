@@ -1,11 +1,11 @@
 # 0005. Tiered, multi-brand design tokens, generated for each platform
 
-- **Status:** Accepted (revised 2026-10-30: one file became three tiers and two brands)
+- **Status:** Accepted (revised 2026-10-31: one file became three tiers and three brands)
 - **Date:** 2026-10-22
 
 ## Context
 
-The same colours and spacing are needed in many places: CSS for the components, Tailwind in apps, JavaScript for charts and native status bars, and Figma for designers. The library also serves **more than one brand**: a public-service brand (ClinicBook) and a retail-bank brand (Orchid Bank) across five markets. Values copied by hand drift. The focus colour had already drifted below WCAG 1.4.11 (2.0:1, where 3:1 is required).
+The same colours and spacing are needed in many places: CSS for the components, Tailwind in apps, JavaScript for charts and native status bars, and Figma for designers. The library also serves **more than one brand**: a public-sector default (Civic), a retail-bank brand (Orchid) and its premium tier (Private), across five markets. Values copied by hand drift. The focus colour had already drifted below WCAG 1.4.11 (2.0:1, where 3:1 is required).
 
 ## Decision
 

@@ -17,7 +17,7 @@ function ToastDemo() {
       </Button>
       <Button
         variant="secondary"
-        onClick={() => toast({ title: 'Booking cancelled', action: { label: 'Undo', onClick: () => {} } })}
+        onClick={() => toast({ title: 'Transfer cancelled', action: { label: 'Undo', onClick: () => {} } })}
       >
         With action (never times out)
       </Button>

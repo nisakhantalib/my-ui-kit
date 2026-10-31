@@ -3,7 +3,7 @@ import { VisuallyHidden } from './VisuallyHidden.js';
 
 /**
  * Screen-reader announcements for things that change without a page load
- * ("3 results found", "Booking saved"). Renders two live regions once at the app root.
+ * ("3 results found", "Transfer sent"). Renders two live regions once at the app root.
  */
 
 type Politeness = 'polite' | 'assertive';

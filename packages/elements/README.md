@@ -32,4 +32,4 @@ My UI Kit as framework-free **Web Components**, for teams on Angular, Vue or ser
 **Angular:** add `CUSTOM_ELEMENTS_SCHEMA` to the component, then `<kit-amount-input (kit-change)="amount = $event.detail.value">`.
 **Vue:** `<kit-amount-input @kit-change="(e) => (amount = e.detail.value)" />`, with `compilerOptions.isCustomElement: (t) => t.startsWith('kit-')`.
 
-A live demo is at `/elements/` on the project site.
+Try it locally: `npm run build:demo -w @nisakhantalib/my-ui-kit-elements` builds a plain-HTML demo page into `dist-demo/`.

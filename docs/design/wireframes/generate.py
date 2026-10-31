@@ -1,15 +1,11 @@
-"""Generates low-fidelity wireframes (SVG) for docs/design/wireframes."""
+"""Generates the low-fidelity Orchid Bank wireframes (SVG).   python generate.py docs/design/wireframes"""
 import sys
 from pathlib import Path
 
 OUT = Path(sys.argv[1])
 OUT.mkdir(parents=True, exist_ok=True)
 
-INK = '#2b2f38'
-MUTED = '#8a90a0'
-LINE = '#c5c9d2'
-FILL = '#f3f4f6'
-NOTE = '#b45309'
+INK, MUTED, LINE, FILL, NOTE = '#2b2f38', '#8a90a0', '#c5c9d2', '#f1f2f5', '#b45309'
 FONT = "font-family=\"system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif\""
 
 
@@ -23,56 +19,57 @@ def rect(x, y, w, h, r=6, fill='#fff', stroke=LINE, sw=1.5, dash=None):
 
 
 def bar(x, y, w, h=8, fill=LINE):
-    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="4" fill="{fill}"/>'
+    return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{h / 2}" fill="{fill}"/>'
 
 
-def field(x, y, w, label, hint=None, error=None, required=True):
-    out = [text(x, y, label + (' *' if required else ''), 12, 600)]
-    y += 8
-    if hint:
-        out.append(bar(x, y + 2, w * 0.6, 6, '#dcdfe5'))
-        y += 14
-    out.append(rect(x, y, w, 36, 6, '#fff', '#d14343' if error else MUTED, 2 if error else 1.5))
-    y += 36
-    if error:
-        out.append(text(x, y + 15, '⚠ ' + error, 11, 600, '#b42318'))
-        y += 20
-    return '\n'.join(out), y + 14
-
-
-def button(x, y, w, label, primary=True, h=40):
-    if primary:
-        return rect(x, y, w, h, 8, INK, INK) + text(x + w / 2, y + h / 2 + 5, label, 13, 600, '#fff', 'middle')
-    return rect(x, y, w, h, 8, '#fff', INK, 2) + text(x + w / 2, y + h / 2 + 5, label, 13, 600, INK, 'middle')
+def circle(cx, cy, r, fill=FILL, stroke='none'):
+    return f'<circle cx="{cx}" cy="{cy}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="1.5"/>'
 
 
 def marker(x, y, n):
-    return f'<circle cx="{x}" cy="{y}" r="11" fill="{NOTE}"/>' + text(x, y + 4.5, str(n), 12, 700, '#fff', 'middle')
+    return circle(x, y, 11, NOTE) + text(x, y + 4.5, str(n), 12, 700, '#fff', 'middle')
 
 
-def tabs(x, y, w, active):
-    labels = ['1. Details', '2. Clinic', '3. Review']
-    out = [f'<line x1="{x}" y1="{y + 32}" x2="{x + w}" y2="{y + 32}" stroke="{MUTED}" stroke-width="2"/>']
-    cw = w / 3
-    for i, lab in enumerate(labels):
-        cx = x + i * cw
-        out.append(text(cx + cw / 2, y + 20, lab, 12, 700 if i == active else 500, INK if i == active else MUTED, 'middle'))
-        if i == active:
-            out.append(f'<rect x="{cx + 6}" y="{y + 30}" width="{cw - 12}" height="4" fill="{INK}"/>')
-    return '\n'.join(out)
+def button(x, y, w, label, primary=True, h=40, r=20):
+    if primary:
+        return rect(x, y, w, h, r, INK, INK) + text(x + w / 2, y + h / 2 + 5, label, 13, 600, '#fff', 'middle')
+    return rect(x, y, w, h, r, '#fff', INK, 2) + text(x + w / 2, y + h / 2 + 5, label, 13, 600, INK, 'middle')
 
 
-def phone(ox, oy, title, body):
+def row(x, y, w, title, sub, amount):
+    return '\n'.join([circle(x + 18, y + 18, 18), bar(x + 46, y + 8, 110, 8, '#9aa0ad'), bar(x + 46, y + 22, 70, 6),
+                      text(x + w, y + 22, amount, 12, 600, INK, 'end')]) if title is None else '\n'.join([
+        circle(x + 18, y + 18, 18), text(x + 46, y + 15, title, 12, 600), text(x + 46, y + 31, sub, 11, 400, MUTED),
+        text(x + w, y + 22, amount, 12, 600, INK, 'end')])
+
+
+def phone(ox, oy, title, body, tab=0):
     w, h = 300, 640
-    head = [
-        rect(ox, oy, w, h, 28, '#fff', INK, 2),
+    clip = f'clip-{ox}'
+    tabs = ['Home', 'Activity', 'Pay', 'Cards', 'Settings']
+    nav = [f'<line x1="{ox}" y1="{oy + h - 62}" x2="{ox + w}" y2="{oy + h - 62}" stroke="{LINE}"/>']
+    for i, t in enumerate(tabs):
+        cx = ox + 30 + i * 60
+        if i == 2:
+            nav.append(circle(cx, oy + h - 42, 17, INK))
+        else:
+            nav.append(rect(cx - 20, oy + h - 54, 40, 22, 11, FILL if i == tab else '#fff', '#fff'))
+            nav.append(circle(cx, oy + h - 43, 6, '#fff', INK if i == tab else MUTED))
+        nav.append(text(cx, oy + h - 14, t, 9, 700 if i == tab else 500, INK if i == tab else MUTED, 'middle'))
+    return '\n'.join([
+        f'<clipPath id="{clip}"><rect x="{ox}" y="{oy}" width="{w}" height="{h}" rx="28"/></clipPath>',
+        rect(ox, oy, w, h, 28, FILL, INK, 2),
         text(ox + w / 2, oy - 14, title, 14, 700, INK, 'middle'),
+        f'<g clip-path="url(#{clip})">',
+        f'<rect x="{ox}" y="{oy}" width="{w}" height="52" fill="#fff"/>',
         f'<line x1="{ox}" y1="{oy + 52}" x2="{ox + w}" y2="{oy + 52}" stroke="{LINE}"/>',
-        text(ox + 20, oy + 33, '✚ ClinicBook SG', 13, 700),
-        rect(ox + w - 74, oy + 18, 56, 22, 11, FILL, FILL),
-        text(ox + w - 46, oy + 33, 'Online', 10, 600, INK, 'middle'),
-    ]
-    return '\n'.join(head + [body])
+        rect(ox + 18, oy + 16, 22, 22, 7, INK, INK), text(ox + 48, oy + 32, 'Orchid Bank', 13, 700),
+        circle(ox + w - 58, oy + 27, 10, '#fff', INK), circle(ox + w - 28, oy + 27, 10, '#fff', INK), circle(ox + w - 21, oy + 19, 3.5, NOTE),
+        body,
+        f'<rect x="{ox}" y="{oy + h - 62}" width="{w}" height="62" fill="#fff"/>',
+        *nav,
+        '</g>',
+    ])
 
 
 def svg(w, h, content, title, desc):
@@ -85,148 +82,128 @@ def svg(w, h, content, title, desc):
 '''
 
 
-# ---------------- Mobile flow ----------------
-parts = []
-x0, y0, gap = 40, 70, 340
-parts.append(text(40, 34, 'ClinicBook SG — booking flow, phone (320–414px). Low fidelity.', 16, 700))
+# ---------------- Phone: Home, Pay (OTP), Cards ----------------
+parts = [text(40, 34, 'Orchid Bank: phone (320 to 414px), low fidelity. Designed first; bottom tab bar like a native app.', 16, 700)]
+y0, gap = 70, 340
 
-# Phone 1: details with errors
-px, py = x0, y0
-b = [text(px + 20, py + 90, 'Book an appointment', 17, 700), tabs(px + 20, py + 104, 260, 0)]
-y = py + 170
-for lab, hint, err in [('Full name', None, 'Enter your full name'), ('NRIC / FIN', True, 'Enter a valid NRIC or FIN'), ('Email', None, 'Enter an email address')]:
-    s, y = field(px + 20, y, 260, lab, hint, err)
-    b.append(s)
-b.append(button(px + 20, y + 4, 120, 'Continue'))
-b += [marker(px + 290, py + 120, 1), marker(px + 290, py + 196, 2), marker(px + 160, y + 24, 3)]
-parts.append(phone(px, py, 'Step 1 — details (after Continue with errors)', '\n'.join(b)))
+# Home
+px = 40
+b = [text(px + 18, y0 + 84, 'Good morning, Wei Ling', 16, 700), text(px + 18, y0 + 102, 'Saturday, 31 October', 11, 400, MUTED)]
+b.append(rect(px + 14, y0 + 116, 272, 132, 18, INK, INK))
+b += [text(px + 30, y0 + 140, 'Total balance', 11, 500, '#fff'), text(px + 30, y0 + 176, '$60,690.55', 26, 700, '#fff'),
+      f'<polyline points="{px + 14},{y0 + 236} {px + 80},{y0 + 230} {px + 150},{y0 + 222} {px + 220},{y0 + 210} {px + 286},{y0 + 196}" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>',
+      rect(px + 30, y0 + 192, 96, 32, 16, '#fff', '#fff'), text(px + 78, y0 + 213, 'Transfer', 12, 600, INK, 'middle')]
+b.append(rect(px + 14, y0 + 262, 272, 112, 16, '#fff', LINE))
+for i, lab in enumerate(['Transfer', 'PayNow', 'Bills', 'Card', 'Statements', 'Settings']):
+    cx, cy = px + 50 + (i % 3) * 100, y0 + 292 + (i // 3) * 50
+    b += [rect(cx - 16, cy - 14, 32, 28, 9, FILL, FILL), text(cx, cy + 26, lab, 9, 500, INK, 'middle')]
+b.append(rect(px + 14, y0 + 388, 272, 150, 16, '#fff', LINE))
+b.append(text(px + 30, y0 + 410, 'Accounts', 12, 700))
+for i, (n, a) in enumerate([('Everyday Account', '$12,480.55'), ('Savings Account', '$48,210.00'), ('Orchid Visa', '$1,320.40')]):
+    b.append(row(px + 26, y0 + 422 + i * 38, 248, n, '•••• 6789', a))
+b += [marker(px + 292, y0 + 120, 1), marker(px + 292, y0 + 266, 2), marker(px + 292, y0 + 392, 3)]
+parts.append(phone(px, y0, 'Home', '\n'.join(b), 0))
 
-# Phone 2: clinic + date + time
-px = x0 + gap
-b = [text(px + 20, py + 90, 'Book an appointment', 17, 700), tabs(px + 20, py + 104, 260, 1)]
-y = py + 170
-b.append(text(px + 20, y, 'Clinic *', 12, 600))
-y += 10
-for i, (name, area) in enumerate([('Tampines Family Clinic', 'East region'), ('Jurong West Medical', 'West region'), ('Toa Payoh Health Hub', 'Central region')]):
-    sel = i == 2
-    b.append(rect(px + 20, y, 260, 50, 8, '#fff', INK if sel else MUTED, 3 if sel else 1.5))
-    b.append(f'<circle cx="{px + 40}" cy="{y + 25}" r="8" fill="#fff" stroke="{INK}" stroke-width="2"/>')
-    if sel:
-        b.append(f'<circle cx="{px + 40}" cy="{y + 25}" r="4" fill="{INK}"/>')
-    b.append(text(px + 58, y + 22, name, 12, 600))
-    b.append(text(px + 58, y + 38, area, 11, 400, MUTED))
-    y += 58
-y += 12
-s, y2 = field(px + 20, y, 124, 'Date')
-b.append(s)
-s, _ = field(px + 156, y, 124, 'Time slot')
-b.append(s)
-b.append(f'<path d="M{px + 262} {y + 22} l5 5 l5 -5" fill="none" stroke="{INK}" stroke-width="2"/>')
-y = y2
-b.append(button(px + 20, y + 4, 90, 'Back', False))
-b.append(button(px + 122, y + 4, 120, 'Continue'))
-b += [marker(px + 290, py + 200, 4), marker(px + 290, y - 30, 5)]
-parts.append(phone(px, py, 'Step 2 — clinic, date and time', '\n'.join(b)))
+# Pay with OTP dialog
+px = 40 + gap
+b = [text(px + 18, y0 + 84, 'Pay & transfer', 16, 700), text(px + 18, y0 + 102, 'Send money instantly with PayNow.', 11, 400, MUTED)]
+for i in range(3):
+    b.append(circle(px + 30 + i * 110, y0 + 126, 10, INK if i < 2 else '#fff', INK))
+    if i < 2:
+        b.append(f'<line x1="{px + 42 + i * 110}" y1="{y0 + 126}" x2="{px + 128 + i * 110}" y2="{y0 + 126}" stroke="{INK if i < 1 else LINE}" stroke-width="2"/>')
+b.append(rect(px + 14, y0 + 148, 272, 300, 16, '#fff', LINE))
+b += [text(px + 30, y0 + 174, 'Check before you send', 13, 700), rect(px + 30, y0 + 188, 240, 60, 12, FILL, FILL),
+      circle(px + 54, y0 + 218, 16, '#fff'), text(px + 78, y0 + 214, 'Tan Wei Ling', 12, 600), text(px + 78, y0 + 230, 'Orchid ···· 4821', 10, 400, MUTED),
+      text(px + 262, y0 + 223, '$250.00', 14, 700, INK, 'end')]
+for i, (k, v) in enumerate([('From', 'Everyday ···· 6789'), ('Arrives', 'Instantly, via PayNow'), ('Fee', 'Free')]):
+    b += [text(px + 30, y0 + 276 + i * 24, k, 11, 400, MUTED), text(px + 270, y0 + 276 + i * 24, v, 11, 500, INK, 'end')]
+b.append(f'<rect x="{px}" y="{y0 + 53}" width="300" height="525" fill="{INK}" opacity="0.45"/>')
+b.append(rect(px + 20, y0 + 220, 260, 190, 16, '#fff', '#fff'))
+b += [text(px + 38, y0 + 250, 'Approve this transfer', 14, 700), bar(px + 38, y0 + 262, 200, 7, '#dcdfe5'), bar(px + 38, y0 + 275, 150, 7, '#dcdfe5')]
+for i in range(6):
+    b.append(rect(px + 38 + i * 38, y0 + 296, 32, 40, 8, '#fff', INK if i == 3 else MUTED, 3 if i == 3 else 1.5))
+    if i < 3:
+        b.append(text(px + 54 + i * 38, y0 + 322, str(i + 1), 15, 700, INK, 'middle'))
+b += [text(px + 38, y0 + 356, 'Resend code in 27s', 10, 400, MUTED), text(px + 176, y0 + 393, 'Cancel', 12, 600, INK, 'middle'), button(px + 200, y0 + 372, 64, 'Approve', True, 32, 16)]
+b += [marker(px + 292, y0 + 120, 4), marker(px + 292, y0 + 300, 5)]
+parts.append(phone(px, y0, 'Pay: review, then approve', '\n'.join(b), 2))
 
-# Phone 3: review + confirm dialog + toast
-px = x0 + gap * 2
-b = [text(px + 20, py + 90, 'Book an appointment', 17, 700), tabs(px + 20, py + 104, 260, 2)]
-y = py + 172
-for k, v in [('Name', 'Tan Wei Ling'), ('NRIC / FIN', '*****567D'), ('Clinic', 'Toa Payoh Health Hub'), ('Date', '30 Oct 2026'), ('Time', '2:00 pm')]:
-    b.append(text(px + 20, y, k, 12, 700))
-    b.append(text(px + 110, y, v, 12))
-    y += 22
-b.append(f'<clipPath id="screen3"><rect x="{px}" y="{py}" width="300" height="640" rx="28"/></clipPath>')
-b.append(f'<rect x="{px}" y="{py + 53}" width="300" height="587" fill="{INK}" opacity="0.45" clip-path="url(#screen3)"/>')
-b.append(rect(px + 22, py + 250, 256, 150, 12, '#fff', '#fff'))
-b.append(text(px + 40, py + 282, 'Confirm this booking?', 15, 700))
-b.append(bar(px + 40, py + 296, 200, 7, '#dcdfe5'))
-b.append(bar(px + 40, py + 310, 150, 7, '#dcdfe5'))
-b.append(text(px + 150, py + 372, 'Cancel', 13, 600, INK, 'middle'))
-b.append(button(px + 186, py + 350, 76, 'Confirm', True, 36))
-b.append(rect(px + 16, py + 556, 268, 62, 10, '#fff', INK, 1.5))
-b.append(f'<rect x="{px + 16}" y="{py + 556}" width="6" height="62" rx="3" fill="{INK}"/>')
-b.append(text(px + 34, py + 580, 'Booking confirmed', 12, 700))
-b.append(text(px + 34, py + 598, 'Toa Payoh · 30 Oct · 2:00 pm', 11, 400, MUTED))
-b.append(rect(px + 206, py + 572, 52, 28, 6, '#fff', INK, 1.5))
-b.append(text(px + 232, py + 590, 'Share', 11, 600, INK, 'middle'))
-b.append(text(px + 270, py + 580, '×', 16, 600, MUTED, 'middle'))
-b += [marker(px + 290, py + 262, 6), marker(px + 290, py + 570, 7)]
-parts.append(phone(px, py, 'Step 3 — review, confirm, then toast', '\n'.join(b)))
+# Cards
+px = 40 + gap * 2
+b = [text(px + 18, y0 + 84, 'Cards', 16, 700), text(px + 18, y0 + 102, 'Freeze, limit or replace instantly.', 11, 400, MUTED)]
+b += [rect(px + 14, y0 + 116, 272, 170, 18, INK, INK), rect(px + 32, y0 + 168, 36, 28, 6, '#d9c187', '#d9c187'),
+      text(px + 32, y0 + 142, 'Orchid Bank', 12, 700, '#fff'), text(px + 268, y0 + 142, 'SIGNATURE', 9, 700, '#fff', 'end'),
+      text(px + 32, y0 + 226, '•••• 5566', 15, 600, '#fff'), text(px + 32, y0 + 264, 'Tan Wei Ling', 11, 500, '#fff'),
+      text(px + 268, y0 + 266, 'VISA', 15, 800, '#fff', 'end')]
+b.append(rect(px + 14, y0 + 300, 272, 150, 16, '#fff', LINE))
+b.append(text(px + 30, y0 + 324, 'Card controls', 12, 700))
+for i, (lab, on) in enumerate([('Freeze card', False), ('Online payments', True), ('Overseas use', False)]):
+    yy = y0 + 340 + i * 34
+    b += [rect(px + 30, yy, 38, 22, 11, INK if on else '#fff', INK, 1.5), circle(px + (57 if on else 41), yy + 11, 7, '#fff' if on else MUTED), text(px + 78, yy + 16, lab, 12, 600)]
+b.append(rect(px + 14, y0 + 464, 272, 60, 16, '#fff', LINE))
+b += [button(px + 30, y0 + 476, 160, 'Report lost or stolen', True, 34, 17)]
+b += [marker(px + 292, y0 + 120, 6), marker(px + 292, y0 + 340, 7), marker(px + 292, y0 + 478, 8)]
+parts.append(phone(px, y0, 'Cards', '\n'.join(b), 3))
 
 notes = [
-    'Errors: each field says how to fix it. Focus moves to the first; a screen reader hears “3 errors on this step. Enter your full name.”',
-    'Hint text sits between label and input, so it is read before typing (aria-describedby).',
-    'One primary action per step, full 44px height, thumb-reachable.',
-    'Radio cards: whole card is the target; region shown as description, not part of the name.',
-    'Native date and select: the phone’s own pickers. Side by side from 640px, stacked below.',
-    'Confirm dialog repeats the key facts; focus starts on Confirm; page behind is inert.',
-    'Toast with Share (native share sheet in the app). Has an action, so it never times out.',
+    'Balance is the largest element on screen; trend line is decorative, the change is stated in text.',
+    'Six quick actions, each lands somewhere real (DBS Simple Mode / OCBC shortcuts pattern).',
+    'Account numbers masked by default; screen readers hear “account number ending 6789”.',
+    'Three-step progress shown as dots and as text (“Step 2 of 3”); review repeats payee, rail and fee.',
+    'OTP: one real input drawn as boxes, so SMS autofill and paste work; resend unlocks after 30s.',
+    'Card art is a brand-surface gradient; frozen state adds a frosted overlay and a “Frozen” badge.',
+    'Freeze is a Switch: it applies instantly, unlike a checkbox that waits for Save.',
+    'Destructive action opens an alert dialog with focus on Cancel, the safe default.',
 ]
 ny = 760
 parts.append(text(40, ny, 'Annotations', 14, 700))
 for i, n in enumerate(notes):
     yy = ny + 26 + i * 24
-    parts.append(marker(52, yy - 4, i + 1))
-    parts.append(text(72, yy, n, 12.5))
+    parts += [marker(52, yy - 4, i + 1), text(72, yy, n, 12.5)]
+(OUT / 'bank-mobile.svg').write_text(svg(1060, 980, '\n'.join(parts), 'Orchid Bank wireframe, phone',
+    'Three phone screens: Home with balance card, quick actions and accounts; Pay review with OTP approval dialog; Cards with visual card, controls and report-lost action. Eight numbered annotations.'), encoding='utf8')
 
-(OUT / 'booking-mobile.svg').write_text(svg(1060, 950, '\n'.join(parts), 'Booking flow wireframe, phone',
-    'Three phone screens: step 1 details with field errors, step 2 clinic radio cards with date and time, step 3 review with confirm dialog and a success toast. Seven numbered annotations explain the decisions.'), encoding='utf8')
-
-# ---------------- Desktop layout ----------------
-p = []
-W, H = 1060, 700
-p.append(text(40, 34, 'ClinicBook SG — desktop (≥ 1024px). Two columns: task left, context right.', 16, 700))
-fx, fy, fw, fh = 40, 60, 980, 600
-p.append(rect(fx, fy, fw, fh, 10, '#fff', INK, 2))
-p.append(f'<line x1="{fx}" y1="{fy + 56}" x2="{fx + fw}" y2="{fy + 56}" stroke="{LINE}"/>')
-p.append(text(fx + 70, fy + 35, '✚ ClinicBook SG', 15, 700))
-p.append(rect(fx + 420, fy + 14, 64, 30, 6, FILL, FILL))
-p.append(text(fx + 452, fy + 34, 'Book', 13, 700, INK, 'middle'))
-p.append(text(fx + 540, fy + 34, 'Components', 13, 500, MUTED, 'middle'))
-p.append(text(fx + 790, fy + 34, 'Dark mode', 12, 600, INK, 'middle'))
-p.append(rect(fx + 840, fy + 16, 70, 26, 13, FILL, FILL))
-p.append(text(fx + 875, fy + 33, 'Online', 11, 600, INK, 'middle'))
-p.append(rect(fx + 8, fy + 8, 52, 22, 4, '#fff', NOTE, 1.5, '4 3'))
-p.append(text(fx + 34, fy + 23, 'skip link', 9, 600, NOTE, 'middle'))
-p.append(text(fx + 70, fy + 100, 'Clinic appointments', 24, 700))
-p.append(bar(fx + 70, fy + 116, 520, 8, '#dcdfe5'))
-p.append(bar(fx + 70, fy + 130, 380, 8, '#dcdfe5'))
-# form card
-cx, cy, cw, ch = fx + 70, fy + 160, 560, 410
-p.append(rect(cx, cy, cw, ch, 14, FILL, LINE))
-p.append(text(cx + 24, cy + 38, 'Book an appointment', 17, 700))
-p.append(tabs(cx + 24, cy + 50, 360, 1))
-yy = cy + 112
-p.append(text(cx + 24, yy, 'Clinic *', 12, 600))
-for i in range(3):
-    p.append(rect(cx + 24, yy + 10 + i * 50, cw - 48, 42, 8, '#fff', INK if i == 0 else MUTED, 3 if i == 0 else 1.5))
-    p.append(f'<circle cx="{cx + 44}" cy="{yy + 31 + i * 50}" r="7" fill="#fff" stroke="{INK}" stroke-width="2"/>')
-    p.append(bar(cx + 62, yy + 22 + i * 50, 180, 8, '#c5c9d2'))
-    p.append(bar(cx + 62, yy + 34 + i * 50, 80, 6, '#dcdfe5'))
-s, _ = field(cx + 24, yy + 180, 246, 'Date')
-p.append(s)
-s, _ = field(cx + 290, yy + 180, 246, 'Time slot')
-p.append(s)
-p.append(button(cx + 24, cy + ch - 62, 90, 'Back', False))
-p.append(button(cx + 126, cy + ch - 62, 120, 'Continue'))
-# aside
-ax, ay, aw = fx + 660, fy + 160, 250
-p.append(rect(ax, ay, aw, 410, 14, '#fff', LINE))
-p.append(text(ax + 22, ay + 38, 'My bookings (1)', 15, 700))
-p.append(rect(ax + 22, ay + 54, aw - 44, 58, 8, FILL, FILL))
-p.append(bar(ax + 36, ay + 70, 150, 8, '#c5c9d2'))
-p.append(bar(ax + 36, ay + 88, 110, 6, '#dcdfe5'))
-p.append(text(ax + 22, ay + 150, 'Questions', 15, 700))
-for i, q in enumerate(['What should I bring?', 'Can I change or cancel?', 'Works without internet?']):
-    qy = ay + 166 + i * 46
-    p.append(f'<line x1="{ax + 22}" y1="{qy}" x2="{ax + aw - 22}" y2="{qy}" stroke="{MUTED}"/>')
-    p.append(text(ax + 22, qy + 28, q, 12, 600))
-    p.append(text(ax + aw - 30, qy + 29, '+', 16, 700, INK, 'middle'))
-p.append(f'<line x1="{ax + 22}" y1="{ay + 304}" x2="{ax + aw - 22}" y2="{ay + 304}" stroke="{MUTED}"/>')
-p += [marker(fx + 34, fy + 48, 'A'), marker(cx + cw - 10, cy + 10, 'B'), marker(ax + aw - 10, ay + 10, 'C'), marker(ax + aw - 10, ay + 150, 'D')]
-for i, n in enumerate(['A  Skip link is the first Tab stop', 'B  Task column flexes; stacks above context below 1024px', 'C  Context column is 320px: bookings update after confirm', 'D  FAQ accordion: real headings, ↑/↓ between questions']):
-    p.append(text(40 + (i % 2) * 500, 684 + (i // 2) * 20, n, 12))
-(OUT / 'booking-desktop.svg').write_text(svg(W, H + 20, '\n'.join(p), 'Booking page wireframe, desktop',
-    'Desktop layout: header with skip link, navigation, theme toggle and online status; booking form card on the left at step 2; My bookings and an FAQ accordion on the right. Four lettered annotations.'), encoding='utf8')
+# ---------------- Desktop: Home with sidebar ----------------
+p = [text(40, 34, 'Orchid Bank: desktop (1024px and up). Sidebar navigation, calm canvas, white cards.', 16, 700)]
+fx, fy, fw, fh = 40, 60, 980, 620
+p += [rect(fx, fy, fw, fh, 10, FILL, INK, 2), f'<rect x="{fx + 1}" y="{fy + 1}" width="200" height="{fh - 2}" rx="9" fill="#fff"/>',
+      f'<line x1="{fx + 200}" y1="{fy}" x2="{fx + 200}" y2="{fy + fh}" stroke="{LINE}"/>',
+      rect(fx + 20, fy + 22, 26, 26, 8, INK, INK), text(fx + 56, fy + 34, 'Orchid Bank', 13, 700), text(fx + 56, fy + 48, 'Personal banking', 10, 400, MUTED)]
+for i, n in enumerate(['Home', 'Activity', 'Pay & transfer', 'Cards', 'Settings']):
+    yy = fy + 80 + i * 38
+    if i == 0:
+        p.append(rect(fx + 12, yy - 4, 176, 32, 10, FILL, FILL))
+    p += [circle(fx + 32, yy + 12, 6, '#fff', INK if i == 0 else MUTED), text(fx + 48, yy + 17, n, 12, 600 if i == 0 else 500, INK if i == 0 else MUTED)]
+p += [rect(fx + 12, fy + fh - 64, 176, 48, 12, FILL, FILL), circle(fx + 36, fy + fh - 40, 14, '#fff'), text(fx + 58, fy + fh - 36, 'Tan Wei Ling', 11, 600)]
+mx = fx + 230
+p += [f'<rect x="{fx + 201}" y="{fy + 1}" width="{fw - 202}" height="48" fill="#fff"/>', f'<line x1="{fx + 200}" y1="{fy + 49}" x2="{fx + fw}" y2="{fy + 49}" stroke="{LINE}"/>',
+      text(mx, fy + 30, '✓ Last signed in today at 9:01 am', 11, 400, MUTED), circle(fx + fw - 90, fy + 25, 10, '#fff', INK), circle(fx + fw - 60, fy + 25, 10, '#fff', INK), circle(fx + fw - 28, fy + 25, 13, FILL)]
+p += [text(mx, fy + 90, 'Good morning, Wei Ling', 20, 700), text(mx, fy + 110, 'Saturday, 31 October', 11, 400, MUTED)]
+p += [rect(mx, fy + 126, 440, 140, 18, INK, INK), text(mx + 20, fy + 152, 'Total balance', 11, 500, '#fff'), text(mx + 20, fy + 192, '$60,690.55', 30, 700, '#fff'),
+      rect(mx + 20, fy + 214, 100, 32, 16, '#fff', '#fff'), text(mx + 70, fy + 235, 'Transfer', 12, 600, INK, 'middle')]
+p.append(rect(mx, fy + 280, 440, 92, 16, '#fff', LINE))
+for i in range(6):
+    p.append(rect(mx + 26 + i * 70, fy + 302, 34, 30, 9, FILL, FILL))
+    p.append(bar(mx + 22 + i * 70, fy + 346, 42, 6))
+p.append(rect(mx, fy + 386, 440, 210, 16, '#fff', LINE))
+p.append(text(mx + 20, fy + 410, 'Recent activity', 12, 700))
+for i in range(4):
+    p.append(row(mx + 18, fy + 424 + i * 42, 400, None, None, '-$86.40' if i else '-$6.80'))
+rx = mx + 460
+p += [rect(rx, fy + 126, 260, 220, 16, '#fff', LINE), text(rx + 20, fy + 150, 'Spending, last 14 days', 12, 700),
+      f'<circle cx="{rx + 70}" cy="{fy + 230}" r="46" fill="none" stroke="{INK}" stroke-width="16" stroke-dasharray="120 300"/>',
+      f'<circle cx="{rx + 70}" cy="{fy + 230}" r="46" fill="none" stroke="{MUTED}" stroke-width="16" stroke-dasharray="100 300" stroke-dashoffset="-122"/>']
+for i in range(4):
+    p += [circle(rx + 140, fy + 196 + i * 22, 4, INK if i == 0 else MUTED), bar(rx + 150, fy + 192 + i * 22, 60, 7), text(rx + 244, fy + 200 + i * 22, f'{34 - i * 7}%', 10, 400, MUTED, 'end')]
+p += [rect(rx, fy + 360, 260, 150, 16, '#fff', LINE), text(rx + 20, fy + 384, 'Upcoming bills', 12, 700)]
+for i in range(2):
+    yy = fy + 400 + i * 50
+    p += [circle(rx + 38, yy + 18, 16), bar(rx + 62, yy + 10, 80, 7, '#9aa0ad'), bar(rx + 62, yy + 24, 50, 6),
+          rect(rx + 168, yy + 6, 76, 18, 9, '#f6e7c8', '#f6e7c8'), text(rx + 206, yy + 19, 'Due in 4 days', 9, 600, INK, 'middle'), text(rx + 244, yy + 40, 'Pay', 11, 700, INK, 'end')]
+p += [marker(fx + 200, fy + 80, 'A'), marker(mx + 440, fy + 130, 'B'), marker(rx + 260, fy + 130, 'C'), marker(rx + 260, fy + 364, 'D'), marker(fx + fw - 60, fy + 8, 'E')]
+for i, n in enumerate(['A  Sidebar from 1024px; below that, the bottom tab bar', 'B  Two columns: money and actions left, context right',
+                       'C  Donut with legend text and a table view', 'D  Bills deep-link into a prefilled payment', 'E  Hide balances and notifications in the top bar']):
+    p.append(text(40 + (i % 2) * 500, 708 + (i // 2) * 20, n, 12))
+(OUT / 'bank-desktop.svg').write_text(svg(1060, 770, '\n'.join(p), 'Orchid Bank wireframe, desktop',
+    'Desktop Home: sidebar navigation, top bar with sign-in note, hide-balance and notification buttons, balance card, quick actions, recent activity, spending donut and upcoming bills. Five lettered annotations.'), encoding='utf8')
 print('ok')

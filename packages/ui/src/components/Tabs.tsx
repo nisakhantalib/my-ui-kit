@@ -6,7 +6,7 @@ import { useTrack } from '../analytics/analytics.js';
  * Composable tabs (WAI-ARIA APG "Tabs" pattern) with roving tabindex.
  *
  *   <Tabs defaultValue="details">
- *     <TabList label="Booking steps">
+ *     <TabList label="Statements">
  *       <Tab value="details">Details</Tab>
  *       <Tab value="review">Review</Tab>
  *     </TabList>
