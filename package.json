@@ -8,14 +8,14 @@
     "apps/*"
   ],
   "scripts": {
-    "dev": "npm run build -w @nisakhantalib/my-ui-kit && npm run dev -w bank",
-    "build": "npm run build -w @nisakhantalib/my-ui-kit && npm run build -w @nisakhantalib/my-ui-kit-elements && npm run build -w bank && npm run build -w demo",
+    "dev": "npm run build:lib && npm run dev -w bank",
+    "build": "npm run build -w @nisakhantalib/my-ui-kit && npm run build -w @nisakhantalib/my-ui-kit-elements && npm run build -w bank",
     "lint": "eslint . --max-warnings 0",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "typecheck": "npm run typecheck -w @nisakhantalib/my-ui-kit -w @nisakhantalib/my-ui-kit-elements -w bank -w demo",
+    "typecheck": "npm run typecheck -w @nisakhantalib/my-ui-kit -w @nisakhantalib/my-ui-kit-elements -w bank",
     "test": "npm run test -w @nisakhantalib/my-ui-kit",
-    "test:e2e": "npm run test:e2e -w demo && npm run test:e2e -w bank",
+    "test:e2e": "npm run test:e2e -w bank",
     "test:governance": "npm test -w @nisakhantalib/eslint-plugin-my-ui-kit -w @nisakhantalib/my-ui-kit-codemods -w @nisakhantalib/my-ui-kit-scanner",
     "governance:report": "npm run report -w @nisakhantalib/my-ui-kit-scanner",
     "check:package": "npm run check:package -w @nisakhantalib/my-ui-kit",
@@ -26,7 +26,6 @@
     "changeset": "changeset",
     "version-packages": "changeset version",
     "release": "npm run build -w @nisakhantalib/my-ui-kit && npm run build -w @nisakhantalib/my-ui-kit-elements && changeset publish",
-    "dev:clinic": "npm run build -w @nisakhantalib/my-ui-kit && npm run dev -w demo",
     "build:lib": "npm run build -w @nisakhantalib/my-ui-kit"
   },
   "engines": {

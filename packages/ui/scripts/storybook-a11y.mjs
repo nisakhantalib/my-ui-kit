@@ -38,7 +38,7 @@ const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePa
 const page = await browser.newPage();
 const failures = [];
 
-const BRANDS = ['civic', 'orchid'];
+const BRANDS = ['civic', 'orchid', 'private'];
 const combos = BRANDS.flatMap((brand) => ['light', 'dark'].map((theme) => ({ brand, theme })));
 
 for (const story of stories) {

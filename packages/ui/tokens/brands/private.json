@@ -1,0 +1,169 @@
+{
+  "$description": "Private: premium wealth tier of Orchid Bank (navy and champagne gold). Same components, re-skinned for a segment, as banks do for private and priority clients.",
+  "font": {
+    "$type": "fontFamily",
+    "$value": ["Inter Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+  },
+  "radius": {
+    "$type": "dimension",
+    "$value": "8px"
+  },
+  "color": {
+    "$type": "color",
+    "bg": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.navy.950}"
+        }
+      }
+    },
+    "surface": {
+      "$value": "{palette.navy.50}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.navy.800}"
+        }
+      }
+    },
+    "text": {
+      "$value": "{palette.navy.900}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.navy.25}"
+        }
+      }
+    },
+    "text-muted": {
+      "$value": "{palette.navy.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.navy.300}"
+        }
+      }
+    },
+    "border": {
+      "$value": "{palette.navy.400}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.navy.500}"
+        }
+      }
+    },
+    "primary": {
+      "$value": "{palette.indigo.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.gold.300}"
+        }
+      }
+    },
+    "primary-hover": {
+      "$value": "{palette.indigo.800}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.gold.400}"
+        }
+      }
+    },
+    "on-primary": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.gold.990}"
+        }
+      }
+    },
+    "accent": {
+      "$value": "{palette.gold.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.gold.400}"
+        }
+      }
+    },
+    "brand-surface": {
+      "$value": "{palette.indigo.800}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.indigo.800}"
+        }
+      }
+    },
+    "brand-surface-end": {
+      "$value": "{palette.indigo.600}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.indigo.600}"
+        }
+      }
+    },
+    "on-brand-surface": {
+      "$value": "{palette.white}"
+    },
+    "danger": {
+      "$value": "{palette.red.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.red.300}"
+        }
+      }
+    },
+    "on-danger": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.red.990}"
+        }
+      }
+    },
+    "success": {
+      "$value": "{palette.green.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.green.300}"
+        }
+      }
+    },
+    "warning": {
+      "$value": "{palette.amber.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.amber.300}"
+        }
+      }
+    },
+    "focus": {
+      "$value": "{palette.gold.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.gold.300}"
+        }
+      }
+    },
+    "backdrop": {
+      "$value": "{palette.backdrop}"
+    }
+  },
+  "component": {
+    "button": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "6px",
+        "$description": "Squarer, more formal than Orchid"
+      }
+    },
+    "control": {
+      "height": {
+        "$type": "dimension",
+        "$value": "48px"
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "14px"
+      }
+    }
+  }
+}

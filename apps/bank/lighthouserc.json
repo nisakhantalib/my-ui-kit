@@ -2,7 +2,12 @@
   "ci": {
     "collect": {
       "staticDistDir": "./dist",
-      "url": ["http://localhost/index.html", "http://localhost/index.html#/pay"],
+      "url": [
+        "http://localhost/index.html",
+        "http://localhost/index.html#/activity",
+        "http://localhost/index.html#/pay",
+        "http://localhost/index.html#/cards"
+      ],
       "numberOfRuns": 3,
       "settings": { "preset": "desktop" }
     },

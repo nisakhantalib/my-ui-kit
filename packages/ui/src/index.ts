@@ -1,6 +1,7 @@
 import './styles.css';
 
 export { Button, type ButtonProps } from './components/Button.js';
+export { IconButton, type IconButtonProps } from './components/IconButton.js';
 export { TextField, type TextFieldProps } from './components/TextField.js';
 export { Select, type SelectProps } from './components/Select.js';
 export { Checkbox, type CheckboxProps } from './components/Checkbox.js';

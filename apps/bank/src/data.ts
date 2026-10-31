@@ -1,6 +1,6 @@
 /**
  * Mock data for Orchid Bank, a fictional bank. Everything is generated per market from SGD base
- * amounts so the five markets look realistic without five hand-written data sets.
+ * amounts, so the five markets look realistic without five hand-written data sets.
  * Amounts are integers in minor units throughout, as they would be from a real banking API.
  */
 
@@ -17,8 +17,9 @@ export interface Market {
   /** How many units of this currency one SGD buys (rough, for mock data only). */
   rate: number;
   dailyLimitSgd: number;
-  /** The signed-in (fictional) customer's first name. */
+  /** The signed-in (fictional) customer. */
   customer: string;
+  customerFull: string;
 }
 
 export const MARKETS: Market[] = [
@@ -32,6 +33,7 @@ export const MARKETS: Market[] = [
     rate: 1,
     dailyLimitSgd: 5000,
     customer: 'Wei Ling',
+    customerFull: 'Tan Wei Ling',
   },
   {
     code: 'HK',
@@ -43,6 +45,7 @@ export const MARKETS: Market[] = [
     rate: 5.8,
     dailyLimitSgd: 5000,
     customer: '嘉欣',
+    customerFull: '李嘉欣',
   },
   {
     code: 'TW',
@@ -54,6 +57,7 @@ export const MARKETS: Market[] = [
     rate: 24,
     dailyLimitSgd: 5000,
     customer: '怡君',
+    customerFull: '陳怡君',
   },
   {
     code: 'ID',
@@ -65,6 +69,7 @@ export const MARKETS: Market[] = [
     rate: 12000,
     dailyLimitSgd: 4000,
     customer: 'Siti',
+    customerFull: 'Siti Rahmawati',
   },
   {
     code: 'IN',
@@ -76,6 +81,7 @@ export const MARKETS: Market[] = [
     rate: 64,
     dailyLimitSgd: 2000,
     customer: 'Priya',
+    customerFull: 'Priya Nair',
   },
 ];
 
@@ -88,19 +94,27 @@ export function localAmount(market: Market, sgd: number, digits: number): number
   return Math.round(Math.round(major / step) * step * 10 ** digits);
 }
 
+export type Category = 'income' | 'groceries' | 'dining' | 'transport' | 'bills' | 'shopping' | 'transfer';
+export const SPEND_CATEGORIES: Exclude<Category, 'income' | 'transfer'>[] = [
+  'shopping',
+  'groceries',
+  'bills',
+  'dining',
+  'transport',
+];
+
 export interface Account {
-  id: string;
-  name: string;
+  id: 'everyday' | 'savings' | 'card';
   number: string;
-  /** Minor units. */
+  /** Minor units. Negative for the card: what is owed. */
   balance: number;
-  kind: 'everyday' | 'savings' | 'card';
 }
 
 export interface Payee {
   id: string;
   name: string;
   detail: string;
+  kind: 'person' | 'biller';
 }
 
 export interface Txn {
@@ -110,45 +124,58 @@ export interface Txn {
   category: Category;
   amount: number;
   status: 'posted' | 'pending';
+  account: 'everyday' | 'card';
 }
 
-export type Category = 'income' | 'groceries' | 'dining' | 'transport' | 'bills' | 'shopping' | 'transfer';
+export interface Bill {
+  id: string;
+  payeeId: string;
+  dueInDays: number;
+  amount: number;
+}
 
-const PAYEES: Record<Market['code'], [string, string][]> = {
+export interface CardInfo {
+  number: string;
+  expiry: string;
+  limit: number;
+  statementDay: number;
+}
+
+const PAYEES: Record<Market['code'], [string, string, Payee['kind']][]> = {
   SG: [
-    ['Tan Wei Ling', 'Orchid Bank ···· 4821'],
-    ['Lim Jia Hui', 'PayNow +65 •••• 0193'],
-    ['Rahman bin Ismail', 'Orchid Bank ···· 7730'],
-    ['Priya Nair', 'PayNow +65 •••• 5512'],
-    ['SP Group', 'UEN 199504470N · Utilities'],
+    ['Tan Wei Ling', 'Orchid Bank ···· 4821', 'person'],
+    ['Lim Jia Hui', 'PayNow +65 •••• 0193', 'person'],
+    ['Rahman bin Ismail', 'Orchid Bank ···· 7730', 'person'],
+    ['Priya Nair', 'PayNow +65 •••• 5512', 'person'],
+    ['SP Group', 'UEN 199504470N · Utilities', 'biller'],
   ],
   HK: [
-    ['陳大文', 'FPS +852 •••• 3381'],
-    ['李嘉欣', 'Orchid Bank ···· 2290'],
-    ['黃志強', 'FPS +852 •••• 7765'],
-    ['中華電力 CLP', '商戶編號 0021 · 電費'],
+    ['陳大文', 'FPS +852 •••• 3381', 'person'],
+    ['李嘉欣', 'Orchid Bank ···· 2290', 'person'],
+    ['黃志強', 'FPS +852 •••• 7765', 'person'],
+    ['中華電力 CLP', '商戶編號 0021 · 電費', 'biller'],
   ],
   TW: [
-    ['林志明', 'Orchid Bank ···· 5521'],
-    ['陳怡君', '轉帳 ···· 8830'],
-    ['王建宏', '轉帳 ···· 1147'],
-    ['台灣電力公司', '電號 01-2345-67 · 電費'],
+    ['林志明', 'Orchid Bank ···· 5521', 'person'],
+    ['陳怡君', '轉帳 ···· 8830', 'person'],
+    ['王建宏', '轉帳 ···· 1147', 'person'],
+    ['台灣電力公司', '電號 01-2345-67 · 電費', 'biller'],
   ],
   ID: [
-    ['Budi Santoso', 'BI-FAST ···· 6612'],
-    ['Siti Rahmawati', 'Orchid Bank ···· 3309'],
-    ['Agus Pratama', 'BI-FAST ···· 9017'],
-    ['PLN', 'ID pelanggan 5321 · Listrik'],
+    ['Budi Santoso', 'BI-FAST ···· 6612', 'person'],
+    ['Siti Rahmawati', 'Orchid Bank ···· 3309', 'person'],
+    ['Agus Pratama', 'BI-FAST ···· 9017', 'person'],
+    ['PLN', 'ID pelanggan 5321 · Listrik', 'biller'],
   ],
   IN: [
-    ['Priya Nair', 'UPI priya@orchid'],
-    ['Arjun Mehta', 'Orchid Bank ···· 4410'],
-    ['Kavya Reddy', 'UPI kavya@orchid'],
-    ['Tata Power', 'Consumer 55120 · Electricity'],
+    ['Priya Nair', 'UPI priya@orchid', 'person'],
+    ['Arjun Mehta', 'Orchid Bank ···· 4410', 'person'],
+    ['Kavya Reddy', 'UPI kavya@orchid', 'person'],
+    ['Tata Power', 'Consumer 55120 · Electricity', 'biller'],
   ],
 };
 
-const MERCHANTS: Record<Market['code'], Record<Exclude<Category, 'income' | 'transfer'>, string>> = {
+const MERCHANTS: Record<Market['code'], Record<(typeof SPEND_CATEGORIES)[number], string>> = {
   SG: {
     groceries: 'NTUC FairPrice',
     dining: 'Ya Kun Kaya Toast',
@@ -174,44 +201,57 @@ const MERCHANTS: Record<Market['code'], Record<Exclude<Category, 'income' | 'tra
   IN: { groceries: 'BigBasket', dining: 'Swiggy', transport: 'Ola', bills: 'Tata Power', shopping: 'Flipkart' },
 };
 
-/** [days ago, category, SGD amount, status] */
-const TXN_PLAN: [number, Exclude<Category, 'transfer'>, number, Txn['status']][] = [
-  [0, 'dining', -6.8, 'pending'],
-  [0, 'transport', -14.9, 'pending'],
-  [1, 'groceries', -86.4, 'posted'],
-  [2, 'income', 5200, 'posted'],
-  [3, 'shopping', -129, 'posted'],
-  [4, 'bills', -135.2, 'posted'],
-  [5, 'dining', -42.5, 'posted'],
-  [6, 'groceries', -61.15, 'posted'],
-  [8, 'transport', -22.4, 'posted'],
-  [9, 'shopping', -58.9, 'posted'],
+/** [days ago, category, SGD amount, status, account] */
+const TXN_PLAN: [number, Exclude<Category, 'transfer'>, number, Txn['status'], Txn['account']][] = [
+  [0, 'dining', -6.8, 'pending', 'card'],
+  [0, 'transport', -14.9, 'pending', 'card'],
+  [1, 'groceries', -86.4, 'posted', 'everyday'],
+  [2, 'income', 5200, 'posted', 'everyday'],
+  [3, 'shopping', -129, 'posted', 'card'],
+  [4, 'bills', -135.2, 'posted', 'everyday'],
+  [5, 'dining', -42.5, 'posted', 'card'],
+  [6, 'groceries', -61.15, 'posted', 'everyday'],
+  [8, 'transport', -22.4, 'posted', 'card'],
+  [9, 'shopping', -58.9, 'posted', 'card'],
+  [11, 'dining', -18.6, 'posted', 'card'],
+  [13, 'groceries', -74.3, 'posted', 'everyday'],
 ];
 
-const isoDaysAgo = (days: number) => new Date(Date.now() - days * 86_400_000).toISOString().slice(0, 10);
+const SALARY: Record<Lang, string> = { en: 'Salary · Acme Pte Ltd', 'zh-Hant': '薪資 · Acme', id: 'Gaji · Acme' };
 
-export function seed(market: Market, digits: number) {
+const isoDaysAgo = (days: number, now: number) => new Date(now - days * 86_400_000).toISOString().slice(0, 10);
+
+export function seed(market: Market, digits: number, now = Date.now()) {
   const amt = (sgd: number) => localAmount(market, sgd, digits);
   const accounts: Account[] = [
-    { id: 'everyday', name: 'everyday', number: '0123456789', balance: amt(12480.55), kind: 'everyday' },
-    { id: 'savings', name: 'savings', number: '0123998877', balance: amt(48210), kind: 'savings' },
-    { id: 'card', name: 'card', number: '4539112233445566', balance: amt(-1320.4), kind: 'card' },
+    { id: 'everyday', number: '0123456789', balance: amt(12480.55) },
+    { id: 'savings', number: '0123998877', balance: amt(48210) },
+    { id: 'card', number: '4539112233445566', balance: amt(-1320.4) },
   ];
-  const payees: Payee[] = PAYEES[market.code].map(([name, detail], i) => ({ id: `p${i}`, name, detail }));
-  const txns: Txn[] = TXN_PLAN.map(([days, category, sgd, status], i) => ({
+  const payees: Payee[] = PAYEES[market.code].map(([name, detail, kind], i) => ({ id: `p${i}`, name, detail, kind }));
+  const txns: Txn[] = TXN_PLAN.map(([days, category, sgd, status, account], i) => ({
     id: `t${i}`,
-    date: isoDaysAgo(days),
-    desc:
-      category === 'income'
-        ? market.lang === 'en'
-          ? 'Salary — Acme Pte Ltd'
-          : market.lang === 'id'
-            ? 'Gaji — Acme'
-            : '薪資 — Acme'
-        : MERCHANTS[market.code][category],
+    date: isoDaysAgo(days, now),
+    desc: category === 'income' ? SALARY[market.lang] : MERCHANTS[market.code][category],
     category,
     amount: amt(sgd),
     status,
+    account,
   }));
-  return { accounts, payees, txns, dailyLimit: amt(market.dailyLimitSgd) };
+  const biller = payees.find((p) => p.kind === 'biller')!;
+  const bills: Bill[] = [
+    { id: 'b-utility', payeeId: biller.id, dueInDays: 4, amount: amt(142.8) },
+    { id: 'b-card', payeeId: 'card', dueInDays: 12, amount: amt(1320.4) },
+  ];
+  const card: CardInfo = { number: accounts[2]!.number, expiry: '08/29', limit: amt(8000), statementDay: 15 };
+  // 30 days of total balance for the trend line, ending at today's total. Deterministic per market.
+  const total = accounts[0]!.balance + accounts[1]!.balance;
+  // A gentle climb with small wobbles: reads as a trend, not a step.
+  const history = Array.from({ length: 30 }, (_, i) => {
+    const progress = i / 29;
+    const wobble = Math.sin(i * 1.3) * 0.006 + Math.sin(i / 3) * 0.008;
+    return Math.round(total * (0.925 + 0.075 * progress ** 1.6 + wobble * (1 - progress)));
+  });
+  history[29] = total;
+  return { accounts, payees, txns, bills, card, history, dailyLimit: amt(market.dailyLimitSgd) };
 }

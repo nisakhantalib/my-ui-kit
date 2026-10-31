@@ -3,7 +3,7 @@
 @import '@nisakhantalib/my-ui-kit/styles.css';
 @import 'tailwindcss';
 
-/* Tailwind speaks the kit's tokens, so app layout and components share one palette per brand. */
+/* Tailwind speaks the kit's tokens, so layout and components share one palette per brand and mode. */
 @theme inline {
   --color-bg: var(--kit-bg);
   --color-surface: var(--kit-surface);
@@ -19,19 +19,28 @@
   --font-sans: var(--kit-font);
 }
 
-/* Keep focused and scrolled-to content clear of the sticky header (WCAG 2.4.11 Focus Not Obscured). */
-@media (min-width: 40rem) {
-  html {
-    scroll-padding-top: 6rem;
-  }
+html {
+  /* Focused or scrolled-to content always clears the sticky top bar (WCAG 2.4.11). */
+  scroll-padding-top: 5.5rem;
+  /* ...and the bottom tab bar on phones. */
+  scroll-padding-bottom: 6rem;
 }
 
+/* Calm canvas, white cards: the layout banks like Mercury use to keep numbers the loudest thing. */
 body {
   margin: 0;
-  background: var(--kit-bg);
+  background: var(--kit-surface);
   color: var(--kit-text);
   font-family: var(--kit-font);
+  font-feature-settings: 'cv11', 'ss01'; /* Inter: single-storey a, open digits */
   -webkit-font-smoothing: antialiased;
+}
+
+/* App-level links and buttons get the same focus ring as kit components. */
+:where(a, button, [tabindex]):focus-visible {
+  outline: 3px solid var(--kit-focus);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
 }
 
 /* Money is always tabular, so columns of figures line up. */
@@ -40,23 +49,35 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* The balance card uses the brand-surface tokens: saturated in both modes, and the token build
-   checks on-brand-surface text against both gradient stops. */
-.hero-card {
+.card {
+  background: var(--kit-bg);
+  border: 1px solid color-mix(in srgb, var(--kit-border) 22%, transparent);
+  border-radius: var(--kit-card-radius);
+  box-shadow:
+    0 1px 2px rgb(16 12 30 / 0.04),
+    0 12px 32px -18px rgb(16 12 30 / 0.16);
+}
+
+/* The balance card and the payment card use the brand-surface tokens: saturated in both modes,
+   and the token build checks on-brand-surface text against both gradient stops. */
+.hero-card,
+.credit-card {
   color: var(--kit-on-brand-surface);
   background:
     radial-gradient(
       120% 140% at 100% 0%,
       color-mix(in srgb, var(--kit-brand-surface-end) 85%, transparent) 0%,
-      transparent 55%
+      transparent 58%
     ),
     linear-gradient(
       135deg,
       var(--kit-brand-surface) 0%,
       color-mix(in srgb, var(--kit-brand-surface) 70%, var(--kit-brand-surface-end)) 100%
     );
-  box-shadow: 0 24px 48px -20px color-mix(in srgb, var(--kit-brand-surface) 70%, transparent);
-  --kit-focus: var(--kit-on-brand-surface); /* the focus ring must contrast with the card, not the page */
+  --kit-focus: var(--kit-on-brand-surface); /* the ring must contrast with the card, not the page */
+}
+.hero-card {
+  box-shadow: 0 28px 56px -28px color-mix(in srgb, var(--kit-brand-surface) 75%, transparent);
 }
 .hero-card .kit-btn--primary {
   color: var(--kit-brand-surface);
@@ -66,13 +87,33 @@ body {
   background: color-mix(in srgb, var(--kit-on-brand-surface) 88%, var(--kit-brand-surface));
 }
 
-.card {
-  background: var(--kit-bg);
-  border: 1px solid color-mix(in srgb, var(--kit-border) 40%, transparent);
-  border-radius: var(--kit-card-radius);
-  box-shadow:
-    0 1px 2px rgb(0 0 0 / 0.04),
-    0 8px 24px -12px rgb(0 0 0 / 0.12);
+.credit-card {
+  box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--kit-brand-surface) 80%, black);
+  transition: filter 0.3s ease;
+}
+/* Subtle guilloché-style rings, like printed card security patterns. Decorative. */
+.credit-card::before {
+  content: '';
+  position: absolute;
+  inset: -40% -20% auto auto;
+  width: 120%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: repeating-radial-gradient(circle, transparent 0 14px, rgb(255 255 255 / 0.06) 14px 15px);
+  pointer-events: none;
+}
+.credit-card--off {
+  filter: grayscale(0.6);
+}
+.credit-card__chip {
+  width: 44px;
+  height: 34px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #e9d29a, #b9954a 55%, #e7cf93);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.15);
+}
+.credit-card .kit-masked__toggle:hover {
+  background: rgb(255 255 255 / 0.15);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -85,15 +126,4 @@ body {
       transform: translateY(6px);
     }
   }
-}
-
-/* The market picker sits in the header, so it is a compact native select. */
-.market-select {
-  --kit-control-height: 40px;
-}
-.market-select .kit-field__label {
-  font-size: 0.8125rem;
-}
-.market-select .kit-field__error {
-  display: none;
 }

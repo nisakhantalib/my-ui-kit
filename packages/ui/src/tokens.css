@@ -152,4 +152,74 @@
     --kit-focus: #5eead4;
     color-scheme: dark;
   }
+
+  /* ---- private ---- */
+  [data-brand='private'] {
+    --kit-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --kit-radius: 8px;
+    --kit-bg: #ffffff;
+    --kit-surface: #f5f6f9;
+    --kit-text: #0f1730;
+    --kit-text-muted: #4a5370;
+    --kit-border: #878fa6;
+    --kit-primary: #1b2f6b;
+    --kit-primary-hover: #14254f;
+    --kit-on-primary: #ffffff;
+    --kit-accent: #8c6a20;
+    --kit-brand-surface: #14254f;
+    --kit-brand-surface-end: #2b3f7a;
+    --kit-on-brand-surface: #ffffff;
+    --kit-danger: #b42318;
+    --kit-on-danger: #ffffff;
+    --kit-success: #1a7f37;
+    --kit-warning: #9a6700;
+    --kit-focus: #8c6a20;
+    --kit-backdrop: rgb(10 14 22 / 0.55);
+    --kit-button-radius: 6px;
+    --kit-control-height: 48px;
+    --kit-card-radius: 14px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) [data-brand='private'],
+    :root:not([data-theme='light'])[data-brand='private'] {
+      --kit-bg: #0b1020;
+      --kit-surface: #141a2e;
+      --kit-text: #eef1f8;
+      --kit-text-muted: #aab3c9;
+      --kit-border: #5b6580;
+      --kit-primary: #e2c27a;
+      --kit-primary-hover: #d9b45c;
+      --kit-on-primary: #1a1408;
+      --kit-accent: #d9b45c;
+      --kit-brand-surface: #14254f;
+      --kit-brand-surface-end: #2b3f7a;
+      --kit-danger: #ff8a7a;
+      --kit-on-danger: #2a0905;
+      --kit-success: #6fdd8b;
+      --kit-warning: #f0b72f;
+      --kit-focus: #e2c27a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme='dark'] [data-brand='private'],
+  :root[data-theme='dark'][data-brand='private'] {
+    --kit-bg: #0b1020;
+    --kit-surface: #141a2e;
+    --kit-text: #eef1f8;
+    --kit-text-muted: #aab3c9;
+    --kit-border: #5b6580;
+    --kit-primary: #e2c27a;
+    --kit-primary-hover: #d9b45c;
+    --kit-on-primary: #1a1408;
+    --kit-accent: #d9b45c;
+    --kit-brand-surface: #14254f;
+    --kit-brand-surface-end: #2b3f7a;
+    --kit-danger: #ff8a7a;
+    --kit-on-danger: #2a0905;
+    --kit-success: #6fdd8b;
+    --kit-warning: #f0b72f;
+    --kit-focus: #e2c27a;
+    color-scheme: dark;
+  }
 }

@@ -56,6 +56,15 @@
     cursor: pointer;
     transition: background-color 0.15s ease;
   }
+  /* Icons passed as children sit beside the label (and survive resets that make svg display: block). */
+  .kit-btn > span:not(.kit-spinner) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--kit-space-2);
+  }
+  .kit-btn svg {
+    flex-shrink: 0;
+  }
   .kit-btn--sm {
     min-height: 36px;
     font-size: 0.875rem;
@@ -991,6 +1000,66 @@
         -50% 0,
         0 0;
     }
+  }
+
+  /* ---------- IconButton ---------- */
+  .kit-icon-btn {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    color: var(--kit-text);
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .kit-icon-btn--sm {
+    width: 32px;
+    height: 32px;
+  }
+  .kit-icon-btn:hover {
+    background: color-mix(in srgb, var(--kit-text) 8%, transparent);
+  }
+  .kit-icon-btn--secondary {
+    border-color: var(--kit-border);
+  }
+  .kit-icon-btn--primary {
+    color: var(--kit-on-primary);
+    background: var(--kit-primary);
+  }
+  .kit-icon-btn--primary:hover {
+    background: var(--kit-primary-hover);
+  }
+  .kit-icon-btn[aria-pressed='true'] {
+    color: var(--kit-primary);
+    background: color-mix(in srgb, var(--kit-primary) 12%, transparent);
+  }
+  .kit-icon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .kit-icon-btn__icon {
+    display: inline-grid;
+    width: 20px;
+    height: 20px;
+  }
+  .kit-icon-btn__icon > svg {
+    width: 100%;
+    height: 100%;
+  }
+  .kit-icon-btn__badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--kit-danger);
+    box-shadow: 0 0 0 2px var(--kit-bg);
   }
 
   /* WCAG 2.3.3: no movement for people who ask for less. */

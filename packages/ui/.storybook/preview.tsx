@@ -20,7 +20,7 @@ const preview: Preview = {
     },
     brand: {
       description: 'Brand (sets <html data-brand>): one component library, many products',
-      toolbar: { title: 'Brand', icon: 'paintbrush', items: ['civic', 'orchid'], dynamicTitle: true },
+      toolbar: { title: 'Brand', icon: 'paintbrush', items: ['civic', 'orchid', 'private'], dynamicTitle: true },
     },
     market: {
       description: 'Market: locale, currency and the library’s built-in words',
