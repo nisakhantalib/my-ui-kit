@@ -1,45 +1,169 @@
 {
-  "$description": "Orchid: premium retail-banking brand (Orchid Bank, the fictional bank in the reference app).",
+  "$description": "Orchid: retail-banking brand (Orchid Bank, the fictional bank in the reference app). Neutral graphite UI with one cobalt accent, so money and status carry the colour.",
   "font": {
     "$type": "fontFamily",
     "$value": ["Inter Variable", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
   },
-  "radius": { "$type": "dimension", "$value": "14px" },
+  "radius": {
+    "$type": "dimension",
+    "$value": "10px"
+  },
   "color": {
     "$type": "color",
-    "bg": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.plum.950}" } } },
-    "surface": { "$value": "{palette.plum.50}", "$extensions": { "mode": { "dark": "{palette.plum.800}" } } },
-    "text": { "$value": "{palette.plum.900}", "$extensions": { "mode": { "dark": "{palette.plum.25}" } } },
-    "text-muted": { "$value": "{palette.plum.700}", "$extensions": { "mode": { "dark": "{palette.plum.300}" } } },
-    "border": { "$value": "{palette.plum.400}", "$extensions": { "mode": { "dark": "{palette.plum.500}" } } },
-    "primary": { "$value": "{palette.violet.700}", "$extensions": { "mode": { "dark": "{palette.violet.300}" } } },
-    "primary-hover": {
-      "$value": "{palette.violet.800}",
-      "$extensions": { "mode": { "dark": "{palette.violet.200}" } }
+    "bg": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.870}"
+        }
+      }
     },
-    "on-primary": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.plum.990}" } } },
-    "accent": { "$value": "{palette.magenta.600}", "$extensions": { "mode": { "dark": "{palette.magenta.400}" } } },
+    "surface": {
+      "$value": "{palette.graphite.50}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.950}"
+        }
+      }
+    },
+    "text": {
+      "$value": "{palette.graphite.900}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.25}"
+        }
+      }
+    },
+    "text-muted": {
+      "$value": "{palette.graphite.600}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.300}"
+        }
+      }
+    },
+    "border": {
+      "$value": "{palette.graphite.400}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.500}"
+        }
+      }
+    },
+    "primary": {
+      "$value": "{palette.graphite.900}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.25}"
+        }
+      }
+    },
+    "primary-hover": {
+      "$value": "{palette.graphite.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.200}"
+        }
+      }
+    },
+    "on-primary": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.900}"
+        }
+      }
+    },
+    "accent": {
+      "$value": "{palette.cobalt.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.cobalt.300}"
+        }
+      }
+    },
     "brand-surface": {
-      "$value": "{palette.violet.700}",
-      "$extensions": { "mode": { "dark": "{palette.violet.800}" } }
+      "$value": "{palette.graphite.900}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.graphite.800}"
+        }
+      }
     },
     "brand-surface-end": {
-      "$value": "{palette.magenta.600}",
-      "$extensions": { "mode": { "dark": "{palette.magenta.600}" } }
+      "$value": "{palette.midnight.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.midnight.800}"
+        }
+      }
     },
-    "on-brand-surface": { "$value": "{palette.white}" },
-    "danger": { "$value": "{palette.red.700}", "$extensions": { "mode": { "dark": "{palette.red.300}" } } },
-    "on-danger": { "$value": "{palette.white}", "$extensions": { "mode": { "dark": "{palette.red.990}" } } },
-    "success": { "$value": "{palette.green.700}", "$extensions": { "mode": { "dark": "{palette.green.300}" } } },
-    "warning": { "$value": "{palette.amber.700}", "$extensions": { "mode": { "dark": "{palette.amber.300}" } } },
-    "focus": { "$value": "{palette.teal.700}", "$extensions": { "mode": { "dark": "{palette.teal.300}" } } },
-    "backdrop": { "$value": "{palette.backdrop}" }
+    "on-brand-surface": {
+      "$value": "{palette.white}"
+    },
+    "danger": {
+      "$value": "{palette.red.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.red.300}"
+        }
+      }
+    },
+    "on-danger": {
+      "$value": "{palette.white}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.red.990}"
+        }
+      }
+    },
+    "success": {
+      "$value": "{palette.green.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.green.300}"
+        }
+      }
+    },
+    "warning": {
+      "$value": "{palette.amber.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.amber.300}"
+        }
+      }
+    },
+    "focus": {
+      "$value": "{palette.blue.700}",
+      "$extensions": {
+        "mode": {
+          "dark": "{palette.blue.400}"
+        }
+      }
+    },
+    "backdrop": {
+      "$value": "{palette.backdrop}"
+    }
   },
   "component": {
     "button": {
-      "radius": { "$type": "dimension", "$value": "999px", "$description": "Pill buttons are part of the Orchid look" }
+      "radius": {
+        "$type": "dimension",
+        "$value": "10px",
+        "$description": "Squared-off buttons: calmer and more formal than pills"
+      }
     },
-    "control": { "height": { "$type": "dimension", "$value": "48px" } },
-    "card": { "radius": { "$type": "dimension", "$value": "20px" } }
+    "control": {
+      "height": {
+        "$type": "dimension",
+        "$value": "48px"
+      }
+    },
+    "card": {
+      "radius": {
+        "$type": "dimension",
+        "$value": "16px"
+      }
+    }
   }
 }

@@ -13,10 +13,38 @@
   --color-brand: var(--kit-primary);
   --color-on-brand: var(--kit-on-primary);
   --color-accent: var(--kit-accent);
+  /* Links use the accent so they read as links against near-black text (text contrast enforced by the token build). */
+  --color-link: var(--kit-accent);
   --color-danger: var(--kit-danger);
   --color-success: var(--kit-success);
   --radius-card: var(--kit-card-radius);
   --font-sans: var(--kit-font);
+}
+
+/* Categorical data colours (a validated colour-blind-safe order), stepped separately for dark mode.
+   Each spending category always gets the same hue, on the donut and on its icon. */
+:root {
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --chart-1: #3987e5;
+    --chart-2: #d95926;
+    --chart-3: #199e70;
+    --chart-4: #c98500;
+    --chart-5: #d55181;
+  }
+}
+:root[data-theme='dark'] {
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
 }
 
 html {
@@ -150,7 +178,7 @@ body {
   color: currentColor;
 }
 .chip--primary:hover {
-  background: color-mix(in srgb, var(--kit-primary) 88%, black);
+  background: var(--kit-primary-hover);
 }
 
 /* Top-bar search: an icon button on phones, a search-box look with its shortcut on wide screens. */
@@ -273,10 +301,10 @@ body {
   height: 12px;
   margin: -6px 0 0 -6px;
   border-radius: 50%;
-  background: var(--kit-primary);
+  background: var(--kit-accent);
   box-shadow:
     0 0 0 3px var(--kit-bg),
-    0 0 0 4px color-mix(in srgb, var(--kit-primary) 35%, transparent);
+    0 0 0 4px color-mix(in srgb, var(--kit-accent) 35%, transparent);
   pointer-events: none;
 }
 .area-chart__tip {

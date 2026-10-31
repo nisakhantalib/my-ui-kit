@@ -76,7 +76,7 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
         onBlur={() => setActive(null)}
         onPointerMove={onPointerMove}
         onPointerLeave={() => setActive(null)}
-        className="area-chart relative h-44 cursor-crosshair touch-pan-y sm:h-52"
+        className="area-chart relative h-36 cursor-crosshair touch-pan-y sm:h-52"
       >
         <svg
           viewBox="0 0 100 100"
@@ -86,8 +86,8 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
         >
           <defs>
             <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0" stopColor="var(--kit-primary)" stopOpacity="0.22" />
-              <stop offset="1" stopColor="var(--kit-primary)" stopOpacity="0" />
+              <stop offset="0" stopColor="var(--kit-accent)" stopOpacity="0.22" />
+              <stop offset="1" stopColor="var(--kit-accent)" stopOpacity="0" />
             </linearGradient>
           </defs>
           {[25, 50, 75].map((g) => (
@@ -105,7 +105,7 @@ export function AreaChart({ values, dates, label, hint, formatValue, formatDate,
           <polyline
             points={line}
             fill="none"
-            stroke="var(--kit-primary)"
+            stroke="var(--kit-accent)"
             strokeWidth="2"
             strokeLinejoin="round"
             vectorEffect="non-scaling-stroke"

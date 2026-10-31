@@ -17,7 +17,8 @@
     ["on-danger", "danger", 4.5],
     ["success", "bg", 4.5],
     ["warning", "bg", 4.5],
-    ["accent", "bg", 3],
+    ["accent", "bg", 4.5],
+    ["accent", "surface", 4.5],
     ["border", "bg", 3],
     ["focus", "bg", 3],
     ["focus", "surface", 3]

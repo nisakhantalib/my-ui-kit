@@ -94,11 +94,11 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
             {t('secured')}
           </p>
           <p className="mt-12 flex gap-5 border-t border-line/25 pt-6 text-sm">
-            <a className="font-medium text-brand underline-offset-4 hover:underline" href="storybook/">
+            <a className="font-medium text-link underline-offset-4 hover:underline" href="storybook/">
               {t('storybook')}
             </a>
             <a
-              className="font-medium text-brand underline-offset-4 hover:underline"
+              className="font-medium text-link underline-offset-4 hover:underline"
               href="https://github.com/nisakhantalib/my-ui-kit"
             >
               {t('source')}

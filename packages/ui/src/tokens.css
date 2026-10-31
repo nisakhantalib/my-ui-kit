@@ -86,70 +86,70 @@
   /* ---- orchid ---- */
   [data-brand='orchid'] {
     --kit-font: 'Inter Variable', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-    --kit-radius: 14px;
+    --kit-radius: 10px;
     --kit-bg: #ffffff;
-    --kit-surface: #f8f6fb;
-    --kit-text: #1a1523;
-    --kit-text-muted: #585067;
-    --kit-border: #8c849b;
-    --kit-primary: #6a1fb0;
-    --kit-primary-hover: #551a8f;
+    --kit-surface: #f6f6f7;
+    --kit-text: #131417;
+    --kit-text-muted: #5a5e67;
+    --kit-border: #868a93;
+    --kit-primary: #131417;
+    --kit-primary-hover: #4b4f57;
     --kit-on-primary: #ffffff;
-    --kit-accent: #c0267a;
-    --kit-brand-surface: #6a1fb0;
-    --kit-brand-surface-end: #c0267a;
+    --kit-accent: #3a4bd1;
+    --kit-brand-surface: #131417;
+    --kit-brand-surface-end: #252a40;
     --kit-on-brand-surface: #ffffff;
     --kit-danger: #b42318;
     --kit-on-danger: #ffffff;
     --kit-success: #1a7f37;
     --kit-warning: #9a6700;
-    --kit-focus: #0f766e;
+    --kit-focus: #0b5cad;
     --kit-backdrop: rgb(10 14 22 / 0.55);
-    --kit-button-radius: 999px;
+    --kit-button-radius: 10px;
     --kit-control-height: 48px;
-    --kit-card-radius: 20px;
+    --kit-card-radius: 16px;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) [data-brand='orchid'],
     :root:not([data-theme='light'])[data-brand='orchid'] {
-      --kit-bg: #110e17;
-      --kit-surface: #1c1724;
-      --kit-text: #f2eef8;
-      --kit-text-muted: #bdb4cc;
-      --kit-border: #6f6782;
-      --kit-primary: #c9a7f5;
-      --kit-primary-hover: #dcc5fa;
-      --kit-on-primary: #1d0b33;
-      --kit-accent: #f472b6;
-      --kit-brand-surface: #551a8f;
-      --kit-brand-surface-end: #c0267a;
+      --kit-bg: #17181b;
+      --kit-surface: #0e0f11;
+      --kit-text: #f1f1f3;
+      --kit-text-muted: #a8abb3;
+      --kit-border: #6b6f78;
+      --kit-primary: #f1f1f3;
+      --kit-primary-hover: #d6d8dd;
+      --kit-on-primary: #131417;
+      --kit-accent: #93a1ff;
+      --kit-brand-surface: #1d1f23;
+      --kit-brand-surface-end: #2b3150;
       --kit-danger: #ff8a7a;
       --kit-on-danger: #2a0905;
       --kit-success: #6fdd8b;
       --kit-warning: #f0b72f;
-      --kit-focus: #5eead4;
+      --kit-focus: #7ab8f5;
       color-scheme: dark;
     }
   }
   :root[data-theme='dark'] [data-brand='orchid'],
   :root[data-theme='dark'][data-brand='orchid'] {
-    --kit-bg: #110e17;
-    --kit-surface: #1c1724;
-    --kit-text: #f2eef8;
-    --kit-text-muted: #bdb4cc;
-    --kit-border: #6f6782;
-    --kit-primary: #c9a7f5;
-    --kit-primary-hover: #dcc5fa;
-    --kit-on-primary: #1d0b33;
-    --kit-accent: #f472b6;
-    --kit-brand-surface: #551a8f;
-    --kit-brand-surface-end: #c0267a;
+    --kit-bg: #17181b;
+    --kit-surface: #0e0f11;
+    --kit-text: #f1f1f3;
+    --kit-text-muted: #a8abb3;
+    --kit-border: #6b6f78;
+    --kit-primary: #f1f1f3;
+    --kit-primary-hover: #d6d8dd;
+    --kit-on-primary: #131417;
+    --kit-accent: #93a1ff;
+    --kit-brand-surface: #1d1f23;
+    --kit-brand-surface-end: #2b3150;
     --kit-danger: #ff8a7a;
     --kit-on-danger: #2a0905;
     --kit-success: #6fdd8b;
     --kit-warning: #f0b72f;
-    --kit-focus: #5eead4;
+    --kit-focus: #7ab8f5;
     color-scheme: dark;
   }
 

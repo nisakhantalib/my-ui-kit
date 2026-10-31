@@ -84,7 +84,7 @@ export function Home() {
             action={
               <a
                 href={href('activity')}
-                className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand"
+                className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-link hover:underline underline-offset-4"
               >
                 {t('seeAll')}
                 <ChevronRight aria-hidden="true" size={16} />
@@ -370,7 +370,7 @@ function CreditWidget({ ready }: { ready: boolean }) {
       action={
         <a
           href={href('cards')}
-          className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-brand"
+          className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-link hover:underline underline-offset-4"
           aria-label={`${t('viewCard')}: ${t('cardShort')}`}
         >
           {t('viewCard')}
@@ -563,7 +563,7 @@ function Bills() {
                 <Badge tone={b.dueInDays <= 5 ? 'warning' : 'neutral'}>{t('dueIn', { days: b.dueInDays })}</Badge>
                 <a
                   href={isCard ? href('cards') : href('pay', { to: b.payeeId, amount: b.amount })}
-                  className="inline-flex min-h-8 items-center text-sm font-semibold text-brand underline-offset-4 hover:underline"
+                  className="inline-flex min-h-8 items-center text-sm font-semibold text-link underline-offset-4 hover:underline"
                   aria-label={`${isCard ? t('viewCard') : t('payBill')}: ${name}`}
                 >
                   {isCard ? t('viewCard') : t('payBill')}
