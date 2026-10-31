@@ -174,7 +174,7 @@ jobs:
           mkdir -p site
           cp -r apps/bank/dist/. site/
           cp -r packages/ui/storybook-static site/storybook
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - id: deployment
