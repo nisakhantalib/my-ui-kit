@@ -142,6 +142,10 @@ npm run deploy         # builds the library, the bank and Storybook into site/, 
 
 To release to a registry instead (a bank's internal Artifactory or Nexus, or npm), change the root `release` script from `changeset tag` to `changeset publish` and give the workflow that registry's credentials; for npm, trusted publishing (OIDC) avoids storing a token.
 
+## How this was built
+
+Built with AI-assisted development (Claude Code). I set the direction and made the design and architecture decisions, and I reviewed and tested every change; the reasoning behind the main choices is in the [decision records](docs/adr).
+
 ## License
 
 [MIT](LICENSE). Orchid Bank is a fictional bank; any resemblance to a real institution is unintended.
