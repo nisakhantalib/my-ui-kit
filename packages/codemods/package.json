@@ -1,6 +1,6 @@
 {
   "name": "@nisakhantalib/my-ui-kit-codemods",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "jscodeshift codemods that migrate apps across @nisakhantalib/my-ui-kit breaking changes",
   "license": "MIT",
   "author": "Khairunnisa Khan Binti Talib",

@@ -1,6 +1,6 @@
 {
   "name": "@nisakhantalib/eslint-plugin-my-ui-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ESLint rules that keep apps on @nisakhantalib/my-ui-kit tokens, components and current APIs",
   "license": "MIT",
   "author": "Khairunnisa Khan Binti Talib",
@@ -33,7 +33,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@nisakhantalib/my-ui-kit-scanner": "^0.1.0"
+    "@nisakhantalib/my-ui-kit-scanner": "^0.2.0"
   },
   "peerDependencies": {
     "eslint": ">=9.0.0"

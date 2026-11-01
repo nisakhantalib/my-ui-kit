@@ -1,6 +1,6 @@
 {
   "name": "@nisakhantalib/my-ui-kit-scanner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Adoption scanner for @nisakhantalib/my-ui-kit: component usage, props, deprecated props and adoption gaps",
   "license": "MIT",
   "author": "Khairunnisa Khan Binti Talib",

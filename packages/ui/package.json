@@ -1,6 +1,6 @@
 {
   "name": "@nisakhantalib/my-ui-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Accessible, composable React components (WCAG 2.2 AA) with pluggable analytics",
   "license": "MIT",
   "author": "Khairunnisa Khan Binti Talib",
