@@ -33,7 +33,7 @@ jobs:
       - run: npm run lint
       - run: npm test -w @nisakhantalib/my-ui-kit -- --project unit
 
-      - uses: changesets/action@v1
+      - uses: changesets/action@v2
         id: changesets
         with:
           version: npm run version-packages
