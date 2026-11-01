@@ -6,6 +6,9 @@ import '@fontsource-variable/hanken-grotesk';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/500.css';
 import '../src/styles.css';
+import './docs.css';
+import { DocsPage } from './DocsPage';
+import { theme } from './theme';
 
 /** The markets the reference bank runs in: one brand, five locales and currencies. */
 const MARKETS = {
@@ -16,6 +19,9 @@ const MARKETS = {
   IN: { locale: 'en-IN', currency: 'INR' },
 } as const;
 
+// Docs pages (MDX) don't run story decorators: start them on the default brand too.
+document.documentElement.dataset.brand ||= 'orchid';
+
 const preview: Preview = {
   globalTypes: {
     theme: {
@@ -24,14 +30,14 @@ const preview: Preview = {
     },
     brand: {
       description: 'Brand (sets <html data-brand>): one component library, many products',
-      toolbar: { title: 'Brand', icon: 'paintbrush', items: ['civic', 'orchid', 'private'], dynamicTitle: true },
+      toolbar: { title: 'Brand', icon: 'paintbrush', items: ['orchid', 'civic', 'private'], dynamicTitle: true },
     },
     market: {
       description: 'Market: locale, currency and the library’s built-in words',
       toolbar: { title: 'Market', icon: 'globe', items: Object.keys(MARKETS), dynamicTitle: true },
     },
   },
-  initialGlobals: { theme: 'light', brand: 'civic', market: 'SG' },
+  initialGlobals: { theme: 'light', brand: 'orchid', market: 'SG' },
   decorators: [
     (Story, { globals }) => {
       const root = document.documentElement;
@@ -54,6 +60,8 @@ const preview: Preview = {
   ],
   parameters: {
     layout: 'padded',
+    // Docs pages share the manager's theme and follow one template (DocsPage).
+    docs: { theme, page: DocsPage },
     backgrounds: { disable: true }, // the theme toolbar drives the background through tokens
     controls: { expanded: true, matchers: { color: /(background|color)$/i } },
     // Same WCAG 2.2 A/AA rule set the tests use; the Accessibility panel shows results per story.

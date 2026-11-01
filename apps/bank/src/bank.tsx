@@ -100,23 +100,19 @@ export function BankProvider({ market, hideBalances, setHideBalances, tier, load
     [market.code, queryClient, key],
   );
 
+  const setCardState = card.mutate;
+  const data = overview.data;
+  // Memoised so pages re-render when the data or a preference changes, not on every parent render.
+  const value = useMemo<BankState | null>(
+    () => (data ? { market, t, ...data, setCardState, hideBalances, setHideBalances, tier, money, transfer } : null),
+    [data, market, t, setCardState, hideBalances, setHideBalances, tier, money, transfer],
+  );
+
   if (overview.isPending) return <>{loading}</>;
   if (overview.isError)
     return <LoadError t={t} onRetry={() => void overview.refetch()} retrying={overview.isFetching} />;
 
-  const d = overview.data;
-  const value: BankState = {
-    market,
-    t,
-    ...d,
-    setCardState: (state) => card.mutate(state),
-    hideBalances,
-    setHideBalances,
-    tier,
-    money,
-    transfer,
-  };
-  return <BankContext.Provider value={value}>{children}</BankContext.Provider>;
+  return <BankContext.Provider value={value!}>{children}</BankContext.Provider>;
 }
 
 /** The overview request failed: say what happened and offer the one thing that helps. */

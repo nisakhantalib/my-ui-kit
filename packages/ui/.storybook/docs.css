@@ -1,0 +1,213 @@
+/* Storybook docs pages in the design system's own typography (preview iframe only). */
+.sbdocs.sbdocs-wrapper {
+  padding: 3.5rem 2rem 5rem;
+  background: var(--kit-bg);
+}
+.sbdocs.sbdocs-content {
+  max-width: 62rem;
+}
+.sbdocs h1,
+.sbdocs h2,
+.sbdocs h3,
+.kit-doc-h2 {
+  font-family: var(--kit-font-display);
+  font-stretch: 112%;
+  letter-spacing: -0.015em;
+  color: var(--kit-text);
+}
+.sbdocs h1 {
+  font-size: 2.5rem;
+  font-stretch: 118%;
+  letter-spacing: -0.03em;
+}
+.sbdocs h2,
+.kit-doc-h2 {
+  margin-top: 3rem;
+  padding-bottom: 0.5rem;
+  font-size: 1.5rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--kit-border) 25%, transparent);
+}
+.sbdocs p,
+.sbdocs li {
+  font-family: var(--kit-font);
+  color: var(--kit-text);
+}
+.sbdocs .docblock-source,
+.sbdocs .docs-story {
+  border-radius: 14px;
+}
+
+/* Status row under each component title. */
+.sbdocs .kit-doc-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0.75rem 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+.sbdocs .kit-doc-status li {
+  display: inline-flex;
+  margin: 0;
+  padding: 4px 10px;
+  font: 600 12px/1.2 var(--kit-font);
+  color: var(--kit-text-muted);
+  background: var(--kit-surface);
+  border-radius: 999px;
+}
+.sbdocs .kit-doc-status li[data-tone='stable'] {
+  color: var(--kit-on-primary);
+  background: var(--kit-primary);
+}
+
+/* ---------- Welcome page blocks ---------- */
+.kit-welcome-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 2.5rem;
+  color: var(--kit-on-brand-surface);
+  background:
+    radial-gradient(90% 120% at 85% 0%, color-mix(in srgb, var(--kit-brand-surface) 70%, #2a8a7a), transparent 60%),
+    linear-gradient(160deg, var(--kit-brand-surface), var(--kit-brand-surface-end));
+  border-radius: 24px;
+}
+.kit-welcome-hero > .kit-guilloche {
+  position: absolute;
+  top: -12rem;
+  right: -12rem;
+  width: 34rem;
+  height: 34rem;
+  opacity: 0.55;
+}
+.kit-welcome-hero > :not(.kit-guilloche) {
+  position: relative;
+}
+.kit-welcome-hero .kit-welcome-eyebrow {
+  font: 500 12px/1 var(--kit-font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--kit-brand-accent);
+}
+.sbdocs .kit-welcome-hero h1 {
+  margin: 0.75rem 0 0;
+  border: 0;
+  font-size: 3.25rem;
+  line-height: 1;
+  color: inherit;
+}
+.sbdocs.sbdocs-content .kit-welcome-hero p {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  font-size: 1.125rem;
+  color: inherit;
+  opacity: 0.85;
+}
+.kit-welcome-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 1.75rem;
+}
+.sbdocs.sbdocs-content .kit-welcome-actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  font: 600 15px/1 var(--kit-font);
+  color: var(--kit-brand-surface);
+  text-decoration: none;
+  background: #fff;
+  border-radius: var(--kit-button-radius);
+}
+.sbdocs.sbdocs-content .kit-welcome-actions a + a {
+  color: #fff;
+  background: rgb(255 255 255 / 0.08);
+  border: 1px solid rgb(255 255 255 / 0.3);
+}
+
+.kit-welcome-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 12px;
+  margin: 1.5rem 0 0;
+}
+.kit-welcome-stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  padding: 1rem 1.125rem;
+  background: var(--kit-surface);
+  border-radius: 14px;
+}
+.sbdocs .kit-welcome-stats dt {
+  font: 500 13px/1.3 var(--kit-font);
+  font-style: normal;
+  color: var(--kit-text-muted);
+}
+.sbdocs .kit-welcome-stats dd {
+  margin: 0;
+  font: 700 1.75rem/1.1 var(--kit-font-display);
+  font-stretch: 115%;
+  color: var(--kit-text);
+}
+
+.kit-welcome-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 12px;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.sbdocs .kit-welcome-cards a {
+  display: block;
+  height: 100%;
+  padding: 1.125rem 1.25rem;
+  text-decoration: none;
+  color: var(--kit-text);
+  background: var(--kit-bg);
+  border: 1px solid color-mix(in srgb, var(--kit-border) 28%, transparent);
+  border-radius: 16px;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
+}
+.sbdocs .kit-welcome-cards a:hover {
+  border-color: var(--kit-accent);
+  transform: translateY(-2px);
+}
+.kit-welcome-cards strong {
+  display: block;
+  font: 700 1.0625rem/1.2 var(--kit-font-display);
+  font-stretch: 110%;
+}
+.kit-welcome-cards span {
+  display: block;
+  margin-top: 6px;
+  font: 400 14px/1.45 var(--kit-font);
+  color: var(--kit-text-muted);
+}
+
+.sbdocs .kit-doc-status li::marker,
+.sbdocs .kit-doc-status li::before,
+.sbdocs .kit-doc-status li::after {
+  content: none;
+}
+
+/* Storybook's docs typography styles every ul/li; the welcome grids opt out. */
+.sbdocs .kit-welcome-cards {
+  margin-left: 0;
+  padding-left: 0;
+}
+.sbdocs .kit-welcome-cards li {
+  margin: 0;
+  list-style: none;
+}
+.sbdocs .kit-welcome-cards li::marker {
+  content: none;
+}
+.sbdocs .kit-welcome-stats {
+  margin-bottom: 1rem;
+}
+.sbdocs.sbdocs-content .kit-welcome-actions {
+  margin-top: 1.75rem;
+}

@@ -1,15 +1,86 @@
 import { Meta } from '@storybook/addon-docs/blocks';
+import { WelcomeActions, WelcomeCards, WelcomeHero, WelcomeStats } from './WelcomeBlocks';
 
 <Meta title="Introduction" />
 
-# My UI Kit
+<WelcomeHero>
+  <span className="kit-welcome-eyebrow">Design system · React 19 · TypeScript</span>
+  <h1>My UI Kit</h1>
+  <p>
+    Accessible, multi-brand React components for banking. WCAG 2.2 AA in light and dark, in three brands and five
+    markets, tested in a real browser on every change.
+  </p>
+  <WelcomeActions
+    items={[
+      ['Browse components', './?path=/docs/actions-button--docs'],
+      ['See it in Orchid Bank', '/'],
+    ]}
+  />
+</WelcomeHero>
 
-Accessible, composable React components for public-facing services. WCAG 2.2 AA in light and dark themes, tested in a real browser on every change.
+<WelcomeStats
+  items={[
+    ['24', 'components'],
+    ['3', 'brands, light and dark'],
+    ['5', 'markets and currencies'],
+    ['138', 'contrast checks per build'],
+  ]}
+/>
+
+## Get started
 
 ```tsx
-import { Button, TextField } from '@nisakhantalib/my-ui-kit';
+import { Button, KitProvider, TextField } from '@nisakhantalib/my-ui-kit';
 import '@nisakhantalib/my-ui-kit/styles.css';
+
+export function App() {
+  return (
+    <KitProvider locale="en-SG" currency="SGD">
+      <TextField label="Payee name" />
+      <Button>Continue</Button>
+    </KitProvider>
+  );
+}
 ```
+
+Set the brand and theme on `<html>` (`data-brand="orchid"`, `data-theme="dark"`); every component follows through the tokens. The toolbar above switches both for every story.
+
+## Explore
+
+<WelcomeCards
+  items={[
+    {
+      title: 'Banking',
+      body: 'AmountInput, OTPInput, Combobox, DataTable, Money, MaskedValue, Guilloche',
+      story: 'banking-amountinput--docs',
+    },
+    {
+      title: 'Forms',
+      body: 'TextField, Select, Checkbox, RadioGroup, Switch: labels and errors built in',
+      story: 'forms-textfield--docs',
+    },
+    {
+      title: 'Actions',
+      body: 'Button and IconButton, with loading and analytics tracking',
+      story: 'actions-button--docs',
+    },
+    {
+      title: 'Feedback',
+      body: 'Alert, ErrorSummary, Toast and Skeleton for every state',
+      story: 'feedback-alert--docs',
+    },
+    {
+      title: 'Overlays',
+      body: 'Dialog as a centred dialog, side sheet or bottom sheet',
+      story: 'overlays-dialog--docs',
+    },
+    {
+      title: 'Foundations',
+      body: 'Design tokens, the three brands and the contrast contract',
+      story: 'foundations-design-tokens--docs',
+    },
+  ]}
+/>
 
 ## Principles
 
@@ -17,16 +88,17 @@ import '@nisakhantalib/my-ui-kit/styles.css';
 2. **Accessible by default, not by option.** Labels, descriptions, error wiring and focus management are built in. You cannot render a `TextField` without a label.
 3. **Composable over configurable.** `Tabs`, `RadioGroup` and `Accordion` are compound components, so layout stays in your hands instead of in a growing list of props.
 4. **One contract for state.** Every stateful component works controlled (`value` + `onValueChange`) or uncontrolled (`defaultValue`).
-5. **Tokens, not hard-coded values.** Colours and spacing come from the token files, so brands, themes, Tailwind and native shells stay in sync.
+5. **Tokens, not hard-coded values.** Colours, type and spacing come from the token files, so brands, themes, Tailwind and native shells stay in sync.
 
 ## Using this Storybook
 
-- **Theme** (toolbar): switch light / dark. Every story must pass in both.
-- **Accessibility** panel: axe-core WCAG 2.2 A/AA results for the current story.
-- **Docs** tab on each component: props table, usage notes, and when to use something else.
+- **Toolbar:** theme (light / dark), brand (Civic, Orchid, Private) and market (locale and currency). Every story must pass in all of them.
+- **Accessibility panel:** axe-core WCAG 2.2 A/AA results for the current story, the same rules CI enforces.
+- **Docs pages:** status, a live example, the props table and every variant, in the same order for each component.
 
-## Links
+## Resources
 
 - [Design rationale, specs and ADRs](https://github.com/nisakhantalib/my-ui-kit/tree/main/docs)
 - [Accessibility statement and test matrix](https://github.com/nisakhantalib/my-ui-kit/blob/main/ACCESSIBILITY.md)
 - [Contributing a component](https://github.com/nisakhantalib/my-ui-kit/blob/main/CONTRIBUTING.md)
+- [Source code](https://github.com/nisakhantalib/my-ui-kit)

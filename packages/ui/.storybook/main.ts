@@ -4,6 +4,8 @@ import remarkGfm from 'remark-gfm';
 const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   stories: ['../docs/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
+  // Brand mark and the kit's fonts for Storybook's own chrome (manager-head.html).
+  staticDirs: ['./static'],
   addons: [
     // GitHub-flavoured Markdown, so tables in .mdx pages render.
     {
@@ -18,6 +20,8 @@ const config: StorybookConfig = {
     build: { ...vite.build, lib: false, rolldownOptions: undefined },
   }),
   typescript: { reactDocgen: 'react-docgen' },
+  // A published component library, not a sandbox: no release-notes pop-ups.
+  core: { disableWhatsNewNotifications: true },
 };
 
 export default config;

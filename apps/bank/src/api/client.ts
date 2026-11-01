@@ -7,13 +7,16 @@ import { ApiError, type CardState, type Overview, type ReceiptDto, type Transfer
  */
 let mockServer: Promise<unknown> | null = null;
 const startMockServer = () =>
-  (mockServer ??= Promise.all([import('msw/browser'), import('./mock')]).then(([{ setupWorker }, { handlers }]) =>
-    setupWorker(...handlers).start({ quiet: true, onUnhandledFrame: 'bypass' }),
-  ));
+  // No service workers (unit tests, which use MSW's Node server instead): nothing to start.
+  !('serviceWorker' in navigator)
+    ? Promise.resolve()
+    : (mockServer ??= Promise.all([import('msw/browser'), import('./mock')]).then(([{ setupWorker }, { handlers }]) =>
+        setupWorker(...handlers).start({ quiet: true, onUnhandledFrame: 'bypass' }),
+      ));
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   await startMockServer();
-  const res = await fetch(`/api/${path}`, {
+  const res = await fetch(new URL(`/api/${path}`, location.origin), {
     ...init,
     headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...init?.headers },
   });

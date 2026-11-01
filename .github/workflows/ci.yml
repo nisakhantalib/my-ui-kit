@@ -43,6 +43,8 @@ jobs:
       # unit = jsdom (logic + ARIA); browser = real Chromium (focus, keyboard, contrast). Coverage floors.
       - name: Component tests (unit + real browser) with coverage
         run: npm test -- --coverage
+      - name: Orchid Bank unit and integration tests (Vitest, Testing Library, MSW)
+        run: npm test -w bank
       - name: Web Components tests (real Chromium)
         run: npm test -w @nisakhantalib/my-ui-kit-elements
       - name: Governance tooling tests (ESLint plugin, codemods, scanner)

@@ -1,0 +1,25 @@
+<link rel="icon" type="image/svg+xml" href="logo.svg" />
+<style>
+  /* The kit's typefaces in Storybook's own chrome (files served from .storybook/static). */
+  @font-face {
+    font-family: 'Hanken Grotesk Variable';
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('fonts/hanken-grotesk.woff2') format('woff2-variations');
+  }
+  @font-face {
+    font-family: 'Archivo';
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+    src: url('fonts/archivo.woff2') format('woff2-variations');
+  }
+  /* Sidebar group labels and the selected story, in the bank's paper-and-treasury style. */
+  .sidebar-subheading {
+    letter-spacing: 0.08em;
+  }
+  .sidebar-item[data-selected='true'] {
+    background: #0b3d36 !important;
+    color: #fff !important;
+  }
+</style>

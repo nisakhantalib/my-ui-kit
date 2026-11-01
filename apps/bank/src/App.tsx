@@ -48,12 +48,21 @@ import { SignIn } from './SignIn';
 import { translator, type StringKey, type T } from './strings';
 import { TxnSheetProvider } from './TxnSheet';
 
-// Less-visited pages load on demand, so the first paint ships less JavaScript.
+// Less-visited pages load on demand, so the first paint ships less JavaScript. The same loaders
+// preload a page when its link is hovered or focused, so the click itself feels instant.
+const loaders = {
+  activity: () => import('./pages/Activity'),
+  pay: () => import('./pages/Pay'),
+  cards: () => import('./pages/Cards'),
+  settings: () => import('./pages/Settings'),
+} satisfies Partial<Record<Page, () => Promise<unknown>>>;
+const preload = (page: Page) => void (page in loaders && loaders[page as keyof typeof loaders]());
+
 const Marketing = lazy(() => import('./site/Marketing').then((m) => ({ default: m.Marketing })));
-const Activity = lazy(() => import('./pages/Activity').then((m) => ({ default: m.Activity })));
-const Pay = lazy(() => import('./pages/Pay').then((m) => ({ default: m.Pay })));
-const Cards = lazy(() => import('./pages/Cards').then((m) => ({ default: m.Cards })));
-const Settings = lazy(() => import('./pages/Settings').then((m) => ({ default: m.Settings })));
+const Activity = lazy(() => loaders.activity().then((m) => ({ default: m.Activity })));
+const Pay = lazy(() => loaders.pay().then((m) => ({ default: m.Pay })));
+const Cards = lazy(() => loaders.cards().then((m) => ({ default: m.Cards })));
+const Settings = lazy(() => loaders.settings().then((m) => ({ default: m.Settings })));
 
 export type Theme = 'system' | 'light' | 'dark';
 export type Tier = 'personal' | 'private';
@@ -159,31 +168,35 @@ export function App() {
     root.lang = market.locale;
   }, [theme, tier, market.locale]);
 
-  const prefs: Preferences = {
-    market,
-    setMarket,
-    theme,
-    setTheme,
-    tier,
-    setTier,
-    hideBalances,
-    setHideBalances,
-    signedIn,
-    signIn: () => {
-      // The sign-in screen disappears: start the user at Home's heading.
-      requestHeadingFocus();
-      signingOut = false;
-      setSignedIn(true);
-      navigateTo(APP);
-    },
-    signOut: () => {
-      signingOut = true; // the app route sends this one to the public site, not the sign-in page
-      setSignedIn(false);
-      queryClient.clear();
-      navigateTo('/');
-    },
-    t,
-  };
+  // One stable object: context consumers re-render only when a preference actually changes.
+  const prefs = useMemo<Preferences>(
+    () => ({
+      market,
+      setMarket,
+      theme,
+      setTheme,
+      tier,
+      setTier,
+      hideBalances,
+      setHideBalances,
+      signedIn,
+      signIn: () => {
+        // The sign-in screen disappears: start the user at Home's heading.
+        requestHeadingFocus();
+        signingOut = false;
+        setSignedIn(true);
+        navigateTo(APP);
+      },
+      signOut: () => {
+        signingOut = true; // the app route sends this one to the public site, not the sign-in page
+        setSignedIn(false);
+        queryClient.clear();
+        navigateTo('/');
+      },
+      t,
+    }),
+    [market, setMarket, theme, setTheme, tier, setTier, hideBalances, setHideBalances, signedIn, setSignedIn, t],
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -445,6 +458,8 @@ function Shell({ prefs }: { prefs: Preferences }) {
                     <a
                       href={href(page)}
                       aria-current={route.page === page ? 'page' : undefined}
+                      onPointerEnter={() => preload(page)}
+                      onFocus={() => preload(page)}
                       className="nav-item flex min-h-11 items-center gap-3 rounded-xl px-3 font-medium text-muted transition-colors hover:text-ink"
                     >
                       <Icon aria-hidden="true" size={19} strokeWidth={1.9} />
@@ -556,6 +571,8 @@ function Shell({ prefs }: { prefs: Preferences }) {
                 <a
                   href={href(page)}
                   aria-current={route.page === page ? 'page' : undefined}
+                  onPointerEnter={() => preload(page)}
+                  onFocus={() => preload(page)}
                   className="group flex min-h-16 flex-col items-center justify-center gap-1 text-[0.6875rem] font-medium text-muted aria-[current=page]:text-ink"
                 >
                   <span className="grid h-7 w-14 place-items-center rounded-full group-aria-[current=page]:bg-brand/10">
