@@ -11,3 +11,5 @@ storybook-static
 dist-demo
 lighthouse
 .lighthouseci
+/site
+.wrangler

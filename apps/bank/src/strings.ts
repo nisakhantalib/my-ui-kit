@@ -282,6 +282,15 @@ const en = {
   cardControlsHint: 'Freeze, limits and PIN',
   statementsHint: 'Download or search',
   autoSaved: '{amount} set aside for {goal} automatically',
+  loadErrorTitle: "We couldn't load your accounts",
+  loadErrorHint: 'Check your connection and try again. Your money is safe.',
+  retry: 'Try again',
+  notFoundTitle: 'Page not found',
+  notFoundHint: 'The link may be old or mistyped.',
+  notFoundHome: 'Go to the homepage',
+  errTransfer: "The transfer didn't go through. Nothing was taken from your account. Try again.",
+  cashFlow: 'Money in and out, last 6 months',
+  cashFlowSummary: 'Last 6 months: {in} in, {out} out',
 };
 
 export type StringKey = keyof typeof en;
@@ -564,6 +573,15 @@ const zhHant: Record<StringKey, string> = {
   cardControlsHint: '凍結、限額及密碼',
   statementsHint: '下載或搜尋',
   autoSaved: '已自動存 {amount} 至「{goal}」',
+  loadErrorTitle: '無法載入您的帳戶',
+  loadErrorHint: '請檢查網絡連線後再試。您的資金安全無虞。',
+  retry: '重試',
+  notFoundTitle: '找不到頁面',
+  notFoundHint: '連結可能已過期或輸入錯誤。',
+  notFoundHome: '返回首頁',
+  errTransfer: '轉帳未能完成，您的帳戶未被扣款。請再試一次。',
+  cashFlow: '近 6 個月收支',
+  cashFlowSummary: '近 6 個月：收入 {in}，支出 {out}',
 };
 
 const id: Record<StringKey, string> = {
@@ -844,6 +862,15 @@ const id: Record<StringKey, string> = {
   cardControlsHint: 'Bekukan, limit dan PIN',
   statementsHint: 'Unduh atau cari',
   autoSaved: '{amount} otomatis disisihkan untuk {goal}',
+  loadErrorTitle: 'Rekening Anda tidak dapat dimuat',
+  loadErrorHint: 'Periksa koneksi Anda lalu coba lagi. Uang Anda aman.',
+  retry: 'Coba lagi',
+  notFoundTitle: 'Halaman tidak ditemukan',
+  notFoundHint: 'Tautan mungkin sudah lama atau salah ketik.',
+  notFoundHome: 'Ke beranda',
+  errTransfer: 'Transfer gagal. Tidak ada dana yang terpotong. Coba lagi.',
+  cashFlow: 'Uang masuk dan keluar, 6 bulan terakhir',
+  cashFlowSummary: '6 bulan terakhir: masuk {in}, keluar {out}',
 };
 
 const CATALOGUES: Record<Lang, Record<StringKey, string>> = { en, 'zh-Hant': zhHant, id };

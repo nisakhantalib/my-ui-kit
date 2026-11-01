@@ -63,7 +63,7 @@ jobs:
         run: npm run test:storybook -w @nisakhantalib/my-ui-kit
 
       # Desktop + Pixel 7: every page in both themes, Private tier, two markets, strict CSP,
-      # 320px reflow, transfer/cards/activity journeys, offline PWA.
+      # 320px reflow, transfer/cards/activity journeys, public site, real URLs.
       - name: End-to-end tests (Orchid Bank)
         run: npm run test:e2e -w bank -- --grep-invert "visual regression"
 
@@ -147,17 +147,16 @@ jobs:
           name: orchid-bank-debug-apk
           path: apps/bank/android/app/build/outputs/apk/debug/*.apk
 
-  deploy-pages:
-    name: Deploy site to GitHub Pages
+  # Cloudflare Workers (static assets): runs once the repository has a CLOUDFLARE_API_TOKEN secret
+  # and a CLOUDFLARE_ACCOUNT_ID variable. Until then, deploy from a laptop with `npm run deploy`.
+  deploy-cloudflare:
+    name: Deploy to Cloudflare
     needs: [verify, visual]
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && vars.CLOUDFLARE_ACCOUNT_ID != ''
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: production
+      url: https://orchid-bank.${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN || 'workers' }}.dev
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -165,19 +164,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build -w @nisakhantalib/my-ui-kit
-      # One site: Orchid Bank at the root, the component library's Storybook at /storybook/.
-      - run: npm run build -w bank
+      # Orchid Bank at the root, the component library's Storybook at /storybook/.
+      - run: npm run build:site
+      - name: wrangler deploy
+        run: npx wrangler deploy
         env:
-          BASE_PATH: /my-ui-kit/
-      - run: npm run build:storybook
-      - name: Assemble site
-        run: |
-          mkdir -p site
-          cp -r apps/bank/dist/. site/
-          cp -r packages/ui/storybook-static site/storybook
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

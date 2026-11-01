@@ -13,5 +13,6 @@ Short records of decisions that shape the library, so new contributors (and futu
 | [0007](0007-vendor-neutral-analytics.md) | Vendor-neutral analytics with Adobe adapters | Accepted |
 | [0008](0008-hybrid-native-with-capacitor.md) | Native apps through a Capacitor shell, not a React Native rewrite | Accepted |
 | [0009](0009-governance-tooling.md) | Govern the library with a lint plugin, codemods and an adoption scanner | Accepted |
+| [0010](0010-real-urls-mock-api-cloudflare.md) | Real URLs, a mocked banking API (MSW + TanStack Query), Cloudflare Workers hosting | Accepted |
 
 New ADR: copy [the template](template.md), take the next number, open a PR. Superseded ADRs stay, marked *Superseded by 00xx*.

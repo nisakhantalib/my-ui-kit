@@ -12,7 +12,7 @@ This covers Singapore's Digital Service Standards (DSS), which require WCAG Leve
 | Every Storybook story | built Storybook + axe-core, **every brand × light and dark** (45 stories × 4) | every push | every documented state of every component; new stories and new brands are covered automatically |
 | Design tokens | `npm run tokens` contrast gate (80 pairs: every brand × mode) | every build | a brand or palette change that drops any text, UI or focus pair below WCAG minimums cannot ship |
 | Lint | eslint-plugin-jsx-a11y (strict) | every push, and in the editor | static mistakes: missing alt, invalid ARIA, non-interactive handlers |
-| Whole apps | Playwright + @axe-core/playwright, desktop + Pixel 7 | every push | Orchid Bank: every page in light and dark, the Private brand, two markets and languages, 320px reflow, transfer / card / activity journeys, OTP and alert dialogs, strict CSP, offline PWA |
+| Whole apps | Playwright + @axe-core/playwright, desktop + Pixel 7 | every push | Orchid Bank: every page in light and dark, the Private brand, two markets and languages, 320px reflow, transfer / card / activity journeys, OTP and alert dialogs, strict CSP, the public site, deep links |
 | Lighthouse | @lhci/cli on Orchid Bank | every push | accessibility score must be 100 |
 | Before release | [Oobee](https://github.com/GovTechSG/oobee) (GovTech Singapore) | manual | site-wide crawl report, DSS-mapped findings |
 | Before release | NVDA + Chrome, VoiceOver + Safari (iOS), TalkBack | manual | what automated tools cannot judge: reading order, announcements, sense |
@@ -56,7 +56,7 @@ Automated tools find roughly a third of WCAG issues. The manual screen-reader pa
 7. **Cards › Freeze card.** You hear "Freeze card, switch, off", then "on" and the toast "Card frozen". **Report lost or stolen** opens an alert dialog with focus on Cancel.
 8. **Activity.** Type "grab": after a pause you hear "2 transactions". The filter chips read "Money in, toggle button, not pressed".
 9. **Phone, bottom tab bar.** Swipe through: five links, the current one announced as "current page".
-10. **VoiceOver + Safari (iOS), installed as a PWA, airplane mode on.** The app opens and Home renders.
+10. **VoiceOver + Safari (iOS), added to the Home Screen.** The app opens at `/app` and Home renders.
 11. **TalkBack, Android app (Capacitor build).** Same transfer journey; Share opens the system share sheet.
 
 ## Known limitations

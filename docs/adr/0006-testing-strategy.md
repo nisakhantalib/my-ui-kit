@@ -14,7 +14,7 @@ jsdom has no layout engine, so it can't check colour contrast, focus rings, targ
 | Unit | Vitest + Testing Library + axe-core, jsdom | 52 | ~5 s | Behaviour, ARIA wiring, keyboard models, controlled/uncontrolled, analytics calls |
 | Component in a real browser | Vitest Browser Mode (Playwright Chromium) + axe with contrast | 8 | ~10 s | Contrast in both themes, focus-ring contrast, target size, real Tab/Space |
 | Story audit | Built Storybook + axe, every story × light/dark | 24 × 2 | ~30 s | Every documented state stays accessible, and new stories are covered automatically |
-| End to end | Playwright + @axe-core/playwright, desktop + Pixel 7 | 9 × 2 | ~40 s | Whole journeys, reflow at 320px, offline PWA, Share fallback, consent |
+| End to end | Playwright + @axe-core/playwright, desktop + Pixel 7 | 9 × 2 | ~40 s | Whole journeys, reflow at 320px, deep links and 404, the public site, Share fallback, consent |
 
 Rules:
 

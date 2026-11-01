@@ -18,7 +18,7 @@ import { ShieldCheck } from 'lucide-react';
 import { useBank, type Receipt } from '../bank';
 import type { Account, Payee } from '../data';
 import { shareText } from '../native';
-import { href } from '../router';
+import { navigate } from '../router';
 import { useOpenTxn } from '../TxnSheet';
 import { Amount, Avatar, PageHeader, Panel, TxnRow } from '../ui';
 
@@ -101,16 +101,21 @@ export function Pay({ params }: { params: URLSearchParams }) {
       setOtpError(t('errOtp'));
       return;
     }
-    setVerifying(true);
-    await new Promise((r) => setTimeout(r, 700)); // stand-in for the authorisation API
-    setVerifying(false);
     if (code !== DEMO_CODE) {
       setOtpError(t('errOtp'));
       setOtp('');
       return;
     }
-    setReceipt(transfer({ fromId, payee: payee!, amount: amount!, reference: reference.trim() }));
+    setVerifying(true);
+    try {
+      setReceipt(await transfer({ fromId, payee: payee!, amount: amount!, reference: reference.trim() }));
+    } catch {
+      setOtpError(t('errTransfer'));
+      setVerifying(false);
+      return;
+    }
     track('form_submit', { component: 'TransferForm', market: market.code });
+    setVerifying(false);
     setApproving(false);
     goTo('done');
   }
@@ -343,7 +348,7 @@ export function Pay({ params }: { params: URLSearchParams }) {
                   <Button variant="secondary" onClick={share}>
                     {t('share')}
                   </Button>
-                  <Button variant="ghost" onClick={() => (location.hash = href('home'))}>
+                  <Button variant="ghost" onClick={() => navigate('home')}>
                     {t('toHome')}
                   </Button>
                 </div>

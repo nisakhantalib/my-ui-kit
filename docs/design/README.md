@@ -55,7 +55,7 @@ Low fidelity, to agree flow and hierarchy before visual design. Generated from [
 | Wireframe decision | Implemented as |
 |---|---|
 | Balance with trend | white card, kit `Money`, `AreaChart` with a period switch and a table toggle; the change is stated in text |
-| Quick actions | chips in a labelled `nav`; links (not buttons), each to a page or a deep link (`#/pay?to=…&amount=…`) |
+| Quick actions | chips in a labelled `nav`; links (not buttons), each to a page or a deep link (`/app/pay?to=…&amount=…`) |
 | Masked account numbers | `MaskedValue` |
 | Payee search | `Combobox` (APG), plus one-tap recent payees (`aria-pressed`) |
 | Amount | `AmountInput`, integer minor units, locale-aware |

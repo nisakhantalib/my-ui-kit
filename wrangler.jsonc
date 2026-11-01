@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Orchid Bank on Cloudflare Workers (static assets). Build with `npm run build:site`, then
+  // `npx wrangler deploy` (or `npm run deploy`, which does both).
+  "name": "orchid-bank",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./site",
+    // Real URLs (/app/activity) are client-side routes: unknown paths get index.html.
+    "not_found_handling": "single-page-application",
+  },
+}
