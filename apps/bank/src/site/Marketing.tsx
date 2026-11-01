@@ -629,7 +629,13 @@ function Rates() {
           {s('ratesTitle')}
         </h2>
         <p className="mt-3 max-w-xl text-lg text-muted">{s('ratesIntro')}</p>
-        <div className="mt-10 overflow-x-auto rounded-2xl border border-line/20">
+        {/* Scrolls sideways on narrow screens, so it can take focus for keyboard scrolling (WCAG 2.1.1). */}
+        <div
+          tabIndex={0}
+          role="region"
+          aria-labelledby="rates-title"
+          className="mt-10 overflow-x-auto rounded-2xl border border-line/20"
+        >
           <table className="site-table w-full min-w-[36rem] text-left">
             <thead>
               <tr>
