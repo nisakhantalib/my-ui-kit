@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import useEmblaCarousel from 'embla-carousel-react';
 import {
   Badge,
   Button,
@@ -46,16 +47,6 @@ const percent = (locale: string, value: number, digits = 0) =>
 /** The demo savings rate, shown on the savings card. */
 const SAVINGS_RATE = 0.0285;
 
-/** Simulated network latency, so the loading state is designed rather than an afterthought. */
-function useFakeLoad(ms: number) {
-  const [ready, setReady] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setReady(true), ms);
-    return () => clearTimeout(timer);
-  }, [ms]);
-  return ready;
-}
-
 const linkClass =
   'inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-link underline-offset-4 hover:underline';
 
@@ -63,11 +54,9 @@ export function Home() {
   const { t, market, txns } = useBank();
   const kit = useKit();
   const announce = useAnnounce();
-  const ready = useFakeLoad(450);
-
-  useEffect(() => {
-    if (ready) announce(t('loaded'));
-  }, [ready, announce, t]);
+  // The overview has loaded by the time Home mounts (BankProvider shows the skeleton until then).
+  const ready = true;
+  useEffect(() => announce(t('loaded')), [announce, t]);
 
   const [now] = useState(() => Date.now());
   // "Your salary arrived 2 days ago": the context line people check first after payday.
@@ -126,6 +115,68 @@ function AccountStack({ ready }: { ready: boolean }) {
   const Trend = change >= 0 ? TrendingUp : TrendingDown;
   const step = (by: number) => setActive((i) => (i + by + ORDER.length) % ORDER.length);
   const name = (id: Account['id']) => t(id === 'card' ? 'card' : id);
+  const face = (id: Account['id']) => {
+    const a = byId(id);
+    return (
+      <>
+        {id === 'card' ? (
+          <Guilloche
+            variant="waves"
+            color="var(--kit-brand-accent)"
+            accentColor="#c8a25a"
+            className="inset-0 size-full"
+          />
+        ) : (
+          <Guilloche
+            color="var(--kit-brand-accent)"
+            accentColor="#c8a25a"
+            animate={id === 'everyday'}
+            className={`-top-28 -right-28 size-80 ${id === 'savings' ? 'opacity-50' : ''}`}
+          />
+        )}
+        <p className="flex items-center text-[0.6875rem] font-semibold tracking-[0.1em] uppercase opacity-80">
+          {name(id)}
+          <span className="ml-auto">
+            {id === 'savings'
+              ? t('interestRate', { rate: percent(kit.locale, SAVINGS_RATE, 2) })
+              : t(id === 'card' ? 'credit' : 'debit')}
+          </span>
+        </p>
+        {id === 'card' && <span aria-hidden="true" className="credit-card__chip mt-3 scale-90 origin-left" />}
+        <p className="display mt-auto text-[2rem] leading-none font-semibold sm:text-[2.125rem]">
+          {hideBalances ? t('hidden') : <Money value={a.balance} currency={market.currency} />}
+        </p>
+        <div className="serial mt-2 flex items-center justify-between text-xs opacity-85">
+          <MaskedValue value={a.number} label={t(id === 'card' ? 'cardNumber' : 'accountNumber')} />
+          {id === 'card' ? (
+            cardState !== 'active' ? (
+              <Badge tone={cardState === 'blocked' ? 'danger' : 'info'}>
+                {t(cardState === 'blocked' ? 'blocked' : 'frozen')}
+              </Badge>
+            ) : (
+              <span>{card.expiry}</span>
+            )
+          ) : (
+            <span>{t('available')}</span>
+          )}
+        </div>
+      </>
+    );
+  };
+
+  // Phones: a real swipe carousel (Embla) with momentum and snapping, synced with the list.
+  const [emblaRef, embla] = useEmblaCarousel({ align: 'start', containScroll: 'trimSnaps' });
+  useEffect(() => {
+    if (!embla) return;
+    const onSelect = () => setActive(embla.selectedScrollSnap());
+    embla.on('select', onSelect);
+    return () => {
+      embla.off('select', onSelect);
+    };
+  }, [embla]);
+  useEffect(() => {
+    if (embla && embla.selectedScrollSnap() !== active) embla.scrollTo(active);
+  }, [embla, active]);
 
   return (
     <section
@@ -134,10 +185,22 @@ function AccountStack({ ready }: { ready: boolean }) {
       className="card rise grid grid-cols-[minmax(0,1fr)] gap-6 p-5 sm:p-7 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:items-center md:gap-8 xl:col-span-8"
     >
       <div>
-        <div className="deck">
+        <div ref={emblaRef} className="-mx-5 overflow-hidden px-5 md:hidden">
+          <div className="flex gap-3">
+            {ORDER.map((id) => (
+              <div key={id} className="min-w-0 flex-[0_0_88%]">
+                <div className="relative aspect-[1.586]">
+                  <div data-pos="0" role="group" aria-label={name(id)} className={`acct-card acct-card--${id}`}>
+                    {face(id)}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="deck hidden md:block">
           {ORDER.map((id, i) => {
             const pos = (i - active + ORDER.length) % ORDER.length;
-            const a = byId(id);
             const front = pos === 0;
             return (
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events
@@ -151,47 +214,7 @@ function AccountStack({ ready }: { ready: boolean }) {
                 role={front ? 'group' : undefined}
                 aria-label={front ? name(id) : undefined}
               >
-                {id === 'card' ? (
-                  <Guilloche
-                    variant="waves"
-                    color="var(--kit-brand-accent)"
-                    accentColor="#c8a25a"
-                    className="inset-0 size-full"
-                  />
-                ) : (
-                  <Guilloche
-                    color="var(--kit-brand-accent)"
-                    accentColor="#c8a25a"
-                    animate={id === 'everyday'}
-                    className={`-top-28 -right-28 size-80 ${id === 'savings' ? 'opacity-50' : ''}`}
-                  />
-                )}
-                <p className="flex items-center text-[0.6875rem] font-semibold tracking-[0.1em] uppercase opacity-80">
-                  {name(id)}
-                  <span className="ml-auto">
-                    {id === 'savings'
-                      ? t('interestRate', { rate: percent(kit.locale, SAVINGS_RATE, 2) })
-                      : t(id === 'card' ? 'credit' : 'debit')}
-                  </span>
-                </p>
-                {id === 'card' && <span aria-hidden="true" className="credit-card__chip mt-3 scale-90 origin-left" />}
-                <p className="display mt-auto text-[2rem] leading-none font-semibold sm:text-[2.125rem]">
-                  {hideBalances ? t('hidden') : <Money value={a.balance} currency={market.currency} />}
-                </p>
-                <div className="serial mt-2 flex items-center justify-between text-xs opacity-85">
-                  <MaskedValue value={a.number} label={t(id === 'card' ? 'cardNumber' : 'accountNumber')} />
-                  {id === 'card' ? (
-                    cardState !== 'active' ? (
-                      <Badge tone={cardState === 'blocked' ? 'danger' : 'info'}>
-                        {t(cardState === 'blocked' ? 'blocked' : 'frozen')}
-                      </Badge>
-                    ) : (
-                      <span>{card.expiry}</span>
-                    )
-                  ) : (
-                    <span>{t('available')}</span>
-                  )}
-                </div>
+                {face(id)}
               </div>
             );
           })}

@@ -1,10 +1,10 @@
 # My UI Kit
 
-**An accessible, multi-brand, multi-market React component library for banking, governed like a product.** It has 24 components (including the hard banking ones), design tokens that refuse to build if contrast fails, Web Components for non-React teams, and lint, codemod and adoption tooling. It is proven by **Orchid Bank**, a fictional bank in five markets that runs as a website, an installable PWA and an Android app.
+**An accessible, multi-brand, multi-market React component library for banking, governed like a product.** It has 24 components (including the hard banking ones), design tokens that refuse to build if contrast fails, Web Components for non-React teams, and lint, codemod and adoption tooling. It is proven by **Orchid Bank**, a fictional bank in five markets: a public website, an online-banking app with real URLs over a (mocked) banking API, and an Android app.
 
 [![CI](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/nisakhantalib/my-ui-kit/actions/workflows/ci.yml)
 
-**Live:** [Orchid Bank](https://nisakhantalib.github.io/my-ui-kit/) ([straight into the demo account](https://nisakhantalib.github.io/my-ui-kit/?demo)) · [Storybook](https://nisakhantalib.github.io/my-ui-kit/storybook/) · **Start here:** [one-page case study](docs/case-study.md)
+**Live:** deployed to Cloudflare Workers (see [Deploy](#deploy)): the public site at `/`, the demo account at `/?demo`, Storybook at `/storybook/` · **Start here:** [one-page case study](docs/case-study.md)
 
 ![Orchid Bank home: action chips, total balance with an interactive chart and period switch, money in and out, card credit widget, spending insight, savings goals and bills](docs/screenshots/home-light.png)
 
@@ -35,7 +35,7 @@ packages/
   codemods        jscodeshift migrations, one for each deprecation
   scanner         kit-scan: adoption report across repos (usage, props, versions, deprecated usages, gaps)
 apps/
-  bank            Orchid Bank: Home, Activity, Pay & transfer, Cards, Settings; 5 markets; PWA + Android
+  bank            Orchid Bank: public site (/), online banking (/app: Home, Activity, Pay, Cards, Settings); 5 markets; Android
 docs/
   case-study.md   one page for reviewers
   specs/          brief → user stories → acceptance criteria → the test that proves each one
@@ -48,16 +48,17 @@ docs/
 
 | Requirement | Evidence |
 |---|---|
-| **Reusable, composable components across platforms** | 24 components with compound APIs (`Tabs`, `RadioGroup`, `Accordion`) and one controlled/uncontrolled contract. Runs on **web, PWA, Android** (Capacitor) and **non-React stacks** (`<kit-*>` Web Components), in **3 brands × 5 markets × 3 languages** |
+| **Reusable, composable components across platforms** | 24 components with compound APIs (`Tabs`, `RadioGroup`, `Accordion`) and one controlled/uncontrolled contract. Runs on **web, Android** (Capacitor) and **non-React stacks** (`<kit-*>` Web Components), in **3 brands × 5 markets × 3 languages** |
 | **Business and design requirements → specs** | [Transfer spec](docs/specs/transfer-flow.md): stakeholder brief, resolved questions, Given/When/Then criteria **each mapped to its e2e test**, tracking plan. [Component spec template](docs/specs/component-spec-template.md) + [RadioGroup spec](docs/specs/components/radio-group.md) |
 | **Standards, best practices, architecture** | [9 ADRs](docs/adr/), [CONTRIBUTING](CONTRIBUTING.md) (API conventions, definition of done), [governance model](docs/governance.md), **enforced** by ESLint (jsx-a11y strict + our own plugin), Prettier, coverage floors, size budgets, a token contrast gate, a deprecated-API gate |
 | **Communication with business, product, design** | Storybook with usage guidance, brand/market/theme toolbars, a live contrast report and an adoption dashboard; specs written for non-developers; design research with sources ([design/](docs/design/README.md)) |
 | **Web fundamentals, HTML, CSS** | Native elements first ([ADR 0004](docs/adr/0004-native-elements-first.md)); cascade layers, custom properties, `:has()`, `color-mix()`, safe-area insets, forced colours, reduced motion, 320px reflow on every page |
 | **JavaScript / TypeScript** | Strict TS (`noUncheckedIndexedAccess`), generic components (`Combobox<T>`, `DataTable<T>`), TS 7 for types; exact minor-unit money arithmetic |
-| **UI testing** | 87 jsdom + 8 real-Chromium component tests; **54 stories × 3 brands × 2 themes** axe audit; 6 Web Component browser tests; **19 Playwright scenarios × desktop + Pixel 7** (every page under axe and a strict CSP, journeys, offline); visual regression in a pinned container; Lighthouse CI; 49 tooling tests. Each new gate was first shown to fail on a deliberately broken build |
+| **UI testing** | 87 jsdom + 8 real-Chromium component tests; **54 stories × 3 brands × 2 themes** axe audit; 6 Web Component browser tests; **19 Playwright scenarios × desktop + Pixel 7** (every page under axe and a strict CSP, journeys, real URLs, the public site); visual regression in a pinned container; Lighthouse CI; 49 tooling tests. Each new gate was first shown to fail on a deliberately broken build |
 | **React** | React 19, hooks, context, portals, lazy routes, compound components, `'use client'` output for Next.js Server Components |
 | **npm package publishing** | 5 packages built to publish: per-module ESM (`Button` alone **365 B**), `exports` map, publint + attw, size-limit. **Changesets** versioning and changelogs; each release is tagged on GitHub with its installable tarball and a **CycloneDX SBOM**. Pointing it at a registry (internal or npm) is a one-line change |
-| **Native / PWA / hybrid** | Workbox PWA (installable, offline reload tested), Capacitor 8 Android APK built in CI, native share sheet with web fallbacks |
+| **Native / hybrid** | Installable web app (manifest), Capacitor 8 Android APK built in CI, native share sheet with web fallbacks |
+| **Production front-end architecture** | React Router (real URLs, deep links, 404), TanStack Query over a typed API client, Mock Service Worker as the backend (latency, validation, optimistic updates with rollback), Motion, Recharts and Embla, all lazy-loaded where used ([ADR 0010](docs/adr/0010-real-urls-mock-api-cloudflare.md)) |
 | **Accessible UI for screen readers** | APG patterns; live regions that exist before content; focus moves to each new page and step; single-input OTP; spoken currency; masked values read as "ending 6789"; WCAG 2.5.3 label-in-name enforced. [ACCESSIBILITY.md](ACCESSIBILITY.md) has the WCAG criterion per component and NVDA/VoiceOver/TalkBack scripts |
 | **Visual design** | A research-led banking UI ([design/](docs/design/README.md)); three complete brands from one component set; dark mode designed (not inverted) with a dedicated `brand-surface` role |
 | *UI design, wireframes, mockups* | [Annotated wireframes](docs/design/README.md#wireframes) for phone and desktop, mapped decision by decision to the build |
@@ -119,6 +120,19 @@ import '@nisakhantalib/my-ui-kit/styles.css';
 | Feedback | `Alert`, `ErrorSummary`, `ToastProvider` + `useToast`, `Skeleton`, `AnnouncerProvider` + `useAnnounce` |
 | Overlays | `Dialog` (`dialog` / `alertdialog`; centred or side `sheet`) |
 | Foundations | `KitProvider` + `useKit`, `AnalyticsProvider` + `useTrack` / `usePageView`, `VisuallyHidden`, `useControllableState`, `tokens` |
+
+## Deploy
+
+Orchid Bank and Storybook deploy together to **Cloudflare Workers** (static assets), configured in [`wrangler.jsonc`](wrangler.jsonc):
+
+```bash
+npx wrangler login     # once: opens Cloudflare in your browser
+npm run deploy         # builds the library, the bank and Storybook into site/, then wrangler deploy
+```
+
+- Deep links (`/app/activity`) are client-side routes: `not_found_handling: "single-page-application"` serves `index.html` for them.
+- Security headers (the same strict CSP the e2e suite runs under, HSTS, `nosniff`) come from [`apps/bank/public/_headers`](apps/bank/public/_headers).
+- To deploy from CI on every push to `main`, add a `CLOUDFLARE_API_TOKEN` repository secret and a `CLOUDFLARE_ACCOUNT_ID` repository variable; the `Deploy to Cloudflare` job in `ci.yml` then runs after the checks pass.
 
 ## Release
 

@@ -1,18 +1,19 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist",
       "url": [
-        "http://localhost/index.html",
-        "http://localhost/index.html?demo",
-        "http://localhost/index.html?demo#/activity",
-        "http://localhost/index.html?demo#/pay",
-        "http://localhost/index.html?demo#/cards"
+        "http://localhost:4174/",
+        "http://localhost:4174/app?demo",
+        "http://localhost:4174/app/activity?demo",
+        "http://localhost:4174/app/pay?demo",
+        "http://localhost:4174/app/cards?demo"
       ],
       "numberOfRuns": 3,
       "settings": {
         "preset": "desktop"
-      }
+      },
+      "startServerCommand": "npm run preview -- --strictPort",
+      "startServerReadyPattern": "4174"
     },
     "assert": {
       "assertions": {

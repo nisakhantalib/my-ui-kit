@@ -1,9 +1,13 @@
-import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
-import { useKit } from '@nisakhantalib/my-ui-kit';
-import { seed, type Account, type Bill, type CardInfo, type Goal, type Market, type Payee, type Txn } from './data';
+import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, useKit } from '@nisakhantalib/my-ui-kit';
+import { CloudOff } from 'lucide-react';
+import { api, overviewKey } from './api/client';
+import type { CardState, Overview } from './api/types';
+import type { Account, Bill, CardInfo, Goal, Market, Payee, Txn } from './data';
 import { translator, type T } from './strings';
 
-export type CardState = 'active' | 'frozen' | 'blocked';
+export type { CardState };
 
 export interface Receipt {
   txn: Txn;
@@ -30,8 +34,8 @@ interface BankState {
   tier: 'personal' | 'private';
   /** Formatted money, or "Hidden" while balances are hidden. */
   money: (minor: number, options?: { signDisplay?: Intl.NumberFormatOptions['signDisplay'] }) => string;
-  /** Stand-in for the payments API: debits the account and returns the receipt the server would. */
-  transfer: (input: { fromId: Account['id']; payee: Payee; amount: number; reference: string }) => Receipt;
+  /** POST /transfers: the server debits the account and returns the receipt. */
+  transfer: (input: { fromId: Account['id']; payee: Payee; amount: number; reference: string }) => Promise<Receipt>;
 }
 
 const BankContext = createContext<BankState | null>(null);
@@ -41,22 +45,21 @@ interface BankProviderProps {
   hideBalances: boolean;
   setHideBalances: (hide: boolean) => void;
   tier: 'personal' | 'private';
+  /** Shown while the first overview request is in flight (the app shell's skeleton). */
+  loading?: ReactNode;
   children: ReactNode;
 }
 
 /**
- * App state for one signed-in customer in one market. A real app would load this from an API.
- * Mount it with key={market.code}: a new market is a different customer profile, so state starts fresh.
+ * App state for one signed-in customer in one market, from the banking API (TanStack Query over
+ * fetch; the mock server is MSW). Mount it with key={market.code}: a new market is a different
+ * customer profile.
  */
-export function BankProvider({ market, hideBalances, setHideBalances, tier, children }: BankProviderProps) {
+export function BankProvider({ market, hideBalances, setHideBalances, tier, loading, children }: BankProviderProps) {
   const kit = useKit();
-  const digits = kit.currencyDigits(market.currency);
-  const [initial] = useState(() => seed(market, digits));
-  const [accounts, setAccounts] = useState(initial.accounts);
-  const [txns, setTxns] = useState(initial.txns);
-  const [bills, setBills] = useState(initial.bills);
-  const [cardState, setCardState] = useState<CardState>('active');
-
+  const queryClient = useQueryClient();
+  const key = overviewKey(market.code);
+  const overview = useQuery({ queryKey: key, queryFn: () => api.overview(market.code) });
   const t = useMemo(() => translator(market.lang), [market.lang]);
 
   const money = useCallback<BankState['money']>(
@@ -65,38 +68,48 @@ export function BankProvider({ market, hideBalances, setHideBalances, tier, chil
     [hideBalances, kit, market.currency, t],
   );
 
-  const transfer = useCallback<BankState['transfer']>(({ fromId, payee, amount, reference }) => {
-    const txn: Txn = {
-      id: `t${Date.now()}`,
-      date: new Date().toISOString().slice(0, 10),
-      desc: reference ? `${payee.name} · ${reference}` : payee.name,
-      category: payee.kind === 'biller' ? 'bills' : 'transfer',
-      amount: -amount,
-      status: 'posted',
-      account: 'everyday',
-      time: new Date().toTimeString().slice(0, 5),
-    };
-    setAccounts((all) => all.map((a) => (a.id === fromId ? { ...a, balance: a.balance - amount } : a)));
-    setTxns((all) => [txn, ...all]);
-    // Paying a biller settles its upcoming bill.
-    setBills((all) => all.filter((b) => b.payeeId !== payee.id));
-    return { txn, ref: `OB${Date.now().toString().slice(-9)}`, at: new Date() };
-  }, []);
+  // Card controls apply instantly (optimistic), and roll back if the server refuses.
+  const card = useMutation({
+    mutationFn: (state: CardState) => api.setCardState(market.code, state),
+    onMutate: async (state) => {
+      await queryClient.cancelQueries({ queryKey: key });
+      const previous = queryClient.getQueryData<Overview>(key);
+      queryClient.setQueryData<Overview>(key, (d) => d && { ...d, cardState: state });
+      return { previous };
+    },
+    onError: (_e, _s, context) => context?.previous && queryClient.setQueryData(key, context.previous),
+  });
 
+  const transfer = useCallback<BankState['transfer']>(
+    async ({ fromId, payee, amount, reference }) => {
+      const dto = await api.transfer(market.code, { fromId, payeeId: payee.id, amount, reference });
+      // Show the result straight away, then let the server's view replace it.
+      queryClient.setQueryData<Overview>(
+        key,
+        (d) =>
+          d && {
+            ...d,
+            accounts: d.accounts.map((a) => (a.id === fromId ? { ...a, balance: a.balance - amount } : a)),
+            txns: [dto.txn, ...d.txns],
+            bills: d.bills.filter((b) => b.payeeId !== payee.id),
+          },
+      );
+      void queryClient.invalidateQueries({ queryKey: key });
+      return { txn: dto.txn, ref: dto.ref, at: new Date(dto.at) };
+    },
+    [market.code, queryClient, key],
+  );
+
+  if (overview.isPending) return <>{loading}</>;
+  if (overview.isError)
+    return <LoadError t={t} onRetry={() => void overview.refetch()} retrying={overview.isFetching} />;
+
+  const d = overview.data;
   const value: BankState = {
     market,
     t,
-    accounts,
-    payees: initial.payees,
-    txns,
-    bills,
-    card: initial.card,
-    cardState,
-    setCardState,
-    history: initial.history,
-    goals: initial.goals,
-    lastMonth: initial.lastMonth,
-    dailyLimit: initial.dailyLimit,
+    ...d,
+    setCardState: (state) => card.mutate(state),
     hideBalances,
     setHideBalances,
     tier,
@@ -104,6 +117,22 @@ export function BankProvider({ market, hideBalances, setHideBalances, tier, chil
     transfer,
   };
   return <BankContext.Provider value={value}>{children}</BankContext.Provider>;
+}
+
+/** The overview request failed: say what happened and offer the one thing that helps. */
+function LoadError({ t, onRetry, retrying }: { t: T; onRetry: () => void; retrying: boolean }) {
+  return (
+    <div role="alert" className="mx-auto grid max-w-md justify-items-center gap-3 px-6 py-24 text-center">
+      <span aria-hidden="true" className="grid size-14 place-items-center rounded-full bg-surface text-muted">
+        <CloudOff size={26} />
+      </span>
+      <h1 className="text-2xl font-semibold">{t('loadErrorTitle')}</h1>
+      <p className="text-muted">{t('loadErrorHint')}</p>
+      <Button onClick={onRetry} loading={retrying} className="mt-2">
+        {t('retry')}
+      </Button>
+    </div>
+  );
 }
 
 export function useBank(): BankState {

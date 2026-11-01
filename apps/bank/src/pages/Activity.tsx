@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import {
   Badge,
   Button,
@@ -19,10 +19,13 @@ import type { StringKey } from '../strings';
 import { useOpenTxn } from '../TxnSheet';
 import { CATEGORY_COLOR, CategoryIcon, PageHeader, Panel, useDayLabel } from '../ui';
 
+// Recharts loads only with this page.
+const CashFlowChart = lazy(() => import('./CashFlowChart').then((m) => ({ default: m.CashFlowChart })));
+
 type Direction = 'all' | 'in' | 'out';
 
 export function Activity() {
-  const { t, txns, money, goals } = useBank();
+  const { t, txns, money, goals, history, hideBalances } = useBank();
   const goal = goals[0];
   const kit = useKit();
   const announce = useAnnounce();
@@ -57,6 +60,29 @@ export function Activity() {
     (sum, x) => (x.amount > 0 ? { ...sum, in: sum.in + x.amount } : { ...sum, out: sum.out - x.amount }),
     { in: 0, out: 0 },
   );
+
+  // Six calendar months of money in and out, from the daily balance history.
+  const months = useMemo(() => {
+    const today = new Date();
+    const dayOf = (i: number) =>
+      new Date(today.getFullYear(), today.getMonth(), today.getDate() - (history.length - 1 - i));
+    return [5, 4, 3, 2, 1, 0].map((k) => {
+      const start = new Date(today.getFullYear(), today.getMonth() - k, 1);
+      const end = new Date(today.getFullYear(), today.getMonth() - k + 1, 1);
+      let moneyIn = 0;
+      let moneyOut = 0;
+      for (let i = 1; i < history.length; i++) {
+        const day = dayOf(i);
+        if (day < start || day >= end) continue;
+        const diff = history[i]! - history[i - 1]!;
+        if (diff > 0) moneyIn += diff;
+        else moneyOut -= diff;
+      }
+      return { label: kit.formatDate(start, { month: 'short' }), moneyIn, moneyOut };
+    });
+  }, [history, kit]);
+  const flowIn = months.reduce((s, m) => s + m.moneyIn, 0);
+  const flowOut = months.reduce((s, m) => s + m.moneyOut, 0);
 
   const groups = useMemo(() => {
     const byDay = new Map<string, Txn[]>();
@@ -221,6 +247,34 @@ export function Activity() {
           ))}
         </dl>
       </section>
+
+      <Panel title={t('cashFlow')}>
+        {hideBalances ? (
+          <p className="grid h-56 place-items-center rounded-xl bg-surface text-muted">{t('hidden')}</p>
+        ) : (
+          <>
+            <Suspense fallback={<div className="h-56" />}>
+              <CashFlowChart
+                months={months}
+                label={t('cashFlowSummary', { in: money(flowIn), out: money(flowOut) })}
+                inLabel={t('moneyIn')}
+                outLabel={t('moneyOut')}
+                format={money}
+              />
+            </Suspense>
+            <p aria-hidden="true" className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted">
+              <span className="flex items-center gap-2">
+                <span className="size-2.5 rounded-[3px] bg-success" />
+                {t('moneyIn')} · <span className="money">{money(flowIn)}</span>
+              </span>
+              <span className="flex items-center gap-2">
+                <span className="size-2.5 rounded-[3px] bg-ink" />
+                {t('moneyOut')} · <span className="money">{money(flowOut)}</span>
+              </span>
+            </p>
+          </>
+        )}
+      </Panel>
 
       {results.length === 0 ? (
         <Panel>

@@ -1,4 +1,7 @@
-import { Fragment, lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { createContext, Fragment, lazy, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { createBrowserRouter, Navigate, Outlet, RouterProvider, useLocation, useNavigate } from 'react-router';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { MotionConfig } from 'motion/react';
 import {
   AnalyticsProvider,
   AnnouncerProvider,
@@ -7,6 +10,7 @@ import {
   IconButton,
   KitProvider,
   SkipLink,
+  Skeleton,
   ToastProvider,
   adobeDataLayerAdapter,
   consoleAdapter,
@@ -35,16 +39,17 @@ import {
 } from 'lucide-react';
 import { MARKETS, type Market } from './data';
 import { BankProvider, useBank } from './bank';
-import { href, useRoute, type Page } from './router';
+import { APP, fromLegacyHash, href, navigateTo, setNavigator, useRoute, type Page } from './router';
 import { Avatar, requestHeadingFocus } from './ui';
 import { CommandPalette } from './CommandPalette';
 import { Logo } from './Logo';
 import { Home } from './pages/Home';
 import { SignIn } from './SignIn';
-import type { StringKey } from './strings';
+import { translator, type StringKey, type T } from './strings';
 import { TxnSheetProvider } from './TxnSheet';
 
-// Less-visited pages load on demand, so Home's first paint ships less JavaScript.
+// Less-visited pages load on demand, so the first paint ships less JavaScript.
+const Marketing = lazy(() => import('./site/Marketing').then((m) => ({ default: m.Marketing })));
 const Activity = lazy(() => import('./pages/Activity').then((m) => ({ default: m.Activity })));
 const Pay = lazy(() => import('./pages/Pay').then((m) => ({ default: m.Pay })));
 const Cards = lazy(() => import('./pages/Cards').then((m) => ({ default: m.Cards })));
@@ -80,10 +85,62 @@ export interface Preferences {
   setTheme: (theme: Theme) => void;
   tier: Tier;
   setTier: (tier: Tier) => void;
+  hideBalances: boolean;
+  setHideBalances: (hide: boolean) => void;
+  signedIn: boolean;
+  signIn: () => void;
   signOut: () => void;
+  /** The market's language, for screens outside the banking app (public site, sign-in). */
+  t: T;
 }
 
+const PrefsContext = createContext<Preferences | null>(null);
+export function usePrefs(): Preferences {
+  const ctx = useContext(PrefsContext);
+  if (!ctx) throw new Error('usePrefs must be used inside <App>.');
+  return ctx;
+}
+
+// Signed-out visitors to /app go to sign-in; someone who just signed out goes to the public site.
+let signingOut = false;
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 30_000, retry: 1, refetchOnWindowFocus: false } },
+});
+
+/** Routes: the public site at /, demo sign-in at /login, the banking app under /app. */
+const routes = [
+  {
+    element: <Root />,
+    children: [
+      {
+        index: true,
+        element: (
+          <Suspense fallback={null}>
+            <Marketing />
+          </Suspense>
+        ),
+      },
+      { path: 'login', element: <LoginRoute /> },
+      {
+        path: 'app',
+        element: <AppRoute />,
+        children: [
+          { index: true, element: <Home /> },
+          { path: 'activity', element: <Activity /> },
+          { path: 'pay', element: <PayRoute /> },
+          { path: 'cards', element: <Cards /> },
+          { path: 'settings', element: <SettingsRoute /> },
+        ],
+      },
+      { path: '*', element: <NotFound /> },
+    ],
+  },
+];
+
 export function App() {
+  // Created on first render (not at import), so it sees the URL after main.tsx has tidied it.
+  const [router] = useState(() => createBrowserRouter(routes));
   const [marketCode, setMarket] = usePersisted<Market['code']>('market', 'SG');
   const [theme, setTheme] = usePersisted<Theme>('theme', 'system');
   const [tier, setTier] = usePersisted<Tier>('tier', 'personal');
@@ -91,6 +148,7 @@ export function App() {
   const [signedIn, setSignedIn] = usePersisted<boolean>('signed-in', false);
   const market = MARKETS.find((m) => m.code === marketCode) ?? MARKETS[0]!;
   const adapters = useMemo(() => [consoleAdapter, adobeDataLayerAdapter()], []);
+  const t = useMemo(() => translator(market.lang), [market.lang]);
 
   // Theme and brand are attributes on <html>, the same switches every kit consumer uses.
   useEffect(() => {
@@ -101,39 +159,165 @@ export function App() {
     root.lang = market.locale;
   }, [theme, tier, market.locale]);
 
-  const prefs: Preferences = { market, setMarket, theme, setTheme, tier, setTier, signOut: () => setSignedIn(false) };
+  const prefs: Preferences = {
+    market,
+    setMarket,
+    theme,
+    setTheme,
+    tier,
+    setTier,
+    hideBalances,
+    setHideBalances,
+    signedIn,
+    signIn: () => {
+      // The sign-in screen disappears: start the user at Home's heading.
+      requestHeadingFocus();
+      signingOut = false;
+      setSignedIn(true);
+      navigateTo(APP);
+    },
+    signOut: () => {
+      signingOut = true; // the app route sends this one to the public site, not the sign-in page
+      setSignedIn(false);
+      queryClient.clear();
+      navigateTo('/');
+    },
+    t,
+  };
 
   return (
-    <KitProvider locale={market.locale} currency={market.currency}>
-      <AnalyticsProvider adapters={adapters}>
-        <AnnouncerProvider>
-          <ToastProvider>
-            <BankProvider
-              key={market.code}
-              market={market}
-              hideBalances={hideBalances}
-              setHideBalances={setHideBalances}
-              tier={tier}
-            >
-              {signedIn ? (
-                <TxnSheetProvider>
-                  <Shell prefs={prefs} />
-                </TxnSheetProvider>
-              ) : (
-                <SignIn
-                  prefs={prefs}
-                  onEnter={() => {
-                    // The button disappears with the screen: start the user at Home's heading.
-                    requestHeadingFocus();
-                    setSignedIn(true);
-                  }}
-                />
-              )}
-            </BankProvider>
-          </ToastProvider>
-        </AnnouncerProvider>
-      </AnalyticsProvider>
-    </KitProvider>
+    <QueryClientProvider client={queryClient}>
+      <KitProvider locale={market.locale} currency={market.currency}>
+        <AnalyticsProvider adapters={adapters}>
+          <AnnouncerProvider>
+            <ToastProvider>
+              {/* Motion follows the user's reduced-motion setting everywhere. */}
+              <MotionConfig reducedMotion="user">
+                <PrefsContext.Provider value={prefs}>
+                  <RouterProvider router={router} />
+                </PrefsContext.Provider>
+              </MotionConfig>
+            </ToastProvider>
+          </AnnouncerProvider>
+        </AnalyticsProvider>
+      </KitProvider>
+    </QueryClientProvider>
+  );
+}
+
+/**
+ * Router root: plain <a href> links anywhere in the app become client-side navigations (so pages
+ * and the kit can use ordinary links), and old #/ links are forwarded to their real URLs.
+ */
+function Root() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    setNavigator((to) => void navigate(to));
+    const legacy = fromLegacyHash(location.hash);
+    if (legacy) void navigate(legacy, { replace: true });
+
+    const onClick = (e: MouseEvent) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = (e.target as Element).closest?.('a');
+      if (!a || a.target || a.hasAttribute('download')) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || url.pathname.startsWith('/storybook')) return;
+      if (url.pathname === location.pathname && url.hash) return; // in-page anchor
+      e.preventDefault();
+      void navigate(url.pathname + url.search + url.hash);
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, [navigate]);
+  return <Outlet />;
+}
+
+function LoginRoute() {
+  const prefs = usePrefs();
+  if (prefs.signedIn) return <Navigate to={APP} replace />;
+  return <SignIn prefs={prefs} onEnter={prefs.signIn} />;
+}
+
+function AppRoute() {
+  const prefs = usePrefs();
+  if (!prefs.signedIn) {
+    return <Navigate to={signingOut ? '/' : '/login'} replace />;
+  }
+  return (
+    <BankProvider
+      key={prefs.market.code}
+      market={prefs.market}
+      hideBalances={prefs.hideBalances}
+      setHideBalances={prefs.setHideBalances}
+      tier={prefs.tier}
+      loading={<AppSkeleton />}
+    >
+      <TxnSheetProvider>
+        <Shell prefs={prefs} />
+      </TxnSheetProvider>
+    </BankProvider>
+  );
+}
+
+function PayRoute() {
+  return <Pay params={useRoute().params} />;
+}
+
+function SettingsRoute() {
+  return <Settings prefs={usePrefs()} />;
+}
+
+function NotFound() {
+  const { t } = usePrefs();
+  useEffect(() => {
+    document.title = `${t('notFoundTitle')} · ${t('brand')}`;
+  }, [t]);
+  return (
+    <main id="main" className="grid min-h-dvh place-items-center px-6 text-center">
+      <div className="grid justify-items-center gap-4">
+        <Logo size={48} />
+        <h1 className="text-3xl font-semibold">{t('notFoundTitle')}</h1>
+        <p className="max-w-sm text-muted">{t('notFoundHint')}</p>
+        <a href="/" className="chip chip--primary mt-2">
+          {t('notFoundHome')}
+        </a>
+      </div>
+    </main>
+  );
+}
+
+/** The first overview request: the app's frame with placeholders where the numbers will be. */
+function AppSkeleton() {
+  const { t } = usePrefs();
+  return (
+    <div aria-busy="true" aria-label={t('loading')} className="min-h-dvh lg:pl-64">
+      <div
+        aria-hidden="true"
+        className="fixed inset-y-0 left-0 hidden w-64 border-r border-line/20 bg-surface lg:block"
+      />
+      <div aria-hidden="true" className="h-16 border-b border-line/15 bg-surface" />
+      <div className="mx-auto grid max-w-[90rem] gap-6 px-4 pt-10 sm:px-6 lg:px-10">
+        <Skeleton width="20rem" className="[&_.kit-skeleton]:h-9" />
+        <div className="grid gap-6 xl:grid-cols-12">
+          <div className="card h-80 p-6 xl:col-span-8">
+            <Skeleton lines={4} />
+          </div>
+          <div className="card h-80 p-6 xl:col-span-4">
+            <Skeleton lines={4} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Each page fades in on arrival (CSS, so the app's first chunk stays small); none with reduced motion. */
+function PageTransition() {
+  const location = useLocation();
+  return (
+    <div key={location.pathname} className="page-enter">
+      <Outlet />
+    </div>
   );
 }
 
@@ -326,16 +510,12 @@ function Shell({ prefs }: { prefs: Preferences }) {
           className="mx-auto max-w-6xl px-4 pt-6 pb-32 outline-none sm:px-6 lg:px-10 lg:pt-10 lg:pb-16"
         >
           <Suspense fallback={<div aria-busy="true" className="min-h-96" />}>
-            {route.page === 'home' && <Home />}
-            {route.page === 'activity' && <Activity />}
-            {route.page === 'pay' && <Pay params={route.params} />}
-            {route.page === 'cards' && <Cards />}
-            {route.page === 'settings' && <Settings prefs={prefs} />}
+            <PageTransition />
           </Suspense>
           <footer className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-line/20 pt-6 text-sm text-muted">
             <p>{t('fictional')}</p>
             <p className="flex gap-4">
-              <a className="font-medium text-link underline-offset-4 hover:underline" href="storybook/">
+              <a className="font-medium text-link underline-offset-4 hover:underline" href="/storybook/">
                 {t('storybook')}
               </a>
               <a

@@ -3,7 +3,7 @@ import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-const PAGES = ['', '#/activity', '#/pay', '#/cards', '#/settings'];
+const PAGES = ['/app', '/app/activity', '/app/pay', '/app/cards', '/app/settings'];
 
 async function expectNoAxeViolations(page: Page) {
   // Finish entry animations first (fades change opacity, so contrast mid-fade is meaningless).
@@ -21,7 +21,7 @@ async function expectNoAxeViolations(page: Page) {
 
 async function openBank(
   page: Page,
-  { market = 'SG', hash = '', theme = 'light', tier = 'personal', signedIn = true } = {},
+  { market = 'SG', path = '/app', theme = 'light', tier = 'personal', signedIn = true } = {},
 ) {
   await page.clock.setFixedTime(new Date('2026-10-29T10:00:00')); // stable greeting and dates
   await page.addInitScript(
@@ -33,10 +33,10 @@ async function openBank(
     },
     [market, theme, tier, signedIn] as const,
   );
-  await page.goto(`/${hash}`);
+  await page.goto(signedIn ? path : '/login');
   await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-  // Home simulates loading: wait until the balance panel is no longer busy.
-  if (!hash && signedIn)
+  // The overview comes from the (mock) API: wait until the balance panel is no longer busy.
+  if (path === '/app' && signedIn)
     await expect(page.getByRole('region', { name: /^(Total balance|總結餘|Total saldo)$/ })).not.toHaveAttribute(
       'aria-busy',
       'true',
@@ -59,8 +59,8 @@ async function payTanWeiLing(page: Page, amount: string) {
 test('every page passes WCAG 2.2 A/AA in light and dark', async ({ page }) => {
   test.slow(); // 5 pages × 2 themes, each with a full axe run
   for (const theme of ['light', 'dark']) {
-    for (const hash of PAGES) {
-      await openBank(page, { hash, theme });
+    for (const path of ['/', ...PAGES]) {
+      await openBank(page, { path, theme });
       await expectNoAxeViolations(page);
     }
   }
@@ -85,8 +85,8 @@ test('runs under a strict Content-Security-Policy with no violations, on every p
   });
   const response = await page.goto('/');
   expect(response?.headers()['content-security-policy']).toContain("style-src 'self'");
-  for (const hash of PAGES) {
-    await openBank(page, { hash });
+  for (const path of ['/', ...PAGES]) {
+    await openBank(page, { path });
     expect(await page.evaluate(() => (window as unknown as { csp: string[] }).csp)).toEqual([]);
   }
 });
@@ -102,7 +102,7 @@ test('navigation: focus moves to the new page heading and the title updates', as
 });
 
 test('transfer: payee by keyboard, review, OTP (wrong, then right), receipt, balance updated', async ({ page }) => {
-  await openBank(page, { hash: '#/pay' });
+  await openBank(page, { path: '/app/pay' });
   await payTanWeiLing(page, '1250.5');
 
   await expect(page.getByRole('heading', { name: 'Check before you send' })).toBeFocused();
@@ -130,7 +130,7 @@ test('transfer: payee by keyboard, review, OTP (wrong, then right), receipt, bal
 });
 
 test('validation: summary takes focus, links reach the fields, limits are enforced', async ({ page }) => {
-  await openBank(page, { hash: '#/pay' });
+  await openBank(page, { path: '/app/pay' });
   await page.getByRole('button', { name: 'Continue' }).click();
   await expect(page.getByRole('heading', { name: /^There is a problem ?\(2 errors\)$/ })).toBeVisible();
   await expect(page.locator('.kit-error-summary')).toBeFocused();
@@ -161,7 +161,7 @@ test('upcoming bill deep-links into a prefilled payment; recent payees select wi
 });
 
 test('activity: search, money in/out filter, live count, CSV export', async ({ page }) => {
-  await openBank(page, { hash: '#/activity' });
+  await openBank(page, { path: '/app/activity' });
   await page.getByRole('searchbox', { name: /Search transactions/ }).fill('grab');
   await expect(page.getByRole('status').filter({ hasText: /^2 transactions$/ })).toBeAttached();
   await expect(page.getByRole('main')).not.toContainText('NTUC FairPrice');
@@ -182,7 +182,7 @@ test('activity: search, money in/out filter, live count, CSV export', async ({ p
 });
 
 test('cards: freeze applies instantly; reporting lost asks first and blocks the card', async ({ page }) => {
-  await openBank(page, { hash: '#/cards' });
+  await openBank(page, { path: '/app/cards' });
   const freeze = page.getByRole('switch', { name: 'Freeze card' });
   await freeze.click();
   await expect(freeze).toHaveAttribute('aria-checked', 'true');
@@ -200,7 +200,7 @@ test('cards: freeze applies instantly; reporting lost asks first and blocks the 
 });
 
 test('settings: theme and banking tier switch the whole app through tokens', async ({ page }) => {
-  await openBank(page, { hash: '#/settings' });
+  await openBank(page, { path: '/app/settings' });
   await page.getByRole('radio', { name: 'Dark' }).check();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   await page.getByRole('radio', { name: /Private/ }).check();
@@ -211,7 +211,7 @@ test('settings: theme and banking tier switch the whole app through tokens', asy
 });
 
 test('markets: Indonesian rupiah has no decimals, Bahasa strings, local payment rail', async ({ page }) => {
-  await openBank(page, { market: 'ID', hash: '#/pay' });
+  await openBank(page, { market: 'ID', path: '/app/pay' });
   await expect(page.locator('html')).toHaveAttribute('lang', 'id-ID');
   await expect(page.getByText('Kirim uang seketika dengan BI-FAST.')).toBeVisible();
   const amount = page.getByRole('textbox', { name: /Jumlah/ });
@@ -236,7 +236,9 @@ test('hide balances: hidden on screen and for screen readers, remembered after r
   await expect(page.getByRole('button', { name: 'Hide balances' })).toHaveAttribute('aria-pressed', 'true');
 });
 
-test('sign-in: market chosen first, one button in, focus lands on the greeting; sign out returns', async ({ page }) => {
+test('sign-in: market chosen first, one button in, focus lands on the greeting; sign out returns to the site', async ({
+  page,
+}) => {
   await openBank(page, { signedIn: false });
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Orchid Bank');
   await expectNoAxeViolations(page);
@@ -244,15 +246,55 @@ test('sign-in: market chosen first, one button in, focus lands on the greeting; 
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('歡迎使用 Orchid Bank');
   await page.getByRole('button', { name: '查看示範帳戶' }).click();
   await expect(page.getByRole('heading', { level: 1, name: '早安，嘉欣' })).toBeFocused();
-  await page.goto('/#/settings');
+  await page.getByRole('link', { name: '設定' }).filter({ visible: true }).first().click();
   await page.getByRole('button', { name: '登出' }).filter({ visible: true }).first().click();
-  await expect(page.getByRole('button', { name: '查看示範帳戶' })).toBeVisible();
+  // Signing out returns to the public site, in the market's language.
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('用心雕刻的每一分錢。');
 });
 
-test('a ?demo link skips sign-in and leaves a clean URL', async ({ page }) => {
+test('a ?demo link skips sign-in and leaves a clean URL; old #/ links still work', async ({ page }) => {
   await page.goto('/?demo#/cards');
   await expect(page.getByRole('heading', { level: 1, name: 'Cards' })).toBeVisible();
-  expect(new URL(page.url()).search).toBe('');
+  const url = new URL(page.url());
+  expect([url.pathname, url.search, url.hash]).toEqual(['/app/cards', '', '']);
+  await page.goto('/#/activity');
+  await expect(page.getByRole('heading', { level: 1, name: 'Activity' })).toBeVisible();
+  expect(new URL(page.url()).pathname).toBe('/app/activity');
+});
+
+test('real URLs: deep links, back and forward, and a 404 page', async ({ page }) => {
+  await openBank(page, { path: '/app/cards' });
+  await expect(page.getByRole('heading', { level: 1, name: 'Cards' })).toBeVisible();
+  await nav(page)
+    .getByRole('link', { name: /Activity/ })
+    .click();
+  await expect(page).toHaveURL(/\/app\/activity$/);
+  await page.goBack();
+  await expect(page.getByRole('heading', { level: 1, name: 'Cards' })).toBeVisible();
+  await page.goForward();
+  await expect(page.getByRole('heading', { level: 1, name: 'Activity' })).toBeVisible();
+  await page.goto('/no-such-page');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Page not found');
+  await page.getByRole('link', { name: 'Go to the homepage' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Money, engraved with care.');
+});
+
+test('public site: savings calculator, market switch, and Log in leads into the app', async ({ page }) => {
+  await openBank(page, { path: '/', signedIn: false });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Money, engraved with care.');
+  const save = page.getByRole('region', { name: /a year\. No lock-in\./ });
+  await save.scrollIntoViewIfNeeded();
+  await save.getByRole('radio', { name: '5 years' }).check();
+  await expect(save).toContainText('+$3,059.17'); // S$20,000 at 2.85%, compounded monthly for 5 years
+  await page.getByRole('button', { name: /香港/ }).click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'zh-HK');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('用心雕刻的每一分錢。');
+  await page.getByRole('button', { name: /Singapore/ }).click();
+  await page.getByRole('link', { name: 'Log in' }).filter({ visible: true }).first().click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Welcome to Orchid Bank');
+  await page.getByRole('button', { name: 'View demo account' }).click();
+  await expect(page).toHaveURL(/\/app$/);
 });
 
 test('balance chart: range switch, keyboard exploration announces date and balance, table alternative', async ({
@@ -317,23 +359,24 @@ test('account numbers are masked until asked for', async ({ page }) => {
 
 test('reflows at 320px with no horizontal scrolling on every page (WCAG 1.4.10)', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 720 });
-  for (const hash of PAGES) {
-    await openBank(page, { hash });
+  for (const path of ['/', ...PAGES]) {
+    await openBank(page, { path });
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
-    expect(overflow, `page ${hash || 'home'}`).toBe(0);
+    expect(overflow, `page ${path}`).toBe(0);
   }
 });
 
-test('PWA: reloads and works offline once the service worker is installed', async ({ page, context }) => {
-  await openBank(page);
-  await page.evaluate(() => navigator.serviceWorker.ready);
-  await page.reload(); // let the service worker take control
-  await context.setOffline(true);
-  await page.reload();
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Wei Ling');
-  await context.setOffline(false);
+test('banking data comes from the API: a transfer survives a reload of the app', async ({ page }) => {
+  await openBank(page, { path: '/app/pay' });
+  await payTanWeiLing(page, '100');
+  await page.getByRole('button', { name: 'Confirm and send' }).click();
+  await page.getByRole('textbox', { name: 'One-time password' }).fill('123456');
+  await expect(page.getByRole('heading', { name: 'Transfer sent' })).toBeFocused();
+  // Client-side navigation keeps the API's state; the overview is refetched from it.
+  await nav(page).getByRole('link', { name: /Home/ }).click();
+  await expect(page.getByRole('listitem').filter({ hasText: 'Everyday Account' })).toContainText('$12,380.55');
 });
 
 test.describe('visual regression', () => {
@@ -350,12 +393,12 @@ test.describe('visual regression', () => {
   }
 
   test('cards', async ({ page }) => {
-    await openBank(page, { hash: '#/cards' });
+    await openBank(page, { path: '/app/cards' });
     await expect(page).toHaveScreenshot('cards.png', { fullPage: true });
   });
 
   test('transfer review', async ({ page }) => {
-    await openBank(page, { hash: '#/pay' });
+    await openBank(page, { path: '/app/pay' });
     await payTanWeiLing(page, '250');
     await expect(page).toHaveScreenshot('transfer-review.png');
   });

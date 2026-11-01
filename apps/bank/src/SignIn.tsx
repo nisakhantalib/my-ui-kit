@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
-import { Button, Guilloche, Select } from '@nisakhantalib/my-ui-kit';
+import { useEffect, useMemo } from 'react';
+import { Button, Guilloche, Money, Select, useKit } from '@nisakhantalib/my-ui-kit';
 import { Accessibility, ArrowRight, ShieldCheck, SlidersHorizontal, Zap, type LucideIcon } from 'lucide-react';
 import type { Preferences } from './App';
-import { useBank } from './bank';
-import { MARKETS, type Market } from './data';
+import { MARKETS, seed, type Market } from './data';
 import { Logo } from './Logo';
 import type { StringKey } from './strings';
-import { Amount } from './ui';
 
 const FEATURES: [LucideIcon, StringKey][] = [
   [Zap, 'featureInstant'],
@@ -19,7 +17,9 @@ const FEATURES: [LucideIcon, StringKey][] = [
  * button; choosing the market first shows off the five-market setup before anything loads.
  */
 export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => void }) {
-  const { t, market, accounts, history } = useBank();
+  const { t, market } = prefs;
+  const kit = useKit();
+  const { accounts, history } = useMemo(() => seed(market, kit.currencyDigits(market.currency)), [market, kit]);
   const total = accounts.filter((a) => a.id !== 'card').reduce((s, a) => s + a.balance, 0);
 
   useEffect(() => {
@@ -65,7 +65,7 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
         <div aria-hidden="true" className="signin-preview relative hidden lg:block">
           <p className="text-sm opacity-75">{t('totalBalance')}</p>
           <p className="display mt-1 text-3xl font-semibold">
-            <Amount value={total} />
+            <Money value={total} currency={market.currency} />
           </p>
           <PreviewLine points={history.slice(-60)} />
         </div>
@@ -100,7 +100,7 @@ export function SignIn({ prefs, onEnter }: { prefs: Preferences; onEnter: () => 
             {t('secured')}
           </p>
           <p className="mt-12 flex gap-5 border-t border-line/25 pt-6 text-sm">
-            <a className="font-medium text-link underline-offset-4 hover:underline" href="storybook/">
+            <a className="font-medium text-link underline-offset-4 hover:underline" href="/storybook/">
               {t('storybook')}
             </a>
             <a
