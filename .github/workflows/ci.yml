@@ -19,7 +19,7 @@ jobs:
     name: Lint, test, build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -95,7 +95,7 @@ jobs:
     # Same image every run, so fonts and rendering are identical to the committed baselines.
     container: mcr.microsoft.com/playwright:v1.64.1-noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -124,7 +124,7 @@ jobs:
     name: Android app (Capacitor)
     runs-on: ubuntu-latest # has the Android SDK preinstalled
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -158,7 +158,7 @@ jobs:
       name: production
       url: https://orchid-bank.${{ vars.CLOUDFLARE_WORKERS_SUBDOMAIN || 'workers' }}.dev
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with:
           node-version: 22
