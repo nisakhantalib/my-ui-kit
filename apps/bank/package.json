@@ -25,7 +25,7 @@
     "@nisakhantalib/my-ui-kit": "^0.1.0",
     "@tanstack/react-query": "^5.105.0",
     "embla-carousel-react": "^8.6.0",
-    "lucide-react": "^1.65.0",
+    "lucide-react": "^1.68.0",
     "motion": "^14.9.0",
     "msw": "^3.0.3",
     "react": "^19.3.1",
